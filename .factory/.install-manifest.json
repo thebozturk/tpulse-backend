@@ -1,0 +1,917 @@
+{
+  "version": "v1.7.0",
+  "profile": "backend",
+  "installed_at": "2026-06-05T22:56:42Z",
+  "files": {
+    ".claude/hooks/on-stop.sh": {
+      "hash": "c76e70c3e0ff838eb0925ea924a0a92797f75dc8f19a5594da3877bd54efe323",
+      "source": "shared/.claude/hooks/on-stop.sh",
+      "version": "v1.7.0"
+    },
+    ".claude/hooks/enrich-prompt.sh": {
+      "hash": "188eb4e5b9d6ffef3e4dd09fb4f7c436bad3f003e58f55691423dabf1e719c0f",
+      "source": "shared/.claude/hooks/enrich-prompt.sh",
+      "version": "v1.7.0"
+    },
+    ".claude/hooks/session-start.sh": {
+      "hash": "8f566b932af4e129a0fa89bb92c4f39b3a271611fdb97e9ec57c56f3909efb13",
+      "source": "shared/.claude/hooks/session-start.sh",
+      "version": "v1.7.0"
+    },
+    ".claude/hooks/protect-branch.sh": {
+      "hash": "8a8172ec1a68d747d80568054a1e1223cc076a30284f13f59d1cf5556ec7cd8d",
+      "source": "shared/.claude/hooks/protect-branch.sh",
+      "version": "v1.7.0"
+    },
+    ".claude/hooks/post-compact.sh": {
+      "hash": "08813d57d08510948a9807afbf48f4fdd2a38c68b989d2d245c9fc40960a55be",
+      "source": "shared/.claude/hooks/post-compact.sh",
+      "version": "v1.7.0"
+    },
+    ".claude/commands/architecture.md": {
+      "hash": "59650355a87c9e74fa2e5209af17f479ab7536e1cdb7870cea5601238e4ff5d3",
+      "source": "shared/.claude/commands/architecture.md",
+      "version": "v1.7.0"
+    },
+    ".claude/commands/improve.md": {
+      "hash": "6785210f0c1301d97f78c0c88ad6d9447f17dc790507f23eea98d7f55e74c0d8",
+      "source": "shared/.claude/commands/improve.md",
+      "version": "v1.7.0"
+    },
+    ".claude/commands/help.md": {
+      "hash": "61de4ae9bb60ca1d175d91f0284ecaf7b11e057df911e2ddc09939092825c8b9",
+      "source": "shared/.claude/commands/help.md",
+      "version": "v1.7.0"
+    },
+    ".claude/commands/resume.md": {
+      "hash": "5705390ece28b127b4ccd4ce1c95a9fa72c931ce3df8da07a7962d07e63edf2f",
+      "source": "shared/.claude/commands/resume.md",
+      "version": "v1.7.0"
+    },
+    ".claude/commands/onboard.md": {
+      "hash": "b91e968ff17d70ca65206055080ba55ed91a2a101b367fdcb4055b06dc5333ae",
+      "source": "shared/.claude/commands/onboard.md",
+      "version": "v1.7.0"
+    },
+    ".claude/commands/design.md": {
+      "hash": "428ce0057ae5e2560625c18829ff6b83041bdf1fa9e6ad0f464a4672c7d854a3",
+      "source": "shared/.claude/commands/design.md",
+      "version": "v1.7.0"
+    },
+    ".claude/commands/review.md": {
+      "hash": "386b15037a181b56da783f8e1fd8ed134c0cc2c9f5dbd532f8e2535658232178",
+      "source": "shared/.claude/commands/review.md",
+      "version": "v1.7.0"
+    },
+    ".claude/commands/test.md": {
+      "hash": "4a9d68c3142ee3207104692a734b7a0ae3be94669209ba2448567ddce627f05e",
+      "source": "shared/.claude/commands/test.md",
+      "version": "v1.7.0"
+    },
+    ".claude/agents/reviewer.md": {
+      "hash": "2081a58d2eaac6c72e3dc912ada948211c6fd7f87f6ef27adfb979d9a966cd60",
+      "source": "shared/.claude/agents/reviewer.md",
+      "version": "v1.7.0"
+    },
+    ".claude/agents/architecture-reviewer.md": {
+      "hash": "6e82abab1277f3ef976f97538d264588eee8a030c392f5c9a7f192810a885ed6",
+      "source": "shared/.claude/agents/architecture-reviewer.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/patterns/service-layer.md": {
+      "hash": "651b35035ecd392c62a4d815731dd03123647efdc4f2740cd8052bcf9875edab",
+      "source": "shared/.factory/skills/patterns/service-layer.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/patterns/singleton.md": {
+      "hash": "1376dcc5a4079dc5b0f05722726e3be082bd49682018be9f9a30a4b9062b7e82",
+      "source": "shared/.factory/skills/patterns/singleton.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/patterns/layered-architecture.md": {
+      "hash": "0203a3e10f92f66777af189fe7d410f643a9327cb25b5a43d46616303b7d01d0",
+      "source": "shared/.factory/skills/patterns/layered-architecture.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/patterns/dependency-injection.md": {
+      "hash": "ee8dc9446e062d0e3b4686be22bb04e3aac1a48fc74fd623d26bbbcd65c8155f",
+      "source": "shared/.factory/skills/patterns/dependency-injection.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/patterns/repository.md": {
+      "hash": "0eb50887a0fc06cda99b4a2f83d9555ab12e01229b87d598437cb95ce82cbfcf",
+      "source": "shared/.factory/skills/patterns/repository.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/patterns/INDEX.md": {
+      "hash": "b24f6229ac77998fb065d83044a54cba2c48b236b93aa72c8c38b03d9840fbae",
+      "source": "shared/.factory/skills/patterns/INDEX.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/patterns/solid-principles.md": {
+      "hash": "af34b27218fd7769c0766680e8edb9ac982e2139b7f463a50a20cb2731f557f5",
+      "source": "shared/.factory/skills/patterns/solid-principles.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/patterns/anti-patterns.md": {
+      "hash": "2636966093c808cd12ef3c82d6200854793622b7e77cec40964097b620715851",
+      "source": "shared/.factory/skills/patterns/anti-patterns.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/patterns/strategy.md": {
+      "hash": "a3e928fa84420f62eec6f8ee340972b1bd2e19741b3d0d41e2e6f591d6eaad7b",
+      "source": "shared/.factory/skills/patterns/strategy.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/patterns/error-handling.md": {
+      "hash": "f89d9e66fde5e06110c0cfe4f0f2d738aee74cd34a2dab533037da593f81cfd5",
+      "source": "shared/.factory/skills/patterns/error-handling.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/patterns/factory.md": {
+      "hash": "55c37d1875d28cfe0c79213a04f4245381715a74d336f6f88c4ae64c6d30322d",
+      "source": "shared/.factory/skills/patterns/factory.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/patterns/naming.md": {
+      "hash": "9836c3acb15f8e8a66d251a4e3a306af1d78fe28b1cd8275df29d8904d26e4d1",
+      "source": "shared/.factory/skills/patterns/naming.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/workflows/decomposition.md": {
+      "hash": "f5fd264402de6cd77979ed8596857947b19f4ac9668933c9447961a08465b044",
+      "source": "shared/.factory/skills/workflows/decomposition.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/workflows/planning.md": {
+      "hash": "368257fb9bc053f6421cae016112a59e31b4ccc554e3afe37d59f1631ff11418",
+      "source": "shared/.factory/skills/workflows/planning.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/workflows/git-flow.md": {
+      "hash": "0ccd2e4ebaa9754812a264b73af3d4154443359ba4787bd0610cd3c63728d776",
+      "source": "shared/.factory/skills/workflows/git-flow.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/INDEX.md": {
+      "hash": "4a111bccd1d37f672edebf69f63f82cd6d302bfc60629f9d40fd4bbe247cc3d7",
+      "source": "shared/.factory/skills/INDEX.md",
+      "version": "v1.7.0"
+    },
+    ".factory/rules/coding-standards.md": {
+      "hash": "3765d00bdabd9592a63ceee60f2dadf2e4a3fd95fb69ec14dc41bd838f6cd986",
+      "source": "shared/.factory/rules/coding-standards.md",
+      "version": "v1.7.0"
+    },
+    ".factory/rules/commits.md": {
+      "hash": "c9fa16d3bbc8232de7d9c5d9b6fc0fbdd11945f794639e910713276a85053e0c",
+      "source": "shared/.factory/rules/commits.md",
+      "version": "v1.7.0"
+    },
+    ".factory/rules/INDEX.md": {
+      "hash": "0bde1b5b2bc4a4337f65d772436e7b93867c304f72b6f7f813e0c876d7c52416",
+      "source": "shared/.factory/rules/INDEX.md",
+      "version": "v1.7.0"
+    },
+    ".factory/docs/templates/module-spec.md": {
+      "hash": "00d05f273e84fd9ede5a4b5ca00c9b318ab1dff2dc6e14ea2b85247f5e2494cf",
+      "source": "shared/.factory/docs/templates/module-spec.md",
+      "version": "v1.7.0"
+    },
+    ".factory/docs/templates/adr.md": {
+      "hash": "4cd7469f45b9e54d3faabde15055dd287c44240318452db24db4cd010c2b2700",
+      "source": "shared/.factory/docs/templates/adr.md",
+      "version": "v1.7.0"
+    },
+    ".claude/hooks/validate-write.sh": {
+      "hash": "a1ce173d5828a52b88b515190d53630ba73e87e9c6768604371ae82121677f00",
+      "source": "profiles/backend/.claude/hooks/validate-write.sh",
+      "version": "v1.7.0"
+    },
+    ".claude/hooks/security-gate.sh": {
+      "hash": "3e0c7f3302e0e036531860a317ff6c995c849a92f5c8cbd6d6c5a4d59f2fa0e4",
+      "source": "profiles/backend/.claude/hooks/security-gate.sh",
+      "version": "v1.7.0"
+    },
+    ".claude/hooks/post-write-check.sh": {
+      "hash": "fb267f576bcc7ced7c91436639a2dca283bdbfa425ce5d8f253b5113cd8dd2c4",
+      "source": "profiles/backend/.claude/hooks/post-write-check.sh",
+      "version": "v1.7.0"
+    },
+    ".claude/hooks/contract-drift-check.sh": {
+      "hash": "2d4b7d3a805484262eff177fc13993b4ce51c06f510d02bdb3eb65501c5a77a7",
+      "source": "profiles/backend/.claude/hooks/contract-drift-check.sh",
+      "version": "v1.7.0"
+    },
+    ".claude/commands/endpoint.md": {
+      "hash": "01b393c191affb1a566debcd4b711728273c979a6bc83837f73d826d93ac47f2",
+      "source": "profiles/backend/.claude/commands/endpoint.md",
+      "version": "v1.7.0"
+    },
+    ".claude/commands/migrate.md": {
+      "hash": "10782add1082c276f7faf38ade78e7bfee480a055b962c08028fd52d30f6859a",
+      "source": "profiles/backend/.claude/commands/migrate.md",
+      "version": "v1.7.0"
+    },
+    ".claude/commands/schema.md": {
+      "hash": "8364bd4d582911302bd577e583c6f386fb93f02cd00ce5ccf4908bc198c26a38",
+      "source": "profiles/backend/.claude/commands/schema.md",
+      "version": "v1.7.0"
+    },
+    ".claude/commands/module.md": {
+      "hash": "0916b71588074aead31272209f2cee0d4660b55c3241b6dd1dc3c061ee957650",
+      "source": "profiles/backend/.claude/commands/module.md",
+      "version": "v1.7.0"
+    },
+    ".claude/commands/build.md": {
+      "hash": "361e24c90563d98ea0d49e331a124f689657fe4a92477f15f80ad1a62a3911a4",
+      "source": "profiles/backend/.claude/commands/build.md",
+      "version": "v1.7.0"
+    },
+    ".claude/commands/db.md": {
+      "hash": "97f48fe0b7f73e989d3b6ed581ae534b1940523c20474bbe0321d9cd39cce3a4",
+      "source": "profiles/backend/.claude/commands/db.md",
+      "version": "v1.7.0"
+    },
+    ".claude/commands/stream.md": {
+      "hash": "c73c35a5fdcbc148eb03d8e9fce051d77746f48a91ba9de96c5bc90d496b5021",
+      "source": "profiles/backend/.claude/commands/stream.md",
+      "version": "v1.7.0"
+    },
+    ".claude/commands/contract-publish.md": {
+      "hash": "37ae2ef6383d0ccf3b694b8f53ed18f7d33ad86287050695fa7efffb3c32d830",
+      "source": "profiles/backend/.claude/commands/contract-publish.md",
+      "version": "v1.7.0"
+    },
+    ".claude/commands/secure.md": {
+      "hash": "f52f5587f25f1d8de17d9794ff523d135725a2acd00763fca1fac764b3d1f1df",
+      "source": "profiles/backend/.claude/commands/secure.md",
+      "version": "v1.7.0"
+    },
+    ".claude/agents/db-architect.md": {
+      "hash": "40b4f0aa96c34b672720e96d388abef2c0f4de04030c5f7939e7b2804b170a77",
+      "source": "profiles/backend/.claude/agents/db-architect.md",
+      "version": "v1.7.0"
+    },
+    ".claude/agents/api-dev.md": {
+      "hash": "e94c7627b9112531b64af5eb7ae48f72b9b91ec2045d9b5ab3d4341bb7365343",
+      "source": "profiles/backend/.claude/agents/api-dev.md",
+      "version": "v1.7.0"
+    },
+    ".claude/agents/security-dev.md": {
+      "hash": "6961786fd84504f5f556e1bb7424824219f227e8aee66938627d0148dad814b9",
+      "source": "profiles/backend/.claude/agents/security-dev.md",
+      "version": "v1.7.0"
+    },
+    ".claude/agents/db-dev.md": {
+      "hash": "f3be0af304527c76d7108620de0a44088e41c2ba3f0440f1cce255e596c04192",
+      "source": "profiles/backend/.claude/agents/db-dev.md",
+      "version": "v1.7.0"
+    },
+    ".claude/agents/test-dev.md": {
+      "hash": "eb559eed5e2bbe50affe48c97f02478dad64df8f4c2f3295dcb08707365b52e0",
+      "source": "profiles/backend/.claude/agents/test-dev.md",
+      "version": "v1.7.0"
+    },
+    ".claude/rules/api.md": {
+      "hash": "22fd9c2722133d7a768d5d8badd6dc8b304b4cbb9c60dd3d107b5de7781137db",
+      "source": "profiles/backend/.claude/rules/api.md",
+      "version": "v1.7.0"
+    },
+    ".claude/rules/schema.md": {
+      "hash": "a62918b68964ec3187e3787897bcc9dc0b97da34563dfc44a45f3e8c3313fc97",
+      "source": "profiles/backend/.claude/rules/schema.md",
+      "version": "v1.7.0"
+    },
+    ".claude/rules/dto.md": {
+      "hash": "22a7226f0a62a75cc20b180cb886883f139b8b3c45aca33f18423b0a099f4077",
+      "source": "profiles/backend/.claude/rules/dto.md",
+      "version": "v1.7.0"
+    },
+    ".claude/rules/tests.md": {
+      "hash": "0b302c01c8dfb1a133a1047b01b081d1b5951467c9fd8f19e4ef013347888442",
+      "source": "profiles/backend/.claude/rules/tests.md",
+      "version": "v1.7.0"
+    },
+    ".claude/rules/config.md": {
+      "hash": "119528c0d63bdd181abbbde0765e586185270f48a1b53f94528aafc312e6c9fb",
+      "source": "profiles/backend/.claude/rules/config.md",
+      "version": "v1.7.0"
+    },
+    ".claude/rules/guards.md": {
+      "hash": "758fca129dde16b68e51bc542490012208985d5a2e78d73394c4eb8dab3aa265",
+      "source": "profiles/backend/.claude/rules/guards.md",
+      "version": "v1.7.0"
+    },
+    ".claude/rules/service.md": {
+      "hash": "065b72e901b5cca98a1d68a0052e6d2d030383eaba604155afc2bffb63a7c122",
+      "source": "profiles/backend/.claude/rules/service.md",
+      "version": "v1.7.0"
+    },
+    ".claude/rules/docker.md": {
+      "hash": "7a0ee16647f7eda49f3e503d94e7715bd5e0bd71c18b63848061e1a9e24f1306",
+      "source": "profiles/backend/.claude/rules/docker.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/devops/env-management.md": {
+      "hash": "0a9ef0b363e9f83ae98b9f47410b88e548763fe4489162a25ba626a413ca3442",
+      "source": "profiles/backend/.factory/skills/devops/env-management.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/devops/zero-downtime.md": {
+      "hash": "fa6baa05d9bd3d7e15e11d2f1a6e879f5bffe76facd18b73a41af1193a82e32f",
+      "source": "profiles/backend/.factory/skills/devops/zero-downtime.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/devops/migrations.md": {
+      "hash": "98cc6c8f499c8be2396c533c2ff7c54214f1cb4a1020559cb138b05419f5416d",
+      "source": "profiles/backend/.factory/skills/devops/migrations.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/devops/dockerfile.md": {
+      "hash": "f1a8cd28b19c1abd65376772d278efcc070f842721b92efb3b539c561d39370f",
+      "source": "profiles/backend/.factory/skills/devops/dockerfile.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/devops/compose.md": {
+      "hash": "57833f685758f6efa43f3ecd92433ff0aaeb7a6d0b3021546bcdc4ff30ec33d1",
+      "source": "profiles/backend/.factory/skills/devops/compose.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/devops/INDEX.md": {
+      "hash": "dc6bacdb847056d01bef4cb52ddbc551f8fa04f7aa8293c96359ff3c58a67f1e",
+      "source": "profiles/backend/.factory/skills/devops/INDEX.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/devops/logging.md": {
+      "hash": "c85c0f42f9a04fbe71fb791ebbe2bbde39ec9c883e035ab5a43154db558e0c5d",
+      "source": "profiles/backend/.factory/skills/devops/logging.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/devops/scaling.md": {
+      "hash": "622a13b83499cbdc64a977fddeecae4d090ed3011469a0f5359a90306d5d866f",
+      "source": "profiles/backend/.factory/skills/devops/scaling.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/devops/backup.md": {
+      "hash": "9fd467b1ff6813702e2e5c1cb9c5419c84ed8703dfba34bcd49b1155c10b4d66",
+      "source": "profiles/backend/.factory/skills/devops/backup.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/devops/monitoring.md": {
+      "hash": "d497d204f871b19e5680ddc78ceefd5e29eea15d2cc6385972371672768983d9",
+      "source": "profiles/backend/.factory/skills/devops/monitoring.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/devops/ci-cd.md": {
+      "hash": "d82322f5746da2a27003f51321f9d40ad9e0320dbe318abf614f76b18f2f400f",
+      "source": "profiles/backend/.factory/skills/devops/ci-cd.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/tools/INDEX.md": {
+      "hash": "79d9119141f556617b6f862615e051ba57b657e6828774d61adedde776f5d798",
+      "source": "profiles/backend/.factory/skills/tools/INDEX.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/security/secrets.md": {
+      "hash": "91a443faba27be0be4dc7dd679ad6222eaad543d2679247ad435da1cc63b53c3",
+      "source": "profiles/backend/.factory/skills/security/secrets.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/security/helmet.md": {
+      "hash": "65853ab737e1b7c76957173f5729dc8b6cd6d33f8bdb3bfd49c3dd4581e2f920",
+      "source": "profiles/backend/.factory/skills/security/helmet.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/security/dependencies.md": {
+      "hash": "5d243f9c924d2a7940c27075a9d87f747da5aa89530dba855721e00d50e2e74d",
+      "source": "profiles/backend/.factory/skills/security/dependencies.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/security/headers.md": {
+      "hash": "cca18dde31f4dfcc8648f642fbbc21ec8dea5d7f0b8137df229a1271b19857b8",
+      "source": "profiles/backend/.factory/skills/security/headers.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/security/rate-limit.md": {
+      "hash": "babac10e09aa18c67f7b01e3541f4063bee1cbf4a20575fe59e96963fff07b16",
+      "source": "profiles/backend/.factory/skills/security/rate-limit.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/security/cors.md": {
+      "hash": "c18b677c8fbbf0000b1f0da18b91011474bafc8746aae02df8fd31d348fe7c8e",
+      "source": "profiles/backend/.factory/skills/security/cors.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/security/INDEX.md": {
+      "hash": "4b9f2ccfb336c761efcf05769dbfb277f8d4e52887e632c960002a8b96aaf9d6",
+      "source": "profiles/backend/.factory/skills/security/INDEX.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/security/csrf.md": {
+      "hash": "db303aedecc8efdc4ee9f6b3132f28e0d73f87446f393ab51553c9513733bdfa",
+      "source": "profiles/backend/.factory/skills/security/csrf.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/security/injection.md": {
+      "hash": "8c3b5530eff3e3d0aa1e476a291ef36f6648458949fddd7c1a5587bc063f9b62",
+      "source": "profiles/backend/.factory/skills/security/injection.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/security/input-validation.md": {
+      "hash": "3e264cfc0f3204fb61295ed7db578d22fc5687c67a310c9633f7b5af5d8ff711",
+      "source": "profiles/backend/.factory/skills/security/input-validation.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/security/audit-log.md": {
+      "hash": "0e92a0be6cee76be499354f6ed1c3c8a8371f5a5cad30830da17c75a21463a68",
+      "source": "profiles/backend/.factory/skills/security/audit-log.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/auth/jwt.md": {
+      "hash": "1b9775915f26a30c95447f2bd10e7858a1d26c00d6f61032737dc4109b622ab9",
+      "source": "profiles/backend/.factory/skills/auth/jwt.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/auth/oauth.md": {
+      "hash": "160a676a2d8ca39580dd09a5a95c7cce4fb36824f2f678acf3a7473d2aa7fd53",
+      "source": "profiles/backend/.factory/skills/auth/oauth.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/auth/password.md": {
+      "hash": "f6b610edde2986d05f08edd9913feeb9be50dbc0f29de1de5232b32819de25f5",
+      "source": "profiles/backend/.factory/skills/auth/password.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/auth/INDEX.md": {
+      "hash": "e4b269aef86ab50d32af91a5030545dcdf653516f18f31d20a3ea09d67b92e49",
+      "source": "profiles/backend/.factory/skills/auth/INDEX.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/auth/rbac.md": {
+      "hash": "d480cf5dba89928606dcfdca5dec05b4f86ac7035e28f6a1670469d53727d64a",
+      "source": "profiles/backend/.factory/skills/auth/rbac.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/auth/session.md": {
+      "hash": "355d3b58cd933ed7bc150440779c9bd60218c2854fbe537ac8216860d3d44a1e",
+      "source": "profiles/backend/.factory/skills/auth/session.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/prisma/queries.md": {
+      "hash": "da083dd7fa43d24d7f0ad8b095247940d45cf344e0edafe958008ca44e32dfe9",
+      "source": "profiles/backend/.factory/skills/prisma/queries.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/prisma/migrations.md": {
+      "hash": "3a6d2a42c9032e1eed943971671813ec55213a589d58079598386d3a448ec468",
+      "source": "profiles/backend/.factory/skills/prisma/migrations.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/prisma/setup.md": {
+      "hash": "dc96a3d0ba082281f804f504f59de571cb58d539a8a75d7cd1a128f4627db907",
+      "source": "profiles/backend/.factory/skills/prisma/setup.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/prisma/validation.md": {
+      "hash": "2b7225f6afc2d1153c28503e0b6b734b71ba0bb6026878e8396d111a7231f2a7",
+      "source": "profiles/backend/.factory/skills/prisma/validation.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/prisma/schema.md": {
+      "hash": "c67e2bed8402774d3ca468b173ce62fa376515d720441abe1206d7e55c8116ff",
+      "source": "profiles/backend/.factory/skills/prisma/schema.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/prisma/performance.md": {
+      "hash": "a145fa5a27a4bccb0027c07c6bbb87d103d25afff0c841d142c2fc2cf9d680e9",
+      "source": "profiles/backend/.factory/skills/prisma/performance.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/prisma/INDEX.md": {
+      "hash": "a641bff384111b916391eee3b92b83fe584acb00458173967183803a950e5027",
+      "source": "profiles/backend/.factory/skills/prisma/INDEX.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/prisma/seeding.md": {
+      "hash": "4980ce3f2ec5368d6f8c78b4920cb6044d10b3c913b55cca35eaae6430bc6680",
+      "source": "profiles/backend/.factory/skills/prisma/seeding.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/prisma/relations.md": {
+      "hash": "1d2683f7cb6383591de38cdd2a0eff67c521903b8e076dc1859d77d9b166c290",
+      "source": "profiles/backend/.factory/skills/prisma/relations.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/observability/alerting.md": {
+      "hash": "5cfc791f399cb43ce605e3dd945c3f761429fa2637ffc88c0410d0f795fad282",
+      "source": "profiles/backend/.factory/skills/observability/alerting.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/observability/INDEX.md": {
+      "hash": "0b018589e0a1db40854420cd5bedd32c7b002abec7912d6379232c292cfd0e99",
+      "source": "profiles/backend/.factory/skills/observability/INDEX.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/observability/logging.md": {
+      "hash": "b7d48fd1dad00aeade740037ecdeba22b216e8c3eb2565f75fa62926f4014141",
+      "source": "profiles/backend/.factory/skills/observability/logging.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/observability/tracing.md": {
+      "hash": "76332ca79fa8a446feef4da2aa975707658161b0e00d8e7b1948761befc1d682",
+      "source": "profiles/backend/.factory/skills/observability/tracing.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/observability/metrics.md": {
+      "hash": "ef418b66c59ca46e7f3025e44bbfc5a918378765e9b4fdc7cc1702a7dd48d7da",
+      "source": "profiles/backend/.factory/skills/observability/metrics.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/observability/health.md": {
+      "hash": "6e9c322b972cd06842b212276e19bc0d91bd516b9083768167b4c85f5803f0ad",
+      "source": "profiles/backend/.factory/skills/observability/health.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/mongodb/queries.md": {
+      "hash": "71862a7341da654655dddbf9971fce8110cabbaa6ab7a2f4b324ec19d0012ad7",
+      "source": "profiles/backend/.factory/skills/mongodb/queries.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/mongodb/migrations.md": {
+      "hash": "1bfc7b2a1b595f19a6983343ea3117e25582e5941e2a850d6a089be8af3a116e",
+      "source": "profiles/backend/.factory/skills/mongodb/migrations.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/mongodb/schemas.md": {
+      "hash": "e934bd55d04c18b6a6424778b4c8cab476164f0a85b4f621bc205c0575594ac7",
+      "source": "profiles/backend/.factory/skills/mongodb/schemas.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/mongodb/indexes.md": {
+      "hash": "df2fd024f98658a05d32d08a7f361e3f46065547e5e2ee2555df7ed2bc251c3c",
+      "source": "profiles/backend/.factory/skills/mongodb/indexes.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/mongodb/aggregation.md": {
+      "hash": "8e275466617f05c1d9adbfdfb984d4279ff9a1ce594f505c29b785d29d4026ae",
+      "source": "profiles/backend/.factory/skills/mongodb/aggregation.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/mongodb/INDEX.md": {
+      "hash": "d3006e308c7ce76f4a19cf1c0e3cd2a76b4ca2e362b2c31a793954e33b53670c",
+      "source": "profiles/backend/.factory/skills/mongodb/INDEX.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/mongodb/transactions.md": {
+      "hash": "ba61c584d94e7bf53a801431d07afe5fceef9b7a46525034cd2ca4c610976e0d",
+      "source": "profiles/backend/.factory/skills/mongodb/transactions.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/mongodb/security.md": {
+      "hash": "0ec9484929a7f146f5785b73b797a4c44bdb68fe3ec4eb670bd8f9c38907f499",
+      "source": "profiles/backend/.factory/skills/mongodb/security.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/streaming/websocket.md": {
+      "hash": "0d48f78f9d7ea6129fb1db826a76cb7948f90d927d6269f76503a00ed5ba62e9",
+      "source": "profiles/backend/.factory/skills/streaming/websocket.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/streaming/sse-emit.md": {
+      "hash": "72b934c3f1a8ee50dd507da0830a66632a9f3b2deb3b8bc46069641fadd5a824",
+      "source": "profiles/backend/.factory/skills/streaming/sse-emit.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/streaming/event-bus.md": {
+      "hash": "2fc70e8ccabd391b28e21eb3fea32c3e6755c2434da90078c86f54f0e55431aa",
+      "source": "profiles/backend/.factory/skills/streaming/event-bus.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/streaming/INDEX.md": {
+      "hash": "df178c84dd0e8961a6bb4e1162f8eafbf59d1e8938c16836931fb52ae9bdcc48",
+      "source": "profiles/backend/.factory/skills/streaming/INDEX.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/testing/unit.md": {
+      "hash": "00c97eef86d7c215f226fe7758e7394c215e826b30ea4b8194870ffd3542035d",
+      "source": "profiles/backend/.factory/skills/testing/unit.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/testing/e2e.md": {
+      "hash": "ee0aa95936e73daf58fa2851bc20c9217a6fe1bf948a26917f7109be97839aaf",
+      "source": "profiles/backend/.factory/skills/testing/e2e.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/testing/integration.md": {
+      "hash": "9b55a5ba7ddf05b158c1bcc0b84612ff983d786bcd18b1f09f565f83bbec02de",
+      "source": "profiles/backend/.factory/skills/testing/integration.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/testing/mocking.md": {
+      "hash": "b1823e3776d4aadaa640aef981e691730be9ee5e04ae1bd4b94469cc28d44f62",
+      "source": "profiles/backend/.factory/skills/testing/mocking.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/testing/fixtures.md": {
+      "hash": "0f3299db5b35c526a1eaf01360611aff9c313bd4df493e28e4d46caa46c1cc29",
+      "source": "profiles/backend/.factory/skills/testing/fixtures.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/testing/INDEX.md": {
+      "hash": "1cea5902dd58a4668bc675bd7ad33342f646240fb56572919b91e911983c4a80",
+      "source": "profiles/backend/.factory/skills/testing/INDEX.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/postgres/indexes.md": {
+      "hash": "f6b97a10601fcfe29f529c5bfe22f3b1d730a909273a1c5468f468e47fd80bd8",
+      "source": "profiles/backend/.factory/skills/postgres/indexes.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/postgres/full-text-search.md": {
+      "hash": "cbddba17a4d3e88f7becbf2ad9a2301c9fd6e297ee66ed59e9bfe20bc25b43a3",
+      "source": "profiles/backend/.factory/skills/postgres/full-text-search.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/postgres/jsonb.md": {
+      "hash": "e0919ee5125263b05abb1073943ec694a0f4c958df61daa66123933fbd299566",
+      "source": "profiles/backend/.factory/skills/postgres/jsonb.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/postgres/connection-pooling.md": {
+      "hash": "af854a16dc273bd1b86548338cc5e6348ecf67102f827298a2581468802abc5c",
+      "source": "profiles/backend/.factory/skills/postgres/connection-pooling.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/postgres/INDEX.md": {
+      "hash": "f5c32be32ea4e9949acfb3670762d04676cafc9719ef21b9a179e7c46799c19b",
+      "source": "profiles/backend/.factory/skills/postgres/INDEX.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/postgres/transactions.md": {
+      "hash": "ea7f92afeda63e61c84fa10fb710237b3746a9a12f83dd3bcf5816954340a18d",
+      "source": "profiles/backend/.factory/skills/postgres/transactions.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/architecture/middleware-chain.md": {
+      "hash": "26a06af0c5871fb21fd426d7b7b255b2d1c5f2c0eccd3ca418b04636c44d6fb7",
+      "source": "profiles/backend/.factory/skills/architecture/middleware-chain.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/architecture/auth-authz-boundaries.md": {
+      "hash": "5f12cf4ad3e9fb8414dd2cf98517f08813ec7de4298601569486bbdab2169227",
+      "source": "profiles/backend/.factory/skills/architecture/auth-authz-boundaries.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/architecture/feature-flags.md": {
+      "hash": "ca4e1a5c13422bc85d72b2739e874610cacb673d31f1f4ff8c29d4dc42481a41",
+      "source": "profiles/backend/.factory/skills/architecture/feature-flags.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/architecture/rate-limiting.md": {
+      "hash": "d80c8081b8f1a37dc791175303bda3ad5895470a5a660103d15faee24b07b8fa",
+      "source": "profiles/backend/.factory/skills/architecture/rate-limiting.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/architecture/INDEX.md": {
+      "hash": "6ac9b38eeb6dfb8cd69f60e77c14ba5d20751d7986f358590c80380abec81031",
+      "source": "profiles/backend/.factory/skills/architecture/INDEX.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/architecture/error-handling.md": {
+      "hash": "0b9e5ce0947225acb042a7c22a9537bccce60cf532d4d62e5181dd39fdea61b6",
+      "source": "profiles/backend/.factory/skills/architecture/error-handling.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/architecture/config-management.md": {
+      "hash": "585c561dacc0e9dc70eaf106df54b3f0f4620d0845bd0adad07c82e41f277d29",
+      "source": "profiles/backend/.factory/skills/architecture/config-management.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/architecture/validation-discipline.md": {
+      "hash": "e1af26c46b068ec1202d182f20d6091dd4cd775c384cfa9a330c35602fec66f9",
+      "source": "profiles/backend/.factory/skills/architecture/validation-discipline.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/resilience/retry.md": {
+      "hash": "9c0630f11129986fba2340d599570134760b4c748de98371f52417d7419cee57",
+      "source": "profiles/backend/.factory/skills/resilience/retry.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/resilience/bulkhead.md": {
+      "hash": "5b0c0b599c72accb3ab2f225efb2bd6fce632269fa342f9cf2c8770f41ccc4bc",
+      "source": "profiles/backend/.factory/skills/resilience/bulkhead.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/resilience/circuit-breaker.md": {
+      "hash": "bf6b0b607d6af1848a1fff6a47301e679e3c7d4e118ecf4c818bd77e9490a3bc",
+      "source": "profiles/backend/.factory/skills/resilience/circuit-breaker.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/resilience/graceful-shutdown.md": {
+      "hash": "9bc742ddfd0c168a18e6b268dc309cb9a1eb0bde696bbdff7c448ee299873551",
+      "source": "profiles/backend/.factory/skills/resilience/graceful-shutdown.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/resilience/INDEX.md": {
+      "hash": "067214e238e086437f1d5616aff09299806c160e60634df092f885923fdd6c95",
+      "source": "profiles/backend/.factory/skills/resilience/INDEX.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/resilience/timeout.md": {
+      "hash": "1735f8837bb7d87a9a05d542fde68184c52c97458d1cccb935e7a04cf022bd06",
+      "source": "profiles/backend/.factory/skills/resilience/timeout.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/resilience/health-checks.md": {
+      "hash": "0fc6068206de1a30661f57c5670f03ed03311f596dbcf2939c70d82b5e5600f2",
+      "source": "profiles/backend/.factory/skills/resilience/health-checks.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/api/versioning.md": {
+      "hash": "299ab730f71cbbd66b7ac9e20f4d36b9c5a42970d511f184e04be51b748f418a",
+      "source": "profiles/backend/.factory/skills/api/versioning.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/api/filtering-sorting.md": {
+      "hash": "269d42b185c8b4aecd8761aa6a885fb9816053bde9d08150259384db72ee5382",
+      "source": "profiles/backend/.factory/skills/api/filtering-sorting.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/api/pagination.md": {
+      "hash": "ffaef12fc276b2df6ca305806636e92295848e500e0bf79391ec3cbe9a2e8f9a",
+      "source": "profiles/backend/.factory/skills/api/pagination.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/api/file-upload.md": {
+      "hash": "2043655df68baf725698adb17344a4e6e8bfd0fc1363db7e2dc27e9757864eff",
+      "source": "profiles/backend/.factory/skills/api/file-upload.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/api/endpoint-design.md": {
+      "hash": "94d50aa093cee52232fd3b938fbf0d9f870007acc4cc86dc4a0bb026a1cf13a5",
+      "source": "profiles/backend/.factory/skills/api/endpoint-design.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/api/INDEX.md": {
+      "hash": "374b8808d52686c8c9efa2977ef0470568a150497914e8ebf975cd4b58ca53f3",
+      "source": "profiles/backend/.factory/skills/api/INDEX.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/api/error-responses.md": {
+      "hash": "b988b879a1fb71d75f0863e3fe8a38721001076c43567cb8e2103ad6445b3cc5",
+      "source": "profiles/backend/.factory/skills/api/error-responses.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/nestjs/lifecycle.md": {
+      "hash": "9bed5a4399324b49c7bd67ce67f5b46b1ce74dc57dae6e634827dc2a92b5d5ff",
+      "source": "profiles/backend/.factory/skills/nestjs/lifecycle.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/nestjs/providers.md": {
+      "hash": "0f86ed7e1475da553d517f1cd4126435114310e2c7d0dd7c3204e015bbb1a38d",
+      "source": "profiles/backend/.factory/skills/nestjs/providers.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/nestjs/guards-interceptors.md": {
+      "hash": "62974cc0f7e6dfa31af31dbd9c22d2df07cece2222fd83bb25609dc3fda1a2d9",
+      "source": "profiles/backend/.factory/skills/nestjs/guards-interceptors.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/nestjs/modules.md": {
+      "hash": "2304672ec31ac10ec0313901c1ac95b81c7d77a677ad9f9c5ab27b46a15cba11",
+      "source": "profiles/backend/.factory/skills/nestjs/modules.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/nestjs/config.md": {
+      "hash": "4d3225c7f720a32ce332d710bbe5c0f9cbda8fa4c8138bfe050194b568737f1e",
+      "source": "profiles/backend/.factory/skills/nestjs/config.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/nestjs/INDEX.md": {
+      "hash": "57c22c08b4dff3ee2a9906b42597ccfb5d8566ecc32c61d9d1a22f2fb2a976c7",
+      "source": "profiles/backend/.factory/skills/nestjs/INDEX.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/nestjs/swagger.md": {
+      "hash": "3bb692747606bfa5f0d630234aad388a9b28b6668b100ab4ae83eb3fa30fd5b3",
+      "source": "profiles/backend/.factory/skills/nestjs/swagger.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/nestjs/exception-filters.md": {
+      "hash": "69cc4557446ec94eba2bd562381be0014aa12e81eaddb2e8a81939bc060a68ec",
+      "source": "profiles/backend/.factory/skills/nestjs/exception-filters.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/nestjs/pipes-validation.md": {
+      "hash": "c524932f3bf23785c51bde8bd0e5104b05fa9491d38cf5188e1d5fd5de8d6e52",
+      "source": "profiles/backend/.factory/skills/nestjs/pipes-validation.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/bot-defense/behavioral.md": {
+      "hash": "7fbbae6bbf92a4134e68219068adefd15e7ae7766c9181dd071a7715f90151ce",
+      "source": "profiles/backend/.factory/skills/bot-defense/behavioral.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/bot-defense/captcha.md": {
+      "hash": "7bd9adf7677f007819f7c52cfbfabf4e5a7f3a1958e0a2851b5634a256ea6616",
+      "source": "profiles/backend/.factory/skills/bot-defense/captcha.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/bot-defense/progressive-trust.md": {
+      "hash": "bd3c802c163b3e7f66efe3fa4f6cd8feefc140df4c794de8c4c40595e3124c47",
+      "source": "profiles/backend/.factory/skills/bot-defense/progressive-trust.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/bot-defense/fingerprinting.md": {
+      "hash": "e78f0ca4ac8fa196696f47b751b035cc974bad5422dde1da95efb0fc19b77d95",
+      "source": "profiles/backend/.factory/skills/bot-defense/fingerprinting.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/bot-defense/INDEX.md": {
+      "hash": "8f50a0916c870bf68b3cbe0d4a883945b7a5a5c9045818a9f9d97a87f7ffb7a1",
+      "source": "profiles/backend/.factory/skills/bot-defense/INDEX.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/bot-defense/adaptive-challenge.md": {
+      "hash": "85fbb342bbca151f3d11844dc9e8c6764ce6a22b311bd6244c71c3361c582174",
+      "source": "profiles/backend/.factory/skills/bot-defense/adaptive-challenge.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/bot-defense/ip-reputation.md": {
+      "hash": "e741c5c9055d7fde36dcd513c93c96d45306d1facb5c0ff5d3a1438c96ab2de1",
+      "source": "profiles/backend/.factory/skills/bot-defense/ip-reputation.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/performance/connection-pool.md": {
+      "hash": "ff4d045db40de0ba924a0ad3f04f816936f229a23b81eba9f695249f54bfdc7c",
+      "source": "profiles/backend/.factory/skills/performance/connection-pool.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/performance/caching.md": {
+      "hash": "b1ed2186ab8005608eca88d2bdc355e8ab8c990095ee87a7783373d4d12ab2e3",
+      "source": "profiles/backend/.factory/skills/performance/caching.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/performance/pagination.md": {
+      "hash": "2f4d73e44d4c95e5f98fc034abca060fc8fd71f0a42e30580558cbdf669fcefd",
+      "source": "profiles/backend/.factory/skills/performance/pagination.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/performance/indexing.md": {
+      "hash": "1752f0e16d17ed39e18f9537de6e3d4076f80b9eadab9bfb90da17a38bf76c2e",
+      "source": "profiles/backend/.factory/skills/performance/indexing.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/performance/INDEX.md": {
+      "hash": "015a9cb62e4fd71e9c4a9455aab6b000feb1597f23bf8f1a5de053b78a6cff59",
+      "source": "profiles/backend/.factory/skills/performance/INDEX.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/performance/n-plus-one.md": {
+      "hash": "6badf60f64c1d81cc723746078f418dffc22910da10a3b8525257066ac346723",
+      "source": "profiles/backend/.factory/skills/performance/n-plus-one.md",
+      "version": "v1.7.0"
+    },
+    ".factory/skills/performance/compression.md": {
+      "hash": "9c91473e6f7ec9e827aa83fc8134f0ffe07e8eda7c1a7a688a9dd5a0fd20a62d",
+      "source": "profiles/backend/.factory/skills/performance/compression.md",
+      "version": "v1.7.0"
+    },
+    ".factory/snippets/test-template.spec.ts": {
+      "hash": "fe40e8a8aa09fdd2350a8083c9788b5fa60cb77423ef45b9aa5a539cbeb676a6",
+      "source": "profiles/backend/.factory/snippets/test-template.spec.ts",
+      "version": "v1.7.0"
+    },
+    ".factory/snippets/dto-template.ts": {
+      "hash": "94c0bcb7245ace4b654accd67a8b95237cab63c3240870a24ce9adc4ba0eb8a0",
+      "source": "profiles/backend/.factory/snippets/dto-template.ts",
+      "version": "v1.7.0"
+    },
+    ".factory/snippets/controller-template.ts": {
+      "hash": "e8cc598cd280b80ba4afaf3dbb11f635dc22b83b1d818413b7a97e9520fe88ab",
+      "source": "profiles/backend/.factory/snippets/controller-template.ts",
+      "version": "v1.7.0"
+    },
+    ".factory/snippets/schema-template.ts": {
+      "hash": "7661c38d6b423feca6ea68728fda2d157824d14f47c120dc2a387d601464e2c2",
+      "source": "profiles/backend/.factory/snippets/schema-template.ts",
+      "version": "v1.7.0"
+    },
+    ".factory/snippets/service-template.ts": {
+      "hash": "e1e522bcb815f98e627e9fbf238f15f5bfd4abde058e4937a4816e39741baf6c",
+      "source": "profiles/backend/.factory/snippets/service-template.ts",
+      "version": "v1.7.0"
+    },
+    ".factory/snippets/guard-template.ts": {
+      "hash": "7507b750faeb3105cb87d5067dd61840722920c326aad7953e9234ffba44a92d",
+      "source": "profiles/backend/.factory/snippets/guard-template.ts",
+      "version": "v1.7.0"
+    },
+    ".factory/docs/templates/runbook.md": {
+      "hash": "7b49d1cea041821e19202cb4ebd868e7f64520351b44e2ee3d0b10bd2c264ca7",
+      "source": "profiles/backend/.factory/docs/templates/runbook.md",
+      "version": "v1.7.0"
+    }
+  }
+}

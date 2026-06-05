@@ -1,0 +1,106 @@
+# compiled output
+/dist
+/node_modules
+
+# Logs
+logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# OS
+.DS_Store
+
+# Tests
+/coverage
+/.nyc_output
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+# --- factory shared ---
+# Factory memory — kullanıcı session verisi
+.factory/memory/*.jsonl
+.factory/memory/session-handoff.md
+.factory/memory/active-task.md
+.factory/memory/registry.json
+.factory/memory/registry-hash
+.factory/memory/error-log.archived.jsonl
+
+# Factory pin state
+.factory/.pinned-version
+
+# Backup dosyaları (update sonrası)
+*.bak
+
+# --- factory backend ---
+# Backend-specific additions
+
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build output
+dist/
+build/
+*.tsbuildinfo
+
+# Test
+coverage/
+.nyc_output/
+
+# Env (NEVER COMMIT)
+.env
+.env.local
+.env.production
+.env.staging
+!.env.example
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+
+# Factory memory (user-specific)
+.factory/memory/*
+!.factory/memory/.gitkeep
+.factory/learned/*
+!.factory/learned/.gitkeep
+
+# MongoDB dump
+*.bson
+*.archive
+backup-*/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Runtime
+pids/
+*.pid
