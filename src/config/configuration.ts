@@ -18,6 +18,14 @@ export const configuration = () => {
     },
     jwt: {
       secret: env.JWT_SECRET,
+      accessExpiry: env.JWT_ACCESS_EXPIRY,
+      issuer: env.JWT_ISSUER,
+      audience: env.JWT_AUDIENCE,
+      refreshExpiryDays: env.JWT_REFRESH_EXPIRY_DAYS,
+    },
+    passwordReset: {
+      tokenMinutes: env.PASSWORD_RESET_TOKEN_MINUTES,
+      urlBase: env.PASSWORD_RESET_URL_BASE,
     },
     redis: {
       connectionString: env.REDIS_CONNECTION_STRING,
@@ -44,8 +52,11 @@ export const configuration = () => {
     },
     smtp: {
       host: env.SMTP_HOST,
+      port: env.SMTP_PORT,
+      secure: env.SMTP_SECURE,
       username: env.SMTP_USERNAME,
       password: env.SMTP_PASSWORD,
+      from: env.SMTP_FROM,
     },
   };
 };
