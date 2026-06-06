@@ -12,5 +12,6 @@ import { PrismaPostRepository } from './prisma-post.repository';
     PostsService,
     { provide: POST_REPOSITORY, useClass: PrismaPostRepository },
   ],
+  exports: [PostsService],
 })
 export class PostsModule {}

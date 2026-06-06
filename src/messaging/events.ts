@@ -25,6 +25,20 @@ export interface PostReactionEvent {
   isLike: boolean;
 }
 
+export interface CommentCreateEvent {
+  userId: string;
+  postId: string;
+  content?: string;
+  parentId?: string;
+  createdAtUtc: string;
+}
+
+export interface CommentReactionEvent {
+  commentId: string;
+  userId: string;
+  isLike: boolean;
+}
+
 export interface OutboxJobData {
   messageId: string;
 }
