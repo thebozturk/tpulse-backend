@@ -31,7 +31,11 @@ const IMAGE_ENDPOINTS = ['leagues', 'teams', 'players', 'news'].flatMap((e) => [
 ]);
 
 // API sözleşmesi dışı, kasıtlı ops uçları (docs/02'de listelenmez)
-const ALLOWED_EXTRA = new Set(['GET /health']);
+// Back office (BO) uçları .NET parity sözleşmesinin dışındadır — kasıtlı eklenir.
+const ALLOWED_EXTRA = new Set([
+  'GET /health',
+  'GET /api/admin/dashboard/overview', // faz-bo-1
+]);
 
 // docs/02 "Sıralama Notları": kesinlikle korunması gereken bot uçları
 const BOT_CRITICAL = [
