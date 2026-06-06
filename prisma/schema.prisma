@@ -88,6 +88,8 @@ model Team {
   players           Player[]
   incomingTransfers Transfer[] @relation("ToTeam")
   outgoingTransfers Transfer[] @relation("FromTeam")
+  newsFrom          News[]     @relation("NewsFromTeam")
+  newsTo            News[]     @relation("NewsToTeam")
 
   @@map("team")
 }
@@ -125,6 +127,7 @@ model Player {
   team      Team       @relation(fields: [teamId], references: [id], onDelete: Restrict)
   position  Position?  @relation(fields: [positionId], references: [id], onDelete: SetNull)
   transfers Transfer[]
+  news      News[]
 
   @@map("player")
 }
@@ -282,6 +285,10 @@ model News {
   sourceUrl   String?
   title       String
   content     String?
+
+  player   Player? @relation(fields: [playerId], references: [id], onDelete: SetNull)
+  fromTeam Team?   @relation("NewsFromTeam", fields: [fromTeamId], references: [id], onDelete: SetNull)
+  toTeam   Team?   @relation("NewsToTeam", fields: [toTeamId], references: [id], onDelete: SetNull)
 
   @@index([playerId])
   @@index([toTeamId])
