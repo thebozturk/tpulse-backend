@@ -22,13 +22,27 @@ import {
   TopExpensiveDto,
   TransferFilterDto,
 } from './dto/transfer-query.dto';
+import { TransferPeriodSummaryDto } from './stats/dto/period-summary.dto';
+import { TransferSeasonDashboardDto } from './stats/dto/season-dashboard.dto';
+import {
+  PeriodSummaryQueryDto,
+  PeriodsQueryDto,
+  SeasonDashboardQueryDto,
+  StatsFilterDto,
+} from './stats/dto/stats-query.dto';
+import { TransferPeriodDto } from './stats/dto/transfer-period.dto';
+import { TransferStatsDto } from './stats/dto/transfer-stats.dto';
+import { StatsService } from './stats/stats.service';
 import { TransfersService } from './transfers.service';
 
 @ApiTags('transfers')
 @Controller('api/transfers')
 @Public()
 export class TransferQueryController {
-  constructor(private readonly transfers: TransfersService) {}
+  constructor(
+    private readonly transfers: TransfersService,
+    private readonly stats: StatsService,
+  ) {}
 
   @Get()
   @ApiOperation({ summary: 'Transferleri filtrele (paged)' })
@@ -85,6 +99,43 @@ export class TransferQueryController {
     @Query() dto: LatestByLeaguesDto,
   ): Promise<ListResponse<LeagueTransfersDto>> {
     return { items: await this.transfers.latestByLeagues(dto) };
+  }
+
+  @Get('stats')
+  @ApiOperation({ summary: 'Transfer istatistikleri' })
+  @ApiResponse({ status: 200, type: TransferStatsDto })
+  getStats(@Query() filter: StatsFilterDto): Promise<TransferStatsDto> {
+    return this.stats.getStats(filter);
+  }
+
+  @Get('periods')
+  @ApiOperation({ summary: 'Transfer dönemleri' })
+  @ApiResponse({ status: 400, description: 'Geçersiz yıl' })
+  async periods(
+    @Query() query: PeriodsQueryDto,
+  ): Promise<ListResponse<TransferPeriodDto>> {
+    return { items: await this.stats.getPeriods(query) };
+  }
+
+  @Get('period-summary')
+  @ApiOperation({ summary: 'Dönem özeti (baseCurrency çevrimi)' })
+  @ApiResponse({
+    status: 400,
+    description: 'year veya transferPeriodId zorunlu',
+  })
+  periodSummary(
+    @Query() query: PeriodSummaryQueryDto,
+  ): Promise<TransferPeriodSummaryDto> {
+    return this.stats.getPeriodSummary(query);
+  }
+
+  @Get('season-dashboard')
+  @ApiOperation({ summary: 'Sezon dashboard (topN + baseCurrency)' })
+  @ApiResponse({ status: 400 })
+  seasonDashboard(
+    @Query() query: SeasonDashboardQueryDto,
+  ): Promise<TransferSeasonDashboardDto> {
+    return this.stats.getSeasonDashboard(query);
   }
 
   @Get(':id')
