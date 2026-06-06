@@ -9,6 +9,10 @@ import { RedisModule } from './common/redis/redis.module';
 import { configuration } from './config/configuration';
 import { EmailModule } from './email/email.module';
 import { HealthModule } from './health/health.module';
+import { LeaguesModule } from './leagues/leagues.module';
+import { NewsModule } from './news/news.module';
+import { PlayersModule } from './players/players.module';
+import { TeamsModule } from './teams/teams.module';
 import { UsersModule } from './users/users.module';
 
 @Module({
@@ -26,6 +30,10 @@ import { UsersModule } from './users/users.module';
     EmailModule,
     AuthModule,
     UsersModule,
+    LeaguesModule,
+    TeamsModule,
+    PlayersModule,
+    NewsModule,
     HealthModule,
   ],
   providers: [
