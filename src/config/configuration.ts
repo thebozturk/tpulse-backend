@@ -53,6 +53,15 @@ export const configuration = () => {
     },
     apiFootball: {
       key: env.API_FOOTBALL_KEY,
+      baseUrl: env.API_FOOTBALL_BASE_URL,
+      leagueIds: env.API_FOOTBALL_LEAGUE_IDS.split(',')
+        .map((s) => s.trim())
+        .filter(Boolean)
+        .map(Number),
+      season: env.API_FOOTBALL_SEASON,
+      syncCron: env.SYNC_CRON,
+      detectTransfers: env.DETECT_TRANSFERS,
+      mirrorImages: env.MIRROR_IMAGES,
     },
     smtp: {
       host: env.SMTP_HOST,

@@ -9,6 +9,7 @@ import { FavouritesModule } from './favourites/favourites.module';
 import { MessagingModule } from './messaging/messaging.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { PostsModule } from './posts/posts.module';
+import { SyncModule } from './sync/sync.module';
 import { TransferCommentsModule } from './transfer-comments/transfer-comments.module';
 import { AuthModule } from './auth/auth.module';
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
@@ -61,6 +62,7 @@ import { UsersModule } from './users/users.module';
     TransferCommentsModule,
     FavouritesModule,
     NotificationsModule,
+    SyncModule,
     EmailModule,
     AuthModule,
     UsersModule,
