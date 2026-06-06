@@ -841,6 +841,141 @@
         ]
       }
     },
+    "/api/admin/posts": {
+      "get": {
+        "operationId": "AdminPostsController_list",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20,
+              "type": "number"
+            }
+          },
+          {
+            "name": "ownerId",
+            "required": false,
+            "in": "query",
+            "description": "İçerik sahibi kullanıcı",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "q",
+            "required": false,
+            "in": "query",
+            "description": "İçerik araması (ILIKE)",
+            "schema": {
+              "maxLength": 100,
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/PostResponseDto"
+                      }
+                    },
+                    "page": {
+                      "type": "number"
+                    },
+                    "pageSize": {
+                      "type": "number"
+                    },
+                    "totalCount": {
+                      "type": "number"
+                    },
+                    "totalPages": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "items",
+                    "page",
+                    "pageSize",
+                    "totalCount",
+                    "totalPages"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Gönderileri listele (moderasyon, paged)",
+        "tags": [
+          "admin-moderation"
+        ]
+      }
+    },
+    "/api/admin/posts/{id}": {
+      "delete": {
+        "operationId": "AdminPostsController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Gönderi sil (admin, owner-bypass)",
+        "tags": [
+          "admin-moderation"
+        ]
+      }
+    },
     "/api/me/favourites": {
       "get": {
         "operationId": "MeFavouritesController_list",
@@ -1254,6 +1389,141 @@
         ]
       }
     },
+    "/api/admin/comments": {
+      "get": {
+        "operationId": "AdminCommentsController_list",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20,
+              "type": "number"
+            }
+          },
+          {
+            "name": "ownerId",
+            "required": false,
+            "in": "query",
+            "description": "İçerik sahibi kullanıcı",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "q",
+            "required": false,
+            "in": "query",
+            "description": "İçerik araması (ILIKE)",
+            "schema": {
+              "maxLength": 100,
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/AdminCommentItemDto"
+                      }
+                    },
+                    "page": {
+                      "type": "number"
+                    },
+                    "pageSize": {
+                      "type": "number"
+                    },
+                    "totalCount": {
+                      "type": "number"
+                    },
+                    "totalPages": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "items",
+                    "page",
+                    "pageSize",
+                    "totalCount",
+                    "totalPages"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Yorumları listele (moderasyon, paged)",
+        "tags": [
+          "admin-moderation"
+        ]
+      }
+    },
+    "/api/admin/comments/{id}": {
+      "delete": {
+        "operationId": "AdminCommentsController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Yorum sil (admin, owner-bypass)",
+        "tags": [
+          "admin-moderation"
+        ]
+      }
+    },
     "/api/transfers/{transferId}/comments": {
       "get": {
         "operationId": "TransferCommentController_list",
@@ -1495,6 +1765,45 @@
         "summary": "Transfer yorumu beğenisini kaldır (senkron 200)",
         "tags": [
           "transfer-comments"
+        ]
+      }
+    },
+    "/api/admin/transfer-comments/{id}": {
+      "delete": {
+        "operationId": "AdminTransferCommentsController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Transfer yorumu sil (admin, owner-bypass)",
+        "tags": [
+          "admin-moderation"
         ]
       }
     },
@@ -2198,6 +2507,422 @@
         "summary": "Kullanıcı sil",
         "tags": [
           "users"
+        ]
+      }
+    },
+    "/api/admin/users": {
+      "get": {
+        "operationId": "AdminUsersController_findAll",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20,
+              "type": "number"
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "Active",
+                "Inactive",
+                "Banned",
+                "Suspended"
+              ]
+            }
+          },
+          {
+            "name": "role",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "User",
+                "Admin"
+              ]
+            }
+          },
+          {
+            "name": "q",
+            "required": false,
+            "in": "query",
+            "description": "username / email / nickname araması (ILIKE)",
+            "schema": {
+              "maxLength": 100,
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/UserResponseDto"
+                      }
+                    },
+                    "page": {
+                      "type": "number"
+                    },
+                    "pageSize": {
+                      "type": "number"
+                    },
+                    "totalCount": {
+                      "type": "number"
+                    },
+                    "totalPages": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "items",
+                    "page",
+                    "pageSize",
+                    "totalCount",
+                    "totalPages"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Kullanıcıları listele (status/role/q filtre, paged)",
+        "tags": [
+          "admin-users"
+        ]
+      }
+    },
+    "/api/admin/users/{id}": {
+      "get": {
+        "operationId": "AdminUsersController_getDetail",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/AdminUserDetailResponseDto"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Kullanıcı detayı (moderasyon alanları)",
+        "tags": [
+          "admin-users"
+        ]
+      }
+    },
+    "/api/admin/users/{id}/content": {
+      "get": {
+        "operationId": "AdminUsersController_getContent",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20,
+              "type": "number"
+            }
+          },
+          {
+            "name": "type",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "example": "posts",
+              "type": "string",
+              "enum": [
+                "posts",
+                "comments",
+                "transfers"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/AdminUserContentItemDto"
+                      }
+                    },
+                    "page": {
+                      "type": "number"
+                    },
+                    "pageSize": {
+                      "type": "number"
+                    },
+                    "totalCount": {
+                      "type": "number"
+                    },
+                    "totalPages": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "items",
+                    "page",
+                    "pageSize",
+                    "totalCount",
+                    "totalPages"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Kullanıcının içeriği (post/comment/transfer, paged)",
+        "tags": [
+          "admin-users"
+        ]
+      }
+    },
+    "/api/admin/users/{id}/status": {
+      "patch": {
+        "operationId": "AdminUsersController_updateStatus",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdminUpdateUserStatusDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/AdminUserDetailResponseDto"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Durum güncelle (ban/suspend/activate)",
+        "tags": [
+          "admin-users"
+        ]
+      }
+    },
+    "/api/admin/users/{id}/role": {
+      "patch": {
+        "operationId": "AdminUsersController_updateRole",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdminUpdateRoleDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/AdminUserDetailResponseDto"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Rol güncelle (son admin korumalı)",
+        "tags": [
+          "admin-users"
+        ]
+      }
+    },
+    "/api/admin/users/{id}/reputation": {
+      "patch": {
+        "operationId": "AdminUsersController_updateReputation",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdminUpdateReputationDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/AdminUserDetailResponseDto"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "İtibar güncelle (delta veya value)",
+        "tags": [
+          "admin-users"
         ]
       }
     },
@@ -7501,6 +8226,674 @@
           "health"
         ]
       }
+    },
+    "/api/admin/dashboard/overview": {
+      "get": {
+        "operationId": "DashboardController_overview",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/DashboardOverviewResponseDto"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Back office genel bakış metrikleri",
+        "tags": [
+          "admin-dashboard"
+        ]
+      }
+    },
+    "/api/reports": {
+      "post": {
+        "operationId": "ReportsController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateReportDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/ReportResponseDto"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "İçerik raporla",
+        "tags": [
+          "reports"
+        ]
+      }
+    },
+    "/api/admin/reports": {
+      "get": {
+        "operationId": "AdminReportsController_list",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20,
+              "type": "number"
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "Pending",
+                "Reviewed",
+                "Actioned",
+                "Dismissed"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ReportResponseDto"
+                      }
+                    },
+                    "page": {
+                      "type": "number"
+                    },
+                    "pageSize": {
+                      "type": "number"
+                    },
+                    "totalCount": {
+                      "type": "number"
+                    },
+                    "totalPages": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "items",
+                    "page",
+                    "pageSize",
+                    "totalCount",
+                    "totalPages"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Rapor kuyruğu (status filtreli, paged)",
+        "tags": [
+          "admin-reports"
+        ]
+      }
+    },
+    "/api/admin/reports/{id}": {
+      "patch": {
+        "operationId": "AdminReportsController_review",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewReportDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/ReportResponseDto"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Raporu incele/aksiyon al (sil/ban)",
+        "tags": [
+          "admin-reports"
+        ]
+      }
+    },
+    "/api/admin/audit-logs": {
+      "get": {
+        "operationId": "AuditLogsController_list",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20,
+              "type": "number"
+            }
+          },
+          {
+            "name": "actor",
+            "required": false,
+            "in": "query",
+            "description": "Aksiyonu yapan kullanıcı",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "action",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "maxLength": 60,
+              "example": "user.status",
+              "type": "string"
+            }
+          },
+          {
+            "name": "from",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "to",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/AuditLogResponseDto"
+                      }
+                    },
+                    "page": {
+                      "type": "number"
+                    },
+                    "pageSize": {
+                      "type": "number"
+                    },
+                    "totalCount": {
+                      "type": "number"
+                    },
+                    "totalPages": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "items",
+                    "page",
+                    "pageSize",
+                    "totalCount",
+                    "totalPages"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Audit kayıtları (actor/action/tarih filtre, paged)",
+        "tags": [
+          "admin-audit"
+        ]
+      }
+    },
+    "/api/admin/notifications/broadcast": {
+      "post": {
+        "operationId": "BroadcastController_send",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBroadcastDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/BroadcastResponseDto"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Toplu bildirim gönder (kuyruğa alınır)",
+        "tags": [
+          "admin-broadcast"
+        ]
+      }
+    },
+    "/api/admin/notifications/broadcasts": {
+      "get": {
+        "operationId": "BroadcastController_history",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/BroadcastResponseDto"
+                      }
+                    },
+                    "page": {
+                      "type": "number"
+                    },
+                    "pageSize": {
+                      "type": "number"
+                    },
+                    "totalCount": {
+                      "type": "number"
+                    },
+                    "totalPages": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "items",
+                    "page",
+                    "pageSize",
+                    "totalCount",
+                    "totalPages"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Gönderim geçmişi (paged)",
+        "tags": [
+          "admin-broadcast"
+        ]
+      }
+    },
+    "/api/admin/currency-rates": {
+      "get": {
+        "operationId": "CurrencyRatesController_findAll",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/CurrencyRateResponseDto"
+                      }
+                    },
+                    "page": {
+                      "type": "number"
+                    },
+                    "pageSize": {
+                      "type": "number"
+                    },
+                    "totalCount": {
+                      "type": "number"
+                    },
+                    "totalPages": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "items",
+                    "page",
+                    "pageSize",
+                    "totalCount",
+                    "totalPages"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Kurları listele (paged)",
+        "tags": [
+          "admin-currency-rates"
+        ]
+      },
+      "post": {
+        "operationId": "CurrencyRatesController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCurrencyRateDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/CurrencyRateResponseDto"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Bu tarih için kur zaten var"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Kur ekle",
+        "tags": [
+          "admin-currency-rates"
+        ]
+      }
+    },
+    "/api/admin/currency-rates/{id}": {
+      "put": {
+        "operationId": "CurrencyRatesController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCurrencyRateDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/CurrencyRateResponseDto"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Kur güncelle",
+        "tags": [
+          "admin-currency-rates"
+        ]
+      },
+      "delete": {
+        "operationId": "CurrencyRatesController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "404": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Kur sil",
+        "tags": [
+          "admin-currency-rates"
+        ]
+      }
     }
   },
   "info": {
@@ -7586,7 +8979,8 @@
             "type": "number",
             "enum": [
               1,
-              2
+              2,
+              3
             ]
           },
           "enabled": {
@@ -8021,6 +9415,45 @@
         },
         "required": [
           "content"
+        ]
+      },
+      "AdminCommentItemDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "postId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "ownerId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "ownerUsername": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "likeCount": {
+            "type": "number"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "postId",
+          "ownerId",
+          "ownerUsername",
+          "content",
+          "likeCount",
+          "createdAt"
         ]
       },
       "TransferCommentDto": {
@@ -8514,6 +9947,161 @@
         "required": [
           "id"
         ]
+      },
+      "AdminUserDetailResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "nickname": {
+            "type": "string"
+          },
+          "profilePic": {
+            "type": "string"
+          },
+          "isMailConfirm": {
+            "type": "boolean"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "Active",
+              "Inactive",
+              "Banned",
+              "Suspended"
+            ]
+          },
+          "favouriteTeam": {
+            "type": "string"
+          },
+          "reputationScore": {
+            "type": "number"
+          },
+          "role": {
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "bannedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "banReason": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "username",
+          "email",
+          "nickname",
+          "isMailConfirm",
+          "status",
+          "reputationScore",
+          "role",
+          "createdAt"
+        ]
+      },
+      "AdminUserContentItemDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "example": "post",
+            "enum": [
+              "post",
+              "comment",
+              "transfer"
+            ]
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "label": {
+            "type": "string",
+            "example": "İçerik özeti",
+            "description": "Metinsel içeriğin kısa özeti (transferde boş olabilir)"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "type",
+          "id",
+          "label",
+          "createdAt"
+        ]
+      },
+      "AdminUpdateUserStatusDto": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "Active",
+              "Inactive",
+              "Banned",
+              "Suspended"
+            ],
+            "example": "Banned"
+          },
+          "reason": {
+            "type": "string",
+            "maxLength": 500,
+            "example": "Irkçı içerik paylaşımı",
+            "description": "Banned/Suspended için gerekçe (banReason olarak saklanır)"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "AdminUpdateRoleDto": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "User",
+              "Admin"
+            ],
+            "example": "Admin"
+          }
+        },
+        "required": [
+          "role"
+        ]
+      },
+      "AdminUpdateReputationDto": {
+        "type": "object",
+        "properties": {
+          "delta": {
+            "type": "number",
+            "example": 5,
+            "description": "Mevcut itibara eklenecek değer (negatif olabilir)"
+          },
+          "value": {
+            "type": "number",
+            "example": 100,
+            "description": "İtibarı bu mutlak değere ayarla"
+          }
+        }
       },
       "TransferPlayerDto": {
         "type": "object",
@@ -9882,6 +11470,463 @@
         },
         "required": [
           "url"
+        ]
+      },
+      "DashboardUsersDto": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "number",
+            "example": 1240,
+            "description": "Toplam kullanıcı sayısı"
+          },
+          "activeToday": {
+            "type": "number",
+            "example": 87,
+            "description": "Bugün içerik (post/yorum) üreten benzersiz kullanıcı sayısı (aktiflik proxy)"
+          },
+          "newThisWeek": {
+            "type": "number",
+            "example": 53,
+            "description": "Son 7 günde kaydolan kullanıcı"
+          }
+        },
+        "required": [
+          "total",
+          "activeToday",
+          "newThisWeek"
+        ]
+      },
+      "DashboardContentDto": {
+        "type": "object",
+        "properties": {
+          "transfers": {
+            "type": "number",
+            "example": 320,
+            "description": "Onaylı transfer (rumour hariç)"
+          },
+          "rumours": {
+            "type": "number",
+            "example": 145,
+            "description": "Duyum (rumour) sayısı"
+          },
+          "news": {
+            "type": "number",
+            "example": 76,
+            "description": "Haber sayısı"
+          },
+          "posts": {
+            "type": "number",
+            "example": 5021,
+            "description": "Gönderi sayısı"
+          },
+          "comments": {
+            "type": "number",
+            "example": 18342,
+            "description": "Yorum sayısı"
+          }
+        },
+        "required": [
+          "transfers",
+          "rumours",
+          "news",
+          "posts",
+          "comments"
+        ]
+      },
+      "DashboardModerationDto": {
+        "type": "object",
+        "properties": {
+          "pendingReports": {
+            "type": "number",
+            "example": 0,
+            "description": "Bekleyen şikayet sayısı (BO-3 ile dolacak)"
+          }
+        },
+        "required": [
+          "pendingReports"
+        ]
+      },
+      "DashboardRecentActivityDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "example": "post",
+            "description": "Aktivite tipi"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "label": {
+            "type": "string",
+            "example": "Yeni transfer hakkında ne düşünüyorsunuz?"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "type",
+          "id",
+          "label",
+          "createdAt"
+        ]
+      },
+      "DashboardOverviewResponseDto": {
+        "type": "object",
+        "properties": {
+          "users": {
+            "$ref": "#/components/schemas/DashboardUsersDto"
+          },
+          "content": {
+            "$ref": "#/components/schemas/DashboardContentDto"
+          },
+          "moderation": {
+            "$ref": "#/components/schemas/DashboardModerationDto"
+          },
+          "recent": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DashboardRecentActivityDto"
+            }
+          }
+        },
+        "required": [
+          "users",
+          "content",
+          "moderation",
+          "recent"
+        ]
+      },
+      "ReportResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "reporterUserId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "targetType": {
+            "type": "string",
+            "enum": [
+              "Post",
+              "Comment",
+              "TransferComment",
+              "User"
+            ]
+          },
+          "targetId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "reason": {
+            "type": "string",
+            "enum": [
+              "Spam",
+              "Hate",
+              "Harassment",
+              "Other"
+            ]
+          },
+          "note": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "Pending",
+              "Reviewed",
+              "Actioned",
+              "Dismissed"
+            ]
+          },
+          "reviewedByUserId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "reviewedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "reporterUserId",
+          "targetType",
+          "targetId",
+          "reason",
+          "status",
+          "createdAt"
+        ]
+      },
+      "CreateReportDto": {
+        "type": "object",
+        "properties": {
+          "targetType": {
+            "type": "string",
+            "enum": [
+              "Post",
+              "Comment",
+              "TransferComment",
+              "User"
+            ],
+            "example": "Post"
+          },
+          "targetId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "reason": {
+            "type": "string",
+            "enum": [
+              "Spam",
+              "Hate",
+              "Harassment",
+              "Other"
+            ],
+            "example": "Hate"
+          },
+          "note": {
+            "type": "string",
+            "maxLength": 1000
+          }
+        },
+        "required": [
+          "targetType",
+          "targetId",
+          "reason"
+        ]
+      },
+      "ReviewReportDto": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "Pending",
+              "Reviewed",
+              "Actioned",
+              "Dismissed"
+            ],
+            "example": "Actioned"
+          },
+          "deleteContent": {
+            "type": "boolean",
+            "description": "status=Actioned ile birlikte raporlanan içeriği sil"
+          },
+          "banUser": {
+            "type": "boolean",
+            "description": "status=Actioned ile birlikte ilgili kullanıcıyı banla"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "AuditLogResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "actorUserId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "action": {
+            "type": "string",
+            "example": "user.status"
+          },
+          "targetType": {
+            "type": "string",
+            "example": "User"
+          },
+          "targetId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Serbest metadata (json)"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "actorUserId",
+          "action",
+          "createdAt"
+        ]
+      },
+      "BroadcastResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "title": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          },
+          "target": {
+            "type": "string",
+            "example": "all"
+          },
+          "status": {
+            "type": "string",
+            "example": "Queued",
+            "enum": [
+              "Queued",
+              "Sending",
+              "Done",
+              "Failed"
+            ]
+          },
+          "sentCount": {
+            "type": "number",
+            "example": 0
+          },
+          "createdBy": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "body",
+          "target",
+          "status",
+          "sentCount",
+          "createdBy",
+          "createdAt"
+        ]
+      },
+      "CreateBroadcastDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "maxLength": 200,
+            "example": "Bakım duyurusu"
+          },
+          "body": {
+            "type": "string",
+            "maxLength": 500,
+            "example": "Sistem bu gece 02:00-03:00 bakımda."
+          },
+          "target": {
+            "type": "string",
+            "enum": [
+              "all"
+            ],
+            "default": "all"
+          }
+        },
+        "required": [
+          "title",
+          "body"
+        ]
+      },
+      "CurrencyRateResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "currencyCode": {
+            "type": "string",
+            "example": "EUR"
+          },
+          "baseCurrencyCode": {
+            "type": "string",
+            "example": "TRY"
+          },
+          "rate": {
+            "type": "number",
+            "example": 35.42
+          },
+          "rateDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "currencyCode",
+          "baseCurrencyCode",
+          "rate",
+          "rateDate",
+          "createdAt"
+        ]
+      },
+      "CreateCurrencyRateDto": {
+        "type": "object",
+        "properties": {
+          "currencyCode": {
+            "type": "string",
+            "maxLength": 10,
+            "example": "EUR"
+          },
+          "baseCurrencyCode": {
+            "type": "string",
+            "maxLength": 10,
+            "example": "TRY"
+          },
+          "rate": {
+            "type": "number",
+            "example": 35.42,
+            "description": "Pozitif kur değeri"
+          },
+          "rateDate": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "currencyCode",
+          "baseCurrencyCode",
+          "rate",
+          "rateDate"
+        ]
+      },
+      "UpdateCurrencyRateDto": {
+        "type": "object",
+        "properties": {
+          "rate": {
+            "type": "number",
+            "example": 35.9,
+            "description": "Pozitif kur değeri"
+          }
+        },
+        "required": [
+          "rate"
         ]
       }
     }
