@@ -22,6 +22,26 @@ export const envSchema = z.object({
     .default('true')
     .transform((v) => v === 'true'),
 
+  // JWT & token (docs/04 §1)
+  JWT_ACCESS_EXPIRY: z.string().default('15m'),
+  JWT_ISSUER: z.string().default('TransferPulse'),
+  JWT_AUDIENCE: z.string().default('TransferPulseApp'),
+  JWT_REFRESH_EXPIRY_DAYS: z.coerce.number().int().positive().default(90),
+
+  // Şifre sıfırlama (docs/04 §1)
+  PASSWORD_RESET_TOKEN_MINUTES: z.coerce.number().int().positive().default(60),
+  PASSWORD_RESET_URL_BASE: z
+    .string()
+    .default('http://localhost:3000/reset-password'),
+
+  // SMTP (boşsa email log'a yazılır)
+  SMTP_PORT: z.coerce.number().int().positive().default(587),
+  SMTP_SECURE: z
+    .enum(['true', 'false'])
+    .default('false')
+    .transform((v) => v === 'true'),
+  SMTP_FROM: z.string().default('no-reply@transferpulse.app'),
+
   // İleride dolacak entegrasyonlar — Faz 0'da opsiyonel
   R2_ACCOUNT_ID: z.string().optional(),
   R2_ACCESS_KEY_ID: z.string().optional(),
