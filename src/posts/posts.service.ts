@@ -9,6 +9,7 @@ import {
 import { AuthUser } from '../common/decorators/current-user.decorator';
 import { PagedResult } from '../common/interfaces/response.interface';
 import { buildPaged } from '../common/pagination';
+import { FavouritesService } from '../favourites/favourites.service';
 import { OutboxEventType } from '../messaging/events';
 import { OutboxService } from '../messaging/outbox.service';
 import { CreatePostDto, UpdatePostDto } from './dto/create-post.dto';
@@ -30,6 +31,7 @@ export class PostsService {
   constructor(
     @Inject(POST_REPOSITORY) private readonly repo: IPostRepository,
     private readonly outbox: OutboxService,
+    private readonly favourites: FavouritesService,
   ) {}
 
   async feed(
@@ -40,8 +42,20 @@ export class PostsService {
       if (!user) {
         throw new UnauthorizedException('Favori feed için giriş gerekli');
       }
-      // Faz 6: FavouriteService entegrasyonu — şimdilik boş feed.
-      return buildPaged([], 0, filter.page, filter.pageSize);
+      const targets = await this.favourites.getTargets(user.userId);
+      if (
+        targets.playerIds.length === 0 &&
+        targets.teamIds.length === 0 &&
+        targets.reporterUserIds.length === 0
+      ) {
+        return buildPaged([], 0, filter.page, filter.pageSize);
+      }
+      const { items, total } = await this.repo.feed({
+        ...filter,
+        favouriteTargets: targets,
+      });
+      const mapped = await this.hydrate(items, user);
+      return buildPaged(mapped, total, filter.page, filter.pageSize);
     }
     const { items, total } = await this.repo.feed(filter);
     const mapped = await this.hydrate(items, user);

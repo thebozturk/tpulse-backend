@@ -5,7 +5,9 @@ import { APP_GUARD } from '@nestjs/core';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { CommentsModule } from './comments/comments.module';
+import { FavouritesModule } from './favourites/favourites.module';
 import { MessagingModule } from './messaging/messaging.module';
+import { NotificationsModule } from './notifications/notifications.module';
 import { PostsModule } from './posts/posts.module';
 import { TransferCommentsModule } from './transfer-comments/transfer-comments.module';
 import { AuthModule } from './auth/auth.module';
@@ -57,6 +59,8 @@ import { UsersModule } from './users/users.module';
     PostsModule,
     CommentsModule,
     TransferCommentsModule,
+    FavouritesModule,
+    NotificationsModule,
     EmailModule,
     AuthModule,
     UsersModule,

@@ -3,8 +3,13 @@ export const OUTBOX_QUEUE = 'outbox';
 export enum OutboxEventType {
   PostCreate = 'post.create',
   PostReaction = 'post.reaction',
-  CommentCreate = 'comment.create', // Faz 5b
-  CommentReaction = 'comment.reaction', // Faz 5b
+  CommentCreate = 'comment.create',
+  CommentReaction = 'comment.reaction',
+  NotificationGenerate = 'notification.generate', // Faz 6
+}
+
+export interface NotificationGenerateEvent {
+  transferId: string;
 }
 
 export interface PostCreateEvent {

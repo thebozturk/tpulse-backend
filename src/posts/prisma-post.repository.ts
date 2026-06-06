@@ -26,6 +26,15 @@ export class PrismaPostRepository implements IPostRepository {
       ...(filter.search
         ? { content: { contains: filter.search, mode: 'insensitive' } }
         : {}),
+      ...(filter.favouriteTargets
+        ? {
+            OR: [
+              { playerId: { in: filter.favouriteTargets.playerIds } },
+              { teamId: { in: filter.favouriteTargets.teamIds } },
+              { ownerId: { in: filter.favouriteTargets.reporterUserIds } },
+            ],
+          }
+        : {}),
     };
     const { skip, take } = toSkipTake(filter.page, filter.pageSize);
     const [items, total] = await Promise.all([

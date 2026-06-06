@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { MessagingModule } from '../messaging/messaging.module';
 import { AdminTransfersController } from './admin-transfers.controller';
 import { AdminTransfersService } from './admin-transfers.service';
 import { PrismaTransferRepository } from './prisma-transfer.repository';
@@ -15,6 +16,7 @@ import { TransferQueryController } from './transfer-query.controller';
 import { TransfersService } from './transfers.service';
 
 @Module({
+  imports: [MessagingModule],
   controllers: [
     TransferQueryController,
     RumourController,

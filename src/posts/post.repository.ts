@@ -21,11 +21,18 @@ export type PostWithRel = Prisma.PostGetPayload<{
   include: typeof postInclude;
 }>;
 
+export interface PostFavouriteTargets {
+  playerIds: string[];
+  teamIds: string[];
+  reporterUserIds: string[];
+}
+
 export interface PostFilter {
   playerId?: string;
   teamId?: string;
   ownerId?: string;
   search?: string;
+  favouriteTargets?: PostFavouriteTargets;
   page: number;
   pageSize: number;
 }
