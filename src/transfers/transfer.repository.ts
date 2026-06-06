@@ -119,7 +119,26 @@ export interface ITransferRepository {
   updateTransfer(id: string, data: TransferWriteInput): Promise<boolean>;
   patchTransfer(id: string, data: TransferPatchInput): Promise<boolean>;
   softDelete(id: string): Promise<boolean>;
+
+  // Rumour write (Faz 6b)
+  createRumour(data: RumourWriteInput): Promise<{ id: string }>;
+  getRumourMeta(
+    id: string,
+  ): Promise<{ createdByUserId: string | null; isRumour: boolean } | null>;
+  updateRumour(id: string, data: RumourUpdateInput): Promise<boolean>;
+  confirmRumour(id: string, data: TransferPatchInput): Promise<boolean>;
 }
+
+export interface RumourWriteInput {
+  playerId: string;
+  fromTeamId: string;
+  toTeamId: string;
+  feeAmount: number;
+  feeCurrency: string;
+  createdByUserId: string;
+}
+
+export type RumourUpdateInput = Omit<RumourWriteInput, 'createdByUserId'>;
 
 export interface TransferWriteInput {
   playerId: string;
