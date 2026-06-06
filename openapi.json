@@ -1,0 +1,6803 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/api/me/notifications": {
+      "get": {
+        "operationId": "MeNotificationsController_list",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20,
+              "type": "number"
+            }
+          },
+          {
+            "name": "unreadOnly",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": false,
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Bildirimlerim (paged)",
+        "tags": [
+          "me-notifications"
+        ]
+      }
+    },
+    "/api/me/notifications/unread-count": {
+      "get": {
+        "operationId": "MeNotificationsController_unreadCount",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Okunmamış sayısı",
+        "tags": [
+          "me-notifications"
+        ]
+      }
+    },
+    "/api/me/notifications/read-all": {
+      "post": {
+        "operationId": "MeNotificationsController_readAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Tümünü okundu işaretle",
+        "tags": [
+          "me-notifications"
+        ]
+      }
+    },
+    "/api/me/notifications/{id}/read": {
+      "post": {
+        "operationId": "MeNotificationsController_read",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Bildirimi okundu işaretle",
+        "tags": [
+          "me-notifications"
+        ]
+      }
+    },
+    "/api/me/notification-preferences": {
+      "get": {
+        "operationId": "MeNotificationPreferencesController_get",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Bildirim tercihleri",
+        "tags": [
+          "me-notifications"
+        ]
+      },
+      "put": {
+        "operationId": "MeNotificationPreferencesController_set",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetPreferencesDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Bildirim tercihlerini güncelle",
+        "tags": [
+          "me-notifications"
+        ]
+      }
+    },
+    "/api/posts/new-count": {
+      "get": {
+        "operationId": "PostsController_newCount",
+        "parameters": [
+          {
+            "name": "afterPostId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "afterPostId sonrası yeni gönderi sayısı",
+        "tags": [
+          "posts"
+        ]
+      }
+    },
+    "/api/posts/my": {
+      "get": {
+        "operationId": "PostsController_my",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Kendi gönderilerim",
+        "tags": [
+          "posts"
+        ]
+      }
+    },
+    "/api/posts": {
+      "get": {
+        "operationId": "PostsController_feed",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20,
+              "type": "number"
+            }
+          },
+          {
+            "name": "playerId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "teamId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ownerId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "onlyFavourites",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": false,
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Feed (filtre + like-state)",
+        "tags": [
+          "posts"
+        ]
+      },
+      "post": {
+        "operationId": "PostsController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePostDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Gönderi oluştur (async 202)",
+        "tags": [
+          "posts"
+        ]
+      }
+    },
+    "/api/posts/by-player/{playerId}": {
+      "get": {
+        "operationId": "PostsController_byPlayer",
+        "parameters": [
+          {
+            "name": "playerId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Oyuncuya göre gönderiler",
+        "tags": [
+          "posts"
+        ]
+      }
+    },
+    "/api/posts/by-team/{teamId}": {
+      "get": {
+        "operationId": "PostsController_byTeam",
+        "parameters": [
+          {
+            "name": "teamId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Takıma göre gönderiler",
+        "tags": [
+          "posts"
+        ]
+      }
+    },
+    "/api/posts/{id}": {
+      "get": {
+        "operationId": "PostsController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Gönderiyi getir",
+        "tags": [
+          "posts"
+        ]
+      },
+      "put": {
+        "operationId": "PostsController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePostDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Gönderi güncelle",
+        "tags": [
+          "posts"
+        ]
+      },
+      "delete": {
+        "operationId": "PostsController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Gönderi sil",
+        "tags": [
+          "posts"
+        ]
+      }
+    },
+    "/api/posts/{id}/vote": {
+      "post": {
+        "operationId": "PostsController_vote",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VotePostDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Oy ver (senkron)",
+        "tags": [
+          "posts"
+        ]
+      }
+    },
+    "/api/posts/{id}/like": {
+      "post": {
+        "operationId": "PostsController_like",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Beğen (202) / zaten beğenili (200)",
+        "tags": [
+          "posts"
+        ]
+      },
+      "delete": {
+        "operationId": "PostsController_unlike",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Beğeniyi kaldır (202) / zaten değil (200)",
+        "tags": [
+          "posts"
+        ]
+      }
+    },
+    "/api/me/favourites": {
+      "get": {
+        "operationId": "MeFavouritesController_list",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Favorilerim (çözülmüş)",
+        "tags": [
+          "me-favourites"
+        ]
+      },
+      "post": {
+        "operationId": "MeFavouritesController_add",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddFavouriteDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Favori ekle (201 / 200 unchanged / 404)",
+        "tags": [
+          "me-favourites"
+        ]
+      },
+      "put": {
+        "operationId": "MeFavouritesController_set",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetFavouritesDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Favori setini değiştir",
+        "tags": [
+          "me-favourites"
+        ]
+      }
+    },
+    "/api/me/favourites/{favouriteId}": {
+      "delete": {
+        "operationId": "MeFavouritesController_remove",
+        "parameters": [
+          {
+            "name": "favouriteId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Favori sil",
+        "tags": [
+          "me-favourites"
+        ]
+      }
+    },
+    "/api/posts/{postId}/comments": {
+      "get": {
+        "operationId": "CommentController_list",
+        "parameters": [
+          {
+            "name": "postId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Gönderi yorumları (2-seviye, like-state)",
+        "tags": [
+          "comments"
+        ]
+      },
+      "post": {
+        "operationId": "CommentController_create",
+        "parameters": [
+          {
+            "name": "postId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCommentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Yorum ekle (async 202)",
+        "tags": [
+          "comments"
+        ]
+      }
+    },
+    "/api/comments/{id}": {
+      "put": {
+        "operationId": "CommentController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCommentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Yorum güncelle",
+        "tags": [
+          "comments"
+        ]
+      },
+      "delete": {
+        "operationId": "CommentController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Yorum sil",
+        "tags": [
+          "comments"
+        ]
+      }
+    },
+    "/api/comments/{id}/like": {
+      "post": {
+        "operationId": "CommentController_like",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Yorumu beğen (async 202)",
+        "tags": [
+          "comments"
+        ]
+      },
+      "delete": {
+        "operationId": "CommentController_unlike",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Yorum beğenisini kaldır (async 202)",
+        "tags": [
+          "comments"
+        ]
+      }
+    },
+    "/api/transfers/{transferId}/comments": {
+      "get": {
+        "operationId": "TransferCommentController_list",
+        "parameters": [
+          {
+            "name": "transferId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Transfer yorumları (2-seviye, like-state)",
+        "tags": [
+          "transfer-comments"
+        ]
+      },
+      "post": {
+        "operationId": "TransferCommentController_create",
+        "parameters": [
+          {
+            "name": "transferId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTransferCommentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Transfer yorumu ekle (senkron 201)",
+        "tags": [
+          "transfer-comments"
+        ]
+      }
+    },
+    "/api/transfer-comments/{id}": {
+      "put": {
+        "operationId": "TransferCommentController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTransferCommentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Transfer yorumu güncelle",
+        "tags": [
+          "transfer-comments"
+        ]
+      },
+      "delete": {
+        "operationId": "TransferCommentController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Transfer yorumu sil",
+        "tags": [
+          "transfer-comments"
+        ]
+      }
+    },
+    "/api/transfer-comments/{id}/like": {
+      "post": {
+        "operationId": "TransferCommentController_like",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Transfer yorumunu beğen (senkron 200)",
+        "tags": [
+          "transfer-comments"
+        ]
+      },
+      "delete": {
+        "operationId": "TransferCommentController_unlike",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Transfer yorumu beğenisini kaldır (senkron 200)",
+        "tags": [
+          "transfer-comments"
+        ]
+      }
+    },
+    "/api/admin/sync/football-data": {
+      "post": {
+        "operationId": "AdminSyncController_syncAll",
+        "parameters": [],
+        "responses": {
+          "202": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Tüm ligleri senkronla (async)",
+        "tags": [
+          "admin-sync"
+        ]
+      }
+    },
+    "/api/admin/sync/football-data/leagues/{leagueExternalId}": {
+      "post": {
+        "operationId": "AdminSyncController_syncLeague",
+        "parameters": [
+          {
+            "name": "leagueExternalId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Tek ligi senkronla (async)",
+        "tags": [
+          "admin-sync"
+        ]
+      }
+    },
+    "/api/admin/sync/runs": {
+      "get": {
+        "operationId": "AdminSyncController_runs",
+        "parameters": [
+          {
+            "name": "take",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Sync audit kayıtları",
+        "tags": [
+          "admin-sync"
+        ]
+      }
+    },
+    "/api/admin/seed/football-data": {
+      "post": {
+        "operationId": "AdminSeedController_seed",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "leagues_with_players.json seed (idempotent)",
+        "tags": [
+          "admin-seed"
+        ]
+      }
+    },
+    "/api/auth/register": {
+      "post": {
+        "operationId": "AuthController_register",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponseDto"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "E-posta/kullanıcı adı çakışması"
+          }
+        },
+        "summary": "Kayıt ol",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "operationId": "AuthController_login",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Hatalı kimlik"
+          }
+        },
+        "summary": "Giriş yap",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/auth/forgot-password": {
+      "post": {
+        "operationId": "AuthController_forgotPassword",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ForgotPasswordDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Şifre sıfırlama isteği (her zaman 200)",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/auth/reset-password": {
+      "post": {
+        "operationId": "AuthController_resetPassword",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResetPasswordDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "Geçersiz/expired token veya zayıf parola"
+          }
+        },
+        "summary": "Şifreyi sıfırla",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/auth/refresh": {
+      "post": {
+        "operationId": "AuthController_refresh",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshTokenDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "401": {
+            "description": "Geçersiz refresh token"
+          }
+        },
+        "summary": "Access token yenile (refresh rotation)",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/auth/logout": {
+      "post": {
+        "operationId": "AuthController_logout",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshTokenDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Çıkış (refresh token revoke)",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/auth/revoke-all": {
+      "post": {
+        "operationId": "AuthController_revokeAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Tüm cihazlardan çıkış",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/auth/google": {
+      "post": {
+        "operationId": "AuthController_google",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GoogleAuthDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponseDto"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Google login etkin değil"
+          }
+        },
+        "summary": "Google ile giriş",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/users": {
+      "post": {
+        "operationId": "UsersController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponseDto"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Çakışma"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Kullanıcı oluştur (Admin)",
+        "tags": [
+          "users"
+        ]
+      },
+      "get": {
+        "operationId": "UsersController_findAll",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Kullanıcıları listele (paged)",
+        "tags": [
+          "users"
+        ]
+      }
+    },
+    "/api/users/{id}": {
+      "get": {
+        "operationId": "UsersController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Kullanıcıyı getir",
+        "tags": [
+          "users"
+        ]
+      },
+      "put": {
+        "operationId": "UsersController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "id uyuşmazlığı"
+          },
+          "404": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Kullanıcı güncelle",
+        "tags": [
+          "users"
+        ]
+      },
+      "delete": {
+        "operationId": "UsersController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "404": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Kullanıcı sil",
+        "tags": [
+          "users"
+        ]
+      }
+    },
+    "/api/transfers": {
+      "get": {
+        "operationId": "TransferQueryController_findAll",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20,
+              "type": "number"
+            }
+          },
+          {
+            "name": "playerId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fromTeamId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "toTeamId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "dateFrom",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "dateTo",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "feeMin",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "feeMax",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "currency",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "description": "field veya -field (createdAt/transferDate/feeAmount)",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Transferleri filtrele (paged)",
+        "tags": [
+          "transfers"
+        ]
+      }
+    },
+    "/api/transfers/latest": {
+      "get": {
+        "operationId": "TransferQueryController_latest",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20,
+              "type": "number"
+            }
+          },
+          {
+            "name": "take",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 10,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Son transferler",
+        "tags": [
+          "transfers"
+        ]
+      }
+    },
+    "/api/transfers/top-expensive": {
+      "get": {
+        "operationId": "TransferQueryController_topExpensive",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20,
+              "type": "number"
+            }
+          },
+          {
+            "name": "take",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "currency",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "En pahalı transferler",
+        "tags": [
+          "transfers"
+        ]
+      }
+    },
+    "/api/transfers/between-teams": {
+      "get": {
+        "operationId": "TransferQueryController_betweenTeams",
+        "parameters": [
+          {
+            "name": "fromTeamId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "toTeamId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "includeReverse",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": false,
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "İki takım arası transferler",
+        "tags": [
+          "transfers"
+        ]
+      }
+    },
+    "/api/transfers/by-year/{year}": {
+      "get": {
+        "operationId": "TransferQueryController_byYear",
+        "parameters": [
+          {
+            "name": "year",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Yıla göre transferler",
+        "tags": [
+          "transfers"
+        ]
+      }
+    },
+    "/api/transfers/by-month/{year}/{month}": {
+      "get": {
+        "operationId": "TransferQueryController_byMonth",
+        "parameters": [
+          {
+            "name": "year",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "month",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Ay/yıla göre transferler",
+        "tags": [
+          "transfers"
+        ]
+      }
+    },
+    "/api/transfers/latest-by-leagues": {
+      "get": {
+        "operationId": "TransferQueryController_latestByLeagues",
+        "parameters": [
+          {
+            "name": "take",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 5,
+              "type": "number"
+            }
+          },
+          {
+            "name": "year",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Liglere göre son transferler",
+        "tags": [
+          "transfers"
+        ]
+      }
+    },
+    "/api/transfers/stats": {
+      "get": {
+        "operationId": "TransferQueryController_getStats",
+        "parameters": [
+          {
+            "name": "playerId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "teamId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "dateFrom",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "dateTo",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "currency",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "year",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "month",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "transferPeriodId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransferStatsDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Transfer istatistikleri",
+        "tags": [
+          "transfers"
+        ]
+      }
+    },
+    "/api/transfers/periods": {
+      "get": {
+        "operationId": "TransferQueryController_periods",
+        "parameters": [
+          {
+            "name": "year",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Geçersiz yıl"
+          }
+        },
+        "summary": "Transfer dönemleri",
+        "tags": [
+          "transfers"
+        ]
+      }
+    },
+    "/api/transfers/period-summary": {
+      "get": {
+        "operationId": "TransferQueryController_periodSummary",
+        "parameters": [
+          {
+            "name": "year",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "transferPeriodId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "baseCurrency",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": "EUR",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "year veya transferPeriodId zorunlu"
+          }
+        },
+        "summary": "Dönem özeti (baseCurrency çevrimi)",
+        "tags": [
+          "transfers"
+        ]
+      }
+    },
+    "/api/transfers/season-dashboard": {
+      "get": {
+        "operationId": "TransferQueryController_seasonDashboard",
+        "parameters": [
+          {
+            "name": "year",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "transferPeriodId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "baseCurrency",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": "EUR",
+              "type": "string"
+            }
+          },
+          {
+            "name": "topN",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 5,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": ""
+          }
+        },
+        "summary": "Sezon dashboard (topN + baseCurrency)",
+        "tags": [
+          "transfers"
+        ]
+      }
+    },
+    "/api/transfers/{id}": {
+      "get": {
+        "operationId": "TransferQueryController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransferResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": ""
+          }
+        },
+        "summary": "Transferi getir",
+        "tags": [
+          "transfers"
+        ]
+      }
+    },
+    "/api/rumours": {
+      "get": {
+        "operationId": "RumourController_findAll",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20,
+              "type": "number"
+            }
+          },
+          {
+            "name": "playerId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fromTeamId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "toTeamId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ownerId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "dateFrom",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "dateTo",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Söylentileri filtrele (paged)",
+        "tags": [
+          "rumours"
+        ]
+      },
+      "post": {
+        "operationId": "RumourWriteController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRumourDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Söylenti oluştur (Admin/Reporter) — bot kullanır",
+        "tags": [
+          "rumours"
+        ]
+      }
+    },
+    "/api/rumours/latest": {
+      "get": {
+        "operationId": "RumourController_latest",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20,
+              "type": "number"
+            }
+          },
+          {
+            "name": "take",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 10,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Son söylentiler",
+        "tags": [
+          "rumours"
+        ]
+      }
+    },
+    "/api/rumours/by-player/{playerId}": {
+      "get": {
+        "operationId": "RumourController_byPlayer",
+        "parameters": [
+          {
+            "name": "playerId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Oyuncuya göre söylentiler",
+        "tags": [
+          "rumours"
+        ]
+      }
+    },
+    "/api/rumours/by-team/{teamId}": {
+      "get": {
+        "operationId": "RumourController_byTeam",
+        "parameters": [
+          {
+            "name": "teamId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Takıma göre söylentiler",
+        "tags": [
+          "rumours"
+        ]
+      }
+    },
+    "/api/rumours/{id}": {
+      "get": {
+        "operationId": "RumourController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransferResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": ""
+          }
+        },
+        "summary": "Söylentiyi getir",
+        "tags": [
+          "rumours"
+        ]
+      },
+      "put": {
+        "operationId": "RumourWriteController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRumourDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Söylenti güncelle (yazar veya admin)",
+        "tags": [
+          "rumours"
+        ]
+      },
+      "delete": {
+        "operationId": "RumourWriteController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Söylenti sil (soft, yazar veya admin)",
+        "tags": [
+          "rumours"
+        ]
+      }
+    },
+    "/api/rumours/{id}/confirm": {
+      "post": {
+        "operationId": "RumourWriteController_confirm",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConfirmRumourDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Söylentiyi transfere çevir (Admin)",
+        "tags": [
+          "rumours"
+        ]
+      }
+    },
+    "/api/admin/transfers": {
+      "post": {
+        "operationId": "AdminTransfersController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTransferDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Transfer oluştur (dup 409)",
+        "tags": [
+          "admin-transfers"
+        ]
+      }
+    },
+    "/api/admin/transfers/{id}": {
+      "put": {
+        "operationId": "AdminTransfersController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTransferDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Transfer güncelle",
+        "tags": [
+          "admin-transfers"
+        ]
+      },
+      "patch": {
+        "operationId": "AdminTransfersController_patch",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PatchTransferDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Transfer kısmi güncelle",
+        "tags": [
+          "admin-transfers"
+        ]
+      },
+      "delete": {
+        "operationId": "AdminTransfersController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Transfer sil (soft-delete)",
+        "tags": [
+          "admin-transfers"
+        ]
+      }
+    },
+    "/api/admin/transfer-periods": {
+      "get": {
+        "operationId": "AdminTransferPeriodsController_list",
+        "parameters": [
+          {
+            "name": "year",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Dönemleri listele",
+        "tags": [
+          "admin-transfer-periods"
+        ]
+      },
+      "post": {
+        "operationId": "AdminTransferPeriodsController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PeriodWriteDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Dönem oluştur (endDate≥startDate)",
+        "tags": [
+          "admin-transfer-periods"
+        ]
+      }
+    },
+    "/api/admin/transfer-periods/{id}": {
+      "get": {
+        "operationId": "AdminTransferPeriodsController_getById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Dönemi getir",
+        "tags": [
+          "admin-transfer-periods"
+        ]
+      },
+      "put": {
+        "operationId": "AdminTransferPeriodsController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PeriodWriteDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Dönem güncelle",
+        "tags": [
+          "admin-transfer-periods"
+        ]
+      },
+      "delete": {
+        "operationId": "AdminTransferPeriodsController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Dönem sil",
+        "tags": [
+          "admin-transfer-periods"
+        ]
+      }
+    },
+    "/api/search": {
+      "get": {
+        "operationId": "SearchController_find",
+        "parameters": [
+          {
+            "name": "q",
+            "required": true,
+            "in": "query",
+            "description": "Arama metni",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 20,
+              "default": 5,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "q boş"
+          }
+        },
+        "summary": "Fuzzy arama (player/team/league)",
+        "tags": [
+          "search"
+        ]
+      }
+    },
+    "/api/leagues": {
+      "get": {
+        "operationId": "LeaguesController_findAll",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Ligleri listele (paged)",
+        "tags": [
+          "leagues"
+        ]
+      }
+    },
+    "/api/leagues/by-code/{code}": {
+      "get": {
+        "operationId": "LeaguesController_findByCode",
+        "parameters": [
+          {
+            "name": "code",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LeagueResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": ""
+          }
+        },
+        "summary": "Lig kodu ile getir",
+        "tags": [
+          "leagues"
+        ]
+      }
+    },
+    "/api/leagues/{leagueId}/transfers/latest": {
+      "get": {
+        "operationId": "LeaguesController_latestTransfers",
+        "parameters": [
+          {
+            "name": "leagueId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "take",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 5,
+              "type": "number"
+            }
+          },
+          {
+            "name": "year",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Ligin son transferleri",
+        "tags": [
+          "leagues"
+        ]
+      }
+    },
+    "/api/leagues/{leagueId}/transfers/incoming": {
+      "get": {
+        "operationId": "LeaguesController_incoming",
+        "parameters": [
+          {
+            "name": "leagueId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20,
+              "type": "number"
+            }
+          },
+          {
+            "name": "playerId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "dateFrom",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "dateTo",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Lige gelen transferler",
+        "tags": [
+          "leagues"
+        ]
+      }
+    },
+    "/api/leagues/{leagueId}/transfers/outgoing": {
+      "get": {
+        "operationId": "LeaguesController_outgoing",
+        "parameters": [
+          {
+            "name": "leagueId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20,
+              "type": "number"
+            }
+          },
+          {
+            "name": "playerId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "dateFrom",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "dateTo",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Ligden giden transferler",
+        "tags": [
+          "leagues"
+        ]
+      }
+    },
+    "/api/leagues/{leagueId}/transfers": {
+      "get": {
+        "operationId": "LeaguesController_leagueTransfers",
+        "parameters": [
+          {
+            "name": "leagueId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20,
+              "type": "number"
+            }
+          },
+          {
+            "name": "year",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Ligin transferleri (paged)",
+        "tags": [
+          "leagues"
+        ]
+      }
+    },
+    "/api/leagues/{id}": {
+      "get": {
+        "operationId": "LeaguesController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LeagueResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": ""
+          }
+        },
+        "summary": "Ligi getir",
+        "tags": [
+          "leagues"
+        ]
+      }
+    },
+    "/api/admin/leagues": {
+      "post": {
+        "operationId": "AdminLeaguesController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LeagueWriteDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Lig oluştur",
+        "tags": [
+          "admin-leagues"
+        ]
+      }
+    },
+    "/api/admin/leagues/{id}": {
+      "put": {
+        "operationId": "AdminLeaguesController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LeagueWriteDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Lig güncelle",
+        "tags": [
+          "admin-leagues"
+        ]
+      },
+      "delete": {
+        "operationId": "AdminLeaguesController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Lig sil",
+        "tags": [
+          "admin-leagues"
+        ]
+      }
+    },
+    "/api/admin/leagues/{leagueId}/image": {
+      "post": {
+        "operationId": "LeagueImageController_upload",
+        "parameters": [
+          {
+            "name": "leagueId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Lig logosu yükle",
+        "tags": [
+          "admin-leagues"
+        ]
+      },
+      "put": {
+        "operationId": "LeagueImageController_replace",
+        "parameters": [
+          {
+            "name": "leagueId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Lig logosu değiştir",
+        "tags": [
+          "admin-leagues"
+        ]
+      },
+      "delete": {
+        "operationId": "LeagueImageController_remove",
+        "parameters": [
+          {
+            "name": "leagueId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Lig logosu sil",
+        "tags": [
+          "admin-leagues"
+        ]
+      }
+    },
+    "/api/admin/leagues/{leagueId}/image/from-url": {
+      "post": {
+        "operationId": "LeagueImageController_fromUrl",
+        "parameters": [
+          {
+            "name": "leagueId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ImageUrlDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "URL’den lig logosu",
+        "tags": [
+          "admin-leagues"
+        ]
+      }
+    },
+    "/api/teams": {
+      "get": {
+        "operationId": "TeamsController_findAll",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Takımları listele (paged)",
+        "tags": [
+          "teams"
+        ]
+      }
+    },
+    "/api/teams/by-league/{leagueId}": {
+      "get": {
+        "operationId": "TeamsController_findByLeague",
+        "parameters": [
+          {
+            "name": "leagueId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Lige göre takımlar",
+        "tags": [
+          "teams"
+        ]
+      }
+    },
+    "/api/teams/{id}/detail": {
+      "get": {
+        "operationId": "TeamsController_detail",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TeamDetailDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": ""
+          }
+        },
+        "summary": "Takım detayı (kadro + son transferler)",
+        "tags": [
+          "teams"
+        ]
+      }
+    },
+    "/api/teams/{teamId}/incoming-transfers": {
+      "get": {
+        "operationId": "TeamsController_incoming",
+        "parameters": [
+          {
+            "name": "teamId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Takıma gelen transferler",
+        "tags": [
+          "teams"
+        ]
+      }
+    },
+    "/api/teams/{teamId}/outgoing-transfers": {
+      "get": {
+        "operationId": "TeamsController_outgoing",
+        "parameters": [
+          {
+            "name": "teamId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Takımdan giden transferler",
+        "tags": [
+          "teams"
+        ]
+      }
+    },
+    "/api/teams/{teamId}/transfers": {
+      "get": {
+        "operationId": "TeamsController_allTransfers",
+        "parameters": [
+          {
+            "name": "teamId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Takımın tüm transferleri (gelen+giden)",
+        "tags": [
+          "teams"
+        ]
+      }
+    },
+    "/api/teams/{id}": {
+      "get": {
+        "operationId": "TeamsController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TeamResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": ""
+          }
+        },
+        "summary": "Takımı getir",
+        "tags": [
+          "teams"
+        ]
+      }
+    },
+    "/api/admin/teams": {
+      "post": {
+        "operationId": "AdminTeamsController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TeamWriteDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Takım oluştur",
+        "tags": [
+          "admin-teams"
+        ]
+      }
+    },
+    "/api/admin/teams/{id}": {
+      "put": {
+        "operationId": "AdminTeamsController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TeamWriteDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Takım güncelle",
+        "tags": [
+          "admin-teams"
+        ]
+      },
+      "delete": {
+        "operationId": "AdminTeamsController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Takım sil",
+        "tags": [
+          "admin-teams"
+        ]
+      }
+    },
+    "/api/admin/teams/{teamId}/image": {
+      "post": {
+        "operationId": "TeamImageController_upload",
+        "parameters": [
+          {
+            "name": "teamId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Takım logosu yükle",
+        "tags": [
+          "admin-teams"
+        ]
+      },
+      "put": {
+        "operationId": "TeamImageController_replace",
+        "parameters": [
+          {
+            "name": "teamId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Takım logosu değiştir",
+        "tags": [
+          "admin-teams"
+        ]
+      },
+      "delete": {
+        "operationId": "TeamImageController_remove",
+        "parameters": [
+          {
+            "name": "teamId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Takım logosu sil",
+        "tags": [
+          "admin-teams"
+        ]
+      }
+    },
+    "/api/admin/teams/{teamId}/image/from-url": {
+      "post": {
+        "operationId": "TeamImageController_fromUrl",
+        "parameters": [
+          {
+            "name": "teamId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ImageUrlDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "URL’den takım logosu",
+        "tags": [
+          "admin-teams"
+        ]
+      }
+    },
+    "/api/players": {
+      "get": {
+        "operationId": "PlayersController_findAll",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20,
+              "type": "number"
+            }
+          },
+          {
+            "name": "teamId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "nationality",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "positionId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "isFree",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Oyuncuları listele (filtre + paged)",
+        "tags": [
+          "players"
+        ]
+      }
+    },
+    "/api/players/free-agents": {
+      "get": {
+        "operationId": "PlayersController_freeAgents",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Serbest oyuncular",
+        "tags": [
+          "players"
+        ]
+      }
+    },
+    "/api/players/search": {
+      "get": {
+        "operationId": "PlayersController_searchPlayers",
+        "parameters": [
+          {
+            "name": "query",
+            "required": true,
+            "in": "query",
+            "description": "Oyuncu arama metni",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 50,
+              "default": 20,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "query boş"
+          }
+        },
+        "summary": "Oyuncu fuzzy arama (paged) — bot kullanır",
+        "tags": [
+          "players"
+        ]
+      }
+    },
+    "/api/players/by-team/{teamId}": {
+      "get": {
+        "operationId": "PlayersController_byTeam",
+        "parameters": [
+          {
+            "name": "teamId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Takıma göre oyuncular",
+        "tags": [
+          "players"
+        ]
+      }
+    },
+    "/api/players/by-nationality/{nationality}": {
+      "get": {
+        "operationId": "PlayersController_byNationality",
+        "parameters": [
+          {
+            "name": "nationality",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Uyruğa göre oyuncular",
+        "tags": [
+          "players"
+        ]
+      }
+    },
+    "/api/players/{id}/profile": {
+      "get": {
+        "operationId": "PlayersController_profile",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlayerProfileDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": ""
+          }
+        },
+        "summary": "Oyuncu profili (transfer+haber+post)",
+        "tags": [
+          "players"
+        ]
+      }
+    },
+    "/api/players/{playerId}/transfers": {
+      "get": {
+        "operationId": "PlayersController_transfers",
+        "parameters": [
+          {
+            "name": "playerId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Oyuncunun transferleri",
+        "tags": [
+          "players"
+        ]
+      }
+    },
+    "/api/players/{playerId}/last-transfer": {
+      "get": {
+        "operationId": "PlayersController_lastTransfer",
+        "parameters": [
+          {
+            "name": "playerId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TeamTransferLineDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": ""
+          }
+        },
+        "summary": "Oyuncunun son transferi",
+        "tags": [
+          "players"
+        ]
+      }
+    },
+    "/api/players/{id}": {
+      "get": {
+        "operationId": "PlayersController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlayerResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": ""
+          }
+        },
+        "summary": "Oyuncuyu getir",
+        "tags": [
+          "players"
+        ]
+      }
+    },
+    "/api/admin/players": {
+      "post": {
+        "operationId": "AdminPlayersController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlayerWriteDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Oyuncu oluştur",
+        "tags": [
+          "admin-players"
+        ]
+      }
+    },
+    "/api/admin/players/{id}": {
+      "put": {
+        "operationId": "AdminPlayersController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlayerWriteDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Oyuncu güncelle",
+        "tags": [
+          "admin-players"
+        ]
+      },
+      "delete": {
+        "operationId": "AdminPlayersController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Oyuncu sil",
+        "tags": [
+          "admin-players"
+        ]
+      }
+    },
+    "/api/admin/players/{playerId}/image": {
+      "post": {
+        "operationId": "PlayerImageController_upload",
+        "parameters": [
+          {
+            "name": "playerId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Oyuncu fotoğrafı yükle",
+        "tags": [
+          "admin-players"
+        ]
+      },
+      "put": {
+        "operationId": "PlayerImageController_replace",
+        "parameters": [
+          {
+            "name": "playerId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Oyuncu fotoğrafı değiştir",
+        "tags": [
+          "admin-players"
+        ]
+      },
+      "delete": {
+        "operationId": "PlayerImageController_remove",
+        "parameters": [
+          {
+            "name": "playerId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Oyuncu fotoğrafı sil",
+        "tags": [
+          "admin-players"
+        ]
+      }
+    },
+    "/api/admin/players/{playerId}/image/from-url": {
+      "post": {
+        "operationId": "PlayerImageController_fromUrl",
+        "parameters": [
+          {
+            "name": "playerId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ImageUrlDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "URL’den oyuncu fotoğrafı",
+        "tags": [
+          "admin-players"
+        ]
+      }
+    },
+    "/api/news": {
+      "get": {
+        "operationId": "NewsController_findAll",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20,
+              "type": "number"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": "publishDate",
+              "type": "string",
+              "enum": [
+                "publishDate",
+                "title"
+              ]
+            }
+          },
+          {
+            "name": "order",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": "desc",
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Haberleri listele (paged + sort)",
+        "tags": [
+          "news"
+        ]
+      }
+    },
+    "/api/news/by-source": {
+      "get": {
+        "operationId": "NewsController_bySource",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20,
+              "type": "number"
+            }
+          },
+          {
+            "name": "sourceName",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Kaynağa göre haberler",
+        "tags": [
+          "news"
+        ]
+      }
+    },
+    "/api/news/by-date-range": {
+      "get": {
+        "operationId": "NewsController_byDateRange",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20,
+              "type": "number"
+            }
+          },
+          {
+            "name": "startDate",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "endDate",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Tarih aralığına göre haberler",
+        "tags": [
+          "news"
+        ]
+      }
+    },
+    "/api/news/by-player/{playerId}": {
+      "get": {
+        "operationId": "NewsController_byPlayer",
+        "parameters": [
+          {
+            "name": "playerId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Oyuncuya göre haberler",
+        "tags": [
+          "news"
+        ]
+      }
+    },
+    "/api/news/by-team/{teamId}": {
+      "get": {
+        "operationId": "NewsController_byTeam",
+        "parameters": [
+          {
+            "name": "teamId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Hedef takıma göre haberler",
+        "tags": [
+          "news"
+        ]
+      }
+    },
+    "/api/news/from-team/{teamId}": {
+      "get": {
+        "operationId": "NewsController_fromTeam",
+        "parameters": [
+          {
+            "name": "teamId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Kaynak takıma göre haberler",
+        "tags": [
+          "news"
+        ]
+      }
+    },
+    "/api/news/{newsId}": {
+      "get": {
+        "operationId": "NewsController_findOne",
+        "parameters": [
+          {
+            "name": "newsId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NewsResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": ""
+          }
+        },
+        "summary": "Haberi getir",
+        "tags": [
+          "news"
+        ]
+      }
+    },
+    "/api/admin/news": {
+      "post": {
+        "operationId": "AdminNewsController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateNewsDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Haber oluştur",
+        "tags": [
+          "admin-news"
+        ]
+      }
+    },
+    "/api/admin/news/bulk": {
+      "delete": {
+        "operationId": "AdminNewsController_removeBulk",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkDeleteNewsDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Toplu haber sil (≤100)",
+        "tags": [
+          "admin-news"
+        ]
+      }
+    },
+    "/api/admin/news/{newsId}": {
+      "put": {
+        "operationId": "AdminNewsController_update",
+        "parameters": [
+          {
+            "name": "newsId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateNewsDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Haber güncelle",
+        "tags": [
+          "admin-news"
+        ]
+      },
+      "delete": {
+        "operationId": "AdminNewsController_remove",
+        "parameters": [
+          {
+            "name": "newsId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Haber sil",
+        "tags": [
+          "admin-news"
+        ]
+      }
+    },
+    "/api/admin/news/{newsId}/image": {
+      "post": {
+        "operationId": "NewsImageController_upload",
+        "parameters": [
+          {
+            "name": "newsId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Haber görseli yükle",
+        "tags": [
+          "admin-news"
+        ]
+      },
+      "put": {
+        "operationId": "NewsImageController_replace",
+        "parameters": [
+          {
+            "name": "newsId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Haber görseli değiştir",
+        "tags": [
+          "admin-news"
+        ]
+      },
+      "delete": {
+        "operationId": "NewsImageController_remove",
+        "parameters": [
+          {
+            "name": "newsId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Haber görseli sil",
+        "tags": [
+          "admin-news"
+        ]
+      }
+    },
+    "/api/admin/news/{newsId}/image/from-url": {
+      "post": {
+        "operationId": "NewsImageController_fromUrl",
+        "parameters": [
+          {
+            "name": "newsId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ImageUrlDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "URL’den haber görseli",
+        "tags": [
+          "admin-news"
+        ]
+      }
+    },
+    "/api/profile/photo": {
+      "post": {
+        "operationId": "ProfilePhotoController_upload",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Profil fotoğrafı yükle",
+        "tags": [
+          "profile"
+        ]
+      },
+      "put": {
+        "operationId": "ProfilePhotoController_replace",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Profil fotoğrafı değiştir",
+        "tags": [
+          "profile"
+        ]
+      },
+      "get": {
+        "operationId": "ProfilePhotoController_get",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Profil fotoğrafını getir",
+        "tags": [
+          "profile"
+        ]
+      },
+      "delete": {
+        "operationId": "ProfilePhotoController_remove",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Profil fotoğrafını sil",
+        "tags": [
+          "profile"
+        ]
+      }
+    },
+    "/api/profile/photo/from-url": {
+      "post": {
+        "operationId": "ProfilePhotoController_fromUrl",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ImageUrlDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "URL’den profil fotoğrafı",
+        "tags": [
+          "profile"
+        ]
+      }
+    },
+    "/health": {
+      "get": {
+        "operationId": "HealthController_check",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Tüm bağımlılıklar up\n\nThe Health Check is successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "ok"
+                    },
+                    "info": {
+                      "type": "object",
+                      "example": {
+                        "database": {
+                          "status": "up"
+                        }
+                      },
+                      "additionalProperties": {
+                        "type": "object",
+                        "required": [
+                          "status"
+                        ],
+                        "properties": {
+                          "status": {
+                            "type": "string"
+                          }
+                        },
+                        "additionalProperties": true
+                      },
+                      "nullable": true
+                    },
+                    "error": {
+                      "type": "object",
+                      "example": {},
+                      "additionalProperties": {
+                        "type": "object",
+                        "required": [
+                          "status"
+                        ],
+                        "properties": {
+                          "status": {
+                            "type": "string"
+                          }
+                        },
+                        "additionalProperties": true
+                      },
+                      "nullable": true
+                    },
+                    "details": {
+                      "type": "object",
+                      "example": {
+                        "database": {
+                          "status": "up"
+                        }
+                      },
+                      "additionalProperties": {
+                        "type": "object",
+                        "required": [
+                          "status"
+                        ],
+                        "properties": {
+                          "status": {
+                            "type": "string"
+                          }
+                        },
+                        "additionalProperties": true
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Bir bağımlılık down\n\nThe Health Check is not successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "error"
+                    },
+                    "info": {
+                      "type": "object",
+                      "example": {
+                        "database": {
+                          "status": "up"
+                        }
+                      },
+                      "additionalProperties": {
+                        "type": "object",
+                        "required": [
+                          "status"
+                        ],
+                        "properties": {
+                          "status": {
+                            "type": "string"
+                          }
+                        },
+                        "additionalProperties": true
+                      },
+                      "nullable": true
+                    },
+                    "error": {
+                      "type": "object",
+                      "example": {
+                        "redis": {
+                          "status": "down",
+                          "message": "Could not connect"
+                        }
+                      },
+                      "additionalProperties": {
+                        "type": "object",
+                        "required": [
+                          "status"
+                        ],
+                        "properties": {
+                          "status": {
+                            "type": "string"
+                          }
+                        },
+                        "additionalProperties": true
+                      },
+                      "nullable": true
+                    },
+                    "details": {
+                      "type": "object",
+                      "example": {
+                        "database": {
+                          "status": "up"
+                        },
+                        "redis": {
+                          "status": "down",
+                          "message": "Could not connect"
+                        }
+                      },
+                      "additionalProperties": {
+                        "type": "object",
+                        "required": [
+                          "status"
+                        ],
+                        "properties": {
+                          "status": {
+                            "type": "string"
+                          }
+                        },
+                        "additionalProperties": true
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Liveness/readiness — PostgreSQL + Redis",
+        "tags": [
+          "health"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "TransferPulse API",
+    "description": "TransferPulse backend (.NET → NestJS migration)",
+    "version": "1.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "bearer": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http"
+      }
+    },
+    "schemas": {
+      "PreferenceDto": {
+        "type": "object",
+        "properties": {
+          "eventType": {
+            "type": "number",
+            "enum": [
+              1,
+              2
+            ]
+          },
+          "enabled": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "eventType",
+          "enabled"
+        ]
+      },
+      "SetPreferencesDto": {
+        "type": "object",
+        "properties": {
+          "preferences": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PreferenceDto"
+            }
+          }
+        },
+        "required": [
+          "preferences"
+        ]
+      },
+      "CreatePostDto": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "string",
+            "maxLength": 5000
+          },
+          "postType": {
+            "type": "number",
+            "enum": [
+              1,
+              2,
+              3
+            ]
+          },
+          "playerId": {
+            "type": "string"
+          },
+          "teamId": {
+            "type": "string"
+          },
+          "fromTeamId": {
+            "type": "string"
+          },
+          "toTeamId": {
+            "type": "string"
+          },
+          "isVotingEnabled": {
+            "type": "boolean",
+            "default": false
+          }
+        },
+        "required": [
+          "content",
+          "postType",
+          "isVotingEnabled"
+        ]
+      },
+      "VotePostDto": {
+        "type": "object",
+        "properties": {
+          "choice": {
+            "type": "number",
+            "enum": [
+              1,
+              2
+            ]
+          }
+        },
+        "required": [
+          "choice"
+        ]
+      },
+      "UpdatePostDto": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "string",
+            "maxLength": 5000
+          },
+          "playerId": {
+            "type": "string"
+          },
+          "teamId": {
+            "type": "string"
+          },
+          "fromTeamId": {
+            "type": "string"
+          },
+          "toTeamId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "content"
+        ]
+      },
+      "AddFavouriteDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "number",
+            "enum": [
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          "targetId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "targetId"
+        ]
+      },
+      "SetFavouritesDto": {
+        "type": "object",
+        "properties": {
+          "favourites": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AddFavouriteDto"
+            }
+          }
+        },
+        "required": [
+          "favourites"
+        ]
+      },
+      "CreateCommentDto": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "string",
+            "maxLength": 2000
+          },
+          "parentId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "content"
+        ]
+      },
+      "UpdateCommentDto": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "string",
+            "maxLength": 2000
+          }
+        },
+        "required": [
+          "content"
+        ]
+      },
+      "CreateTransferCommentDto": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "string",
+            "maxLength": 2000
+          },
+          "parentId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "content"
+        ]
+      },
+      "UpdateTransferCommentDto": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "string",
+            "maxLength": 2000
+          }
+        },
+        "required": [
+          "content"
+        ]
+      },
+      "RegisterDto": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "example": "alice",
+            "minLength": 3,
+            "maxLength": 50
+          },
+          "email": {
+            "type": "string",
+            "example": "alice@acme.com",
+            "maxLength": 256
+          },
+          "password": {
+            "type": "string",
+            "example": "Secret123",
+            "minLength": 8,
+            "maxLength": 72
+          },
+          "nickname": {
+            "type": "string",
+            "example": "Alice",
+            "maxLength": 50
+          },
+          "favouriteTeam": {
+            "type": "string",
+            "example": "Arsenal",
+            "maxLength": 100
+          }
+        },
+        "required": [
+          "username",
+          "email",
+          "password",
+          "nickname"
+        ]
+      },
+      "UserResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "nickname": {
+            "type": "string"
+          },
+          "profilePic": {
+            "type": "string"
+          },
+          "isMailConfirm": {
+            "type": "boolean"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "Active",
+              "Inactive",
+              "Banned",
+              "Suspended"
+            ]
+          },
+          "favouriteTeam": {
+            "type": "string"
+          },
+          "reputationScore": {
+            "type": "number"
+          },
+          "role": {
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "username",
+          "email",
+          "nickname",
+          "isMailConfirm",
+          "status",
+          "reputationScore",
+          "role",
+          "createdAt"
+        ]
+      },
+      "AuthResponseDto": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string"
+          },
+          "refreshToken": {
+            "type": "string"
+          },
+          "expiresAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Access token sona erme zamanı"
+          },
+          "user": {
+            "$ref": "#/components/schemas/UserResponseDto"
+          }
+        },
+        "required": [
+          "accessToken",
+          "refreshToken",
+          "expiresAt",
+          "user"
+        ]
+      },
+      "LoginDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "alice@acme.com",
+            "maxLength": 256
+          },
+          "password": {
+            "type": "string",
+            "example": "Secret123",
+            "maxLength": 72
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
+      "ForgotPasswordDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "alice@acme.com",
+            "maxLength": 256
+          }
+        },
+        "required": [
+          "email"
+        ]
+      },
+      "ResetPasswordDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "alice@acme.com",
+            "maxLength": 256
+          },
+          "token": {
+            "type": "string",
+            "description": "E-posta ile gelen ham reset token"
+          },
+          "newPassword": {
+            "type": "string",
+            "example": "NewSecret123",
+            "minLength": 8,
+            "maxLength": 72
+          }
+        },
+        "required": [
+          "email",
+          "token",
+          "newPassword"
+        ]
+      },
+      "RefreshTokenDto": {
+        "type": "object",
+        "properties": {
+          "refreshToken": {
+            "type": "string",
+            "description": "Opaque refresh token (login/refresh yanıtından)"
+          }
+        },
+        "required": [
+          "refreshToken"
+        ]
+      },
+      "GoogleAuthDto": {
+        "type": "object",
+        "properties": {
+          "idToken": {
+            "type": "string",
+            "description": "Google ID token (client-side oturumdan)"
+          }
+        },
+        "required": [
+          "idToken"
+        ]
+      },
+      "CreateUserDto": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "example": "alice",
+            "minLength": 3,
+            "maxLength": 50
+          },
+          "email": {
+            "type": "string",
+            "example": "alice@acme.com",
+            "maxLength": 256
+          },
+          "password": {
+            "type": "string",
+            "example": "Secret123",
+            "minLength": 8,
+            "maxLength": 72
+          },
+          "nickname": {
+            "type": "string",
+            "example": "Alice",
+            "maxLength": 50
+          },
+          "profilePic": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "favouriteTeam": {
+            "type": "string",
+            "maxLength": 100
+          }
+        },
+        "required": [
+          "username",
+          "email",
+          "password",
+          "nickname"
+        ]
+      },
+      "UpdateUserDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Route :id ile eşleşmeli (uyuşmazsa 400)"
+          },
+          "nickname": {
+            "type": "string",
+            "maxLength": 50
+          },
+          "profilePic": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "favouriteTeam": {
+            "type": "string",
+            "maxLength": 100
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "TeamTransferLineDto": {
+        "type": "object",
+        "properties": {
+          "transferId": {
+            "type": "string"
+          },
+          "playerId": {
+            "type": "string"
+          },
+          "playerName": {
+            "type": "string"
+          },
+          "playerPhoto": {
+            "type": "string"
+          },
+          "fromTeamId": {
+            "type": "string"
+          },
+          "fromTeamName": {
+            "type": "string"
+          },
+          "fromTeamLogo": {
+            "type": "string"
+          },
+          "toTeamId": {
+            "type": "string"
+          },
+          "toTeamName": {
+            "type": "string"
+          },
+          "toTeamLogo": {
+            "type": "string"
+          },
+          "transferDate": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "feeAmount": {
+            "type": "number"
+          },
+          "feeCurrency": {
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "transferId",
+          "playerId",
+          "playerName",
+          "fromTeamId",
+          "toTeamId",
+          "transferDate",
+          "feeAmount",
+          "feeCurrency",
+          "createdAt"
+        ]
+      },
+      "TeamActivityDto": {
+        "type": "object",
+        "properties": {
+          "teamId": {
+            "type": "string"
+          },
+          "teamName": {
+            "type": "string"
+          },
+          "count": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "teamId",
+          "teamName",
+          "count"
+        ]
+      },
+      "PlayerActivityDto": {
+        "type": "object",
+        "properties": {
+          "playerId": {
+            "type": "string"
+          },
+          "playerName": {
+            "type": "string"
+          },
+          "count": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "playerId",
+          "playerName",
+          "count"
+        ]
+      },
+      "HighestFeePlayerDto": {
+        "type": "object",
+        "properties": {
+          "playerId": {
+            "type": "string"
+          },
+          "playerName": {
+            "type": "string"
+          },
+          "feeAmount": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "playerId",
+          "playerName",
+          "feeAmount"
+        ]
+      },
+      "TransferStatsDto": {
+        "type": "object",
+        "properties": {
+          "totalTransfers": {
+            "type": "number"
+          },
+          "totalSpent": {
+            "type": "number"
+          },
+          "averageFee": {
+            "type": "number"
+          },
+          "maxFee": {
+            "type": "number"
+          },
+          "minFee": {
+            "type": "number"
+          },
+          "mostExpensiveTransfer": {
+            "$ref": "#/components/schemas/TeamTransferLineDto"
+          },
+          "latestTransfer": {
+            "$ref": "#/components/schemas/TeamTransferLineDto"
+          },
+          "earliestTransfer": {
+            "$ref": "#/components/schemas/TeamTransferLineDto"
+          },
+          "mostActiveBuyerTeam": {
+            "$ref": "#/components/schemas/TeamActivityDto"
+          },
+          "mostActiveSellerTeam": {
+            "$ref": "#/components/schemas/TeamActivityDto"
+          },
+          "mostTransferredPlayer": {
+            "$ref": "#/components/schemas/PlayerActivityDto"
+          },
+          "highestFeePlayer": {
+            "$ref": "#/components/schemas/HighestFeePlayerDto"
+          }
+        },
+        "required": [
+          "totalTransfers",
+          "totalSpent",
+          "averageFee",
+          "maxFee",
+          "minFee"
+        ]
+      },
+      "TransferPlayerDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "photo": {
+            "type": "string"
+          },
+          "nationality": {
+            "type": "string"
+          },
+          "positionName": {
+            "type": "string"
+          },
+          "teamId": {
+            "type": "string"
+          },
+          "teamName": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "nationality",
+          "teamId",
+          "teamName"
+        ]
+      },
+      "TransferTeamDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "logo": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ]
+      },
+      "TransferCreatedByDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          },
+          "photo": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "username",
+          "role"
+        ]
+      },
+      "TransferResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "player": {
+            "$ref": "#/components/schemas/TransferPlayerDto"
+          },
+          "fromTeam": {
+            "$ref": "#/components/schemas/TransferTeamDto"
+          },
+          "toTeam": {
+            "$ref": "#/components/schemas/TransferTeamDto"
+          },
+          "feeAmount": {
+            "type": "number"
+          },
+          "feeCurrency": {
+            "type": "string"
+          },
+          "transferDate": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "createdBy": {
+            "$ref": "#/components/schemas/TransferCreatedByDto"
+          },
+          "isRumour": {
+            "type": "boolean"
+          },
+          "source": {
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "player",
+          "fromTeam",
+          "toTeam",
+          "feeAmount",
+          "feeCurrency",
+          "transferDate",
+          "isRumour",
+          "source",
+          "createdAt"
+        ]
+      },
+      "CreateRumourDto": {
+        "type": "object",
+        "properties": {
+          "playerId": {
+            "type": "string"
+          },
+          "fromTeamId": {
+            "type": "string"
+          },
+          "toTeamId": {
+            "type": "string"
+          },
+          "feeAmount": {
+            "type": "number"
+          },
+          "feeCurrency": {
+            "type": "string",
+            "maxLength": 10
+          }
+        },
+        "required": [
+          "playerId",
+          "fromTeamId",
+          "toTeamId"
+        ]
+      },
+      "ConfirmRumourDto": {
+        "type": "object",
+        "properties": {
+          "feeAmount": {
+            "type": "number"
+          },
+          "feeCurrency": {
+            "type": "string",
+            "maxLength": 10
+          },
+          "transferDate": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "feeAmount",
+          "feeCurrency",
+          "transferDate"
+        ]
+      },
+      "CreateTransferDto": {
+        "type": "object",
+        "properties": {
+          "playerId": {
+            "type": "string"
+          },
+          "fromTeamId": {
+            "type": "string"
+          },
+          "toTeamId": {
+            "type": "string"
+          },
+          "transferDate": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "feeAmount": {
+            "type": "number"
+          },
+          "feeCurrency": {
+            "type": "string",
+            "maxLength": 10
+          }
+        },
+        "required": [
+          "playerId",
+          "fromTeamId",
+          "toTeamId",
+          "transferDate",
+          "feeAmount",
+          "feeCurrency"
+        ]
+      },
+      "PatchTransferDto": {
+        "type": "object",
+        "properties": {
+          "feeAmount": {
+            "type": "number"
+          },
+          "feeCurrency": {
+            "type": "string",
+            "maxLength": 10
+          },
+          "transferDate": {
+            "format": "date-time",
+            "type": "string"
+          }
+        }
+      },
+      "PeriodWriteDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "periodType": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "startDate": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "endDate": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "startDate",
+          "endDate"
+        ]
+      },
+      "SearchResultItemDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "player",
+              "team",
+              "league"
+            ]
+          },
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "imageUrl": {
+            "type": "string"
+          },
+          "subtitle": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id",
+          "name"
+        ]
+      },
+      "SearchResultsDto": {
+        "type": "object",
+        "properties": {
+          "players": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SearchResultItemDto"
+            }
+          },
+          "teams": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SearchResultItemDto"
+            }
+          },
+          "leagues": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SearchResultItemDto"
+            }
+          }
+        },
+        "required": [
+          "players",
+          "teams",
+          "leagues"
+        ]
+      },
+      "SearchResponseDto": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/SearchResultsDto"
+          }
+        },
+        "required": [
+          "query",
+          "data"
+        ]
+      },
+      "LeagueResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "countryLogo": {
+            "type": "string"
+          },
+          "leagueLogo": {
+            "type": "string"
+          },
+          "leagueCode": {
+            "type": "string"
+          },
+          "teamCount": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "country",
+          "countryLogo",
+          "leagueLogo",
+          "teamCount"
+        ]
+      },
+      "LeagueWriteDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 30
+          },
+          "country": {
+            "type": "string",
+            "maxLength": 30
+          },
+          "countryLogo": {
+            "type": "string"
+          },
+          "leagueLogo": {
+            "type": "string"
+          },
+          "leagueCode": {
+            "type": "string",
+            "maxLength": 10
+          }
+        },
+        "required": [
+          "name",
+          "country",
+          "countryLogo",
+          "leagueLogo"
+        ]
+      },
+      "ImageUrlDto": {
+        "type": "object",
+        "properties": {
+          "imageUrl": {
+            "type": "string",
+            "description": "İndirilecek görsel URL"
+          }
+        },
+        "required": [
+          "imageUrl"
+        ]
+      },
+      "SquadPlayerDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "fullName": {
+            "type": "string"
+          },
+          "photo": {
+            "type": "string"
+          },
+          "positionName": {
+            "type": "string"
+          },
+          "nationality": {
+            "type": "string"
+          },
+          "isFree": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "fullName",
+          "nationality",
+          "isFree"
+        ]
+      },
+      "TeamDetailDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "logo": {
+            "type": "string"
+          },
+          "founded": {
+            "type": "number"
+          },
+          "venueName": {
+            "type": "string"
+          },
+          "venueCity": {
+            "type": "string"
+          },
+          "venueCapacity": {
+            "type": "number"
+          },
+          "leagueId": {
+            "type": "string"
+          },
+          "leagueName": {
+            "type": "string"
+          },
+          "leagueLogo": {
+            "type": "string"
+          },
+          "playerCount": {
+            "type": "number"
+          },
+          "squad": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SquadPlayerDto"
+            }
+          },
+          "recentIncoming": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TeamTransferLineDto"
+            }
+          },
+          "recentOutgoing": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TeamTransferLineDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "leagueId",
+          "leagueName",
+          "playerCount",
+          "squad",
+          "recentIncoming",
+          "recentOutgoing"
+        ]
+      },
+      "TeamResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "logo": {
+            "type": "string"
+          },
+          "leagueId": {
+            "type": "string"
+          },
+          "leagueName": {
+            "type": "string"
+          },
+          "playerCount": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "leagueId",
+          "leagueName",
+          "playerCount"
+        ]
+      },
+      "TeamWriteDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 50
+          },
+          "logo": {
+            "type": "string"
+          },
+          "leagueId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "leagueId"
+        ]
+      },
+      "PlayerResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "fullName": {
+            "type": "string"
+          },
+          "nationality": {
+            "type": "string"
+          },
+          "birthDate": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "height": {
+            "type": "number"
+          },
+          "weight": {
+            "type": "number"
+          },
+          "photo": {
+            "type": "string"
+          },
+          "birthPlace": {
+            "type": "string"
+          },
+          "birthCountry": {
+            "type": "string"
+          },
+          "isFree": {
+            "type": "boolean"
+          },
+          "teamId": {
+            "type": "string"
+          },
+          "teamName": {
+            "type": "string"
+          },
+          "teamLogo": {
+            "type": "string"
+          },
+          "positionId": {
+            "type": "string"
+          },
+          "positionName": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "firstName",
+          "lastName",
+          "fullName",
+          "nationality",
+          "isFree",
+          "teamId",
+          "teamName"
+        ]
+      },
+      "NewsResponseDto": {
+        "type": "object",
+        "properties": {
+          "newsId": {
+            "type": "string"
+          },
+          "publishDate": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "playerId": {
+            "type": "string"
+          },
+          "playerName": {
+            "type": "string"
+          },
+          "playerNationality": {
+            "type": "string"
+          },
+          "playerPhoto": {
+            "type": "string"
+          },
+          "fromTeamId": {
+            "type": "string"
+          },
+          "fromTeamName": {
+            "type": "string"
+          },
+          "fromTeamLogo": {
+            "type": "string"
+          },
+          "toTeamId": {
+            "type": "string"
+          },
+          "toTeamName": {
+            "type": "string"
+          },
+          "toTeamLogo": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "imageUrl": {
+            "type": "string"
+          },
+          "sourceName": {
+            "type": "string"
+          },
+          "sourceUrl": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "newsId",
+          "publishDate",
+          "slug",
+          "title"
+        ]
+      },
+      "PostResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "ownerId": {
+            "type": "string"
+          },
+          "ownerName": {
+            "type": "string"
+          },
+          "ownerPhoto": {
+            "type": "string"
+          },
+          "isMailConfirm": {
+            "type": "boolean"
+          },
+          "userRole": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "postType": {
+            "type": "number"
+          },
+          "playerId": {
+            "type": "string"
+          },
+          "playerName": {
+            "type": "string"
+          },
+          "playerPhoto": {
+            "type": "string"
+          },
+          "teamId": {
+            "type": "string"
+          },
+          "teamName": {
+            "type": "string"
+          },
+          "teamLogo": {
+            "type": "string"
+          },
+          "fromTeamId": {
+            "type": "string"
+          },
+          "fromTeamName": {
+            "type": "string"
+          },
+          "fromTeamLogo": {
+            "type": "string"
+          },
+          "toTeamId": {
+            "type": "string"
+          },
+          "toTeamName": {
+            "type": "string"
+          },
+          "toTeamLogo": {
+            "type": "string"
+          },
+          "likeCount": {
+            "type": "number"
+          },
+          "isLiked": {
+            "type": "boolean"
+          },
+          "isVotingEnabled": {
+            "type": "boolean"
+          },
+          "agreeCount": {
+            "type": "number"
+          },
+          "disagreeCount": {
+            "type": "number"
+          },
+          "totalVotes": {
+            "type": "number"
+          },
+          "agreePercentage": {
+            "type": "number"
+          },
+          "disagreePercentage": {
+            "type": "number"
+          },
+          "userVote": {
+            "type": "number"
+          },
+          "createdAtUtc": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "commentCount": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "ownerId",
+          "ownerName",
+          "isMailConfirm",
+          "userRole",
+          "content",
+          "postType",
+          "likeCount",
+          "isLiked",
+          "isVotingEnabled",
+          "agreeCount",
+          "disagreeCount",
+          "totalVotes",
+          "agreePercentage",
+          "disagreePercentage",
+          "createdAtUtc",
+          "commentCount"
+        ]
+      },
+      "PlayerProfileDto": {
+        "type": "object",
+        "properties": {
+          "player": {
+            "$ref": "#/components/schemas/PlayerResponseDto"
+          },
+          "transfers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TeamTransferLineDto"
+            }
+          },
+          "news": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NewsResponseDto"
+            }
+          },
+          "posts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PostResponseDto"
+            }
+          }
+        },
+        "required": [
+          "player",
+          "transfers",
+          "news",
+          "posts"
+        ]
+      },
+      "PlayerWriteDto": {
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string",
+            "maxLength": 32
+          },
+          "lastName": {
+            "type": "string",
+            "maxLength": 32
+          },
+          "nationality": {
+            "type": "string",
+            "maxLength": 32
+          },
+          "birthDate": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "height": {
+            "type": "number"
+          },
+          "weight": {
+            "type": "number"
+          },
+          "photo": {
+            "type": "string"
+          },
+          "birthPlace": {
+            "type": "string"
+          },
+          "birthCountry": {
+            "type": "string"
+          },
+          "isFree": {
+            "type": "boolean",
+            "default": false
+          },
+          "teamId": {
+            "type": "string"
+          },
+          "positionId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "firstName",
+          "lastName",
+          "nationality",
+          "isFree",
+          "teamId"
+        ]
+      },
+      "CreateNewsDto": {
+        "type": "object",
+        "properties": {
+          "publishDate": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "playerId": {
+            "type": "string"
+          },
+          "fromTeamId": {
+            "type": "string"
+          },
+          "toTeamId": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "imageUrl": {
+            "type": "string"
+          },
+          "sourceName": {
+            "type": "string",
+            "maxLength": 128
+          },
+          "sourceUrl": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "slug",
+          "title"
+        ]
+      },
+      "BulkDeleteNewsDto": {
+        "type": "object",
+        "properties": {
+          "ids": {
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "ids"
+        ]
+      },
+      "UpdateNewsDto": {
+        "type": "object",
+        "properties": {
+          "publishDate": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "playerId": {
+            "type": "string"
+          },
+          "fromTeamId": {
+            "type": "string"
+          },
+          "toTeamId": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "imageUrl": {
+            "type": "string"
+          },
+          "sourceName": {
+            "type": "string",
+            "maxLength": 128
+          },
+          "sourceUrl": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "newsId": {
+            "type": "string",
+            "description": "Route :newsId ile eşleşmeli (uyuşmazsa 400)"
+          }
+        },
+        "required": [
+          "slug",
+          "title",
+          "newsId"
+        ]
+      }
+    }
+  }
+}
