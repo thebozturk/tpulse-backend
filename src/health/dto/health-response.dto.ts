@@ -17,22 +17,28 @@ export class HealthResponseDto {
 
   @ApiPropertyOptional({
     type: 'object',
-    additionalProperties: { $ref: '#/components/schemas/HealthIndicatorResultDto' },
-    description: 'Sağlıklı indicator\'ların detayları',
+    additionalProperties: {
+      $ref: '#/components/schemas/HealthIndicatorResultDto',
+    },
+    description: "Sağlıklı indicator'ların detayları",
   })
   info?: Record<string, HealthIndicatorResultDto>;
 
   @ApiPropertyOptional({
     type: 'object',
-    additionalProperties: { $ref: '#/components/schemas/HealthIndicatorResultDto' },
-    description: 'Hatalı indicator\'ların detayları',
+    additionalProperties: {
+      $ref: '#/components/schemas/HealthIndicatorResultDto',
+    },
+    description: "Hatalı indicator'ların detayları",
   })
   error?: Record<string, HealthIndicatorResultDto>;
 
   @ApiProperty({
     type: 'object',
-    additionalProperties: { $ref: '#/components/schemas/HealthIndicatorResultDto' },
-    description: 'Tüm indicator\'ların detayları',
+    additionalProperties: {
+      $ref: '#/components/schemas/HealthIndicatorResultDto',
+    },
+    description: "Tüm indicator'ların detayları",
   })
   details: Record<string, HealthIndicatorResultDto>;
 }

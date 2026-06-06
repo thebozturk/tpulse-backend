@@ -19,7 +19,11 @@ export class HealthController {
   @Public()
   @HealthCheck()
   @ApiOperation({ summary: 'Liveness/readiness — PostgreSQL + Redis' })
-  @ApiResponse({ status: 200, type: HealthResponseDto, description: 'Tüm bağımlılıklar up' })
+  @ApiResponse({
+    status: 200,
+    type: HealthResponseDto,
+    description: 'Tüm bağımlılıklar up',
+  })
   @ApiResponse({ status: 503, description: 'Bir bağımlılık down' })
   check() {
     return this.health.check([

@@ -1,9 +1,5 @@
 import { INestApplication } from '@nestjs/common';
-import {
-  DocumentBuilder,
-  OpenAPIObject,
-  SwaggerModule,
-} from '@nestjs/swagger';
+import { DocumentBuilder, OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
 
 /** Tek kaynak: hem /swagger UI'ı hem openapi.json export'u bu document'ı kullanır. */
 export function buildSwaggerDocument(app: INestApplication): OpenAPIObject {
