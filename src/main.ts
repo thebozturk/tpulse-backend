@@ -1,3 +1,4 @@
+import './tracing'; // MUTLAKA 1. import — diğer tüm modüllerden önce OTel patch'i
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
