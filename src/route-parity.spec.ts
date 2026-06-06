@@ -42,6 +42,15 @@ const ALLOWED_EXTRA = new Set([
   'PATCH /api/admin/users/:p/status',
   'PATCH /api/admin/users/:p/role',
   'PATCH /api/admin/users/:p/reputation',
+  // faz-bo-3 — moderasyon + şikayet
+  'DELETE /api/admin/posts/:p',
+  'DELETE /api/admin/comments/:p',
+  'DELETE /api/admin/transfer-comments/:p',
+  'GET /api/admin/posts',
+  'GET /api/admin/comments',
+  'POST /api/reports',
+  'GET /api/admin/reports',
+  'PATCH /api/admin/reports/:p',
 ]);
 
 // docs/02 "Sıralama Notları": kesinlikle korunması gereken bot uçları

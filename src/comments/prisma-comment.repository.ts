@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from '../common/prisma/prisma.service';
 import {
+  CommentAdminFilter,
   CommentWithOwner,
   ICommentRepository,
   commentInclude,
@@ -54,5 +56,27 @@ export class PrismaCommentRepository implements ICommentRepository {
       select: { commentId: true },
     });
     return new Set(likes.map((l) => l.commentId));
+  }
+
+  async adminList(
+    filter: CommentAdminFilter,
+  ): Promise<{ items: CommentWithOwner[]; total: number }> {
+    const where: Prisma.CommentWhereInput = {
+      ...(filter.ownerId ? { ownerId: filter.ownerId } : {}),
+      ...(filter.q
+        ? { content: { contains: filter.q, mode: 'insensitive' } }
+        : {}),
+    };
+    const [items, total] = await Promise.all([
+      this.prisma.comment.findMany({
+        where,
+        include: commentInclude,
+        orderBy: { createdAtUtc: 'desc' },
+        skip: (filter.page - 1) * filter.pageSize,
+        take: filter.pageSize,
+      }),
+      this.prisma.comment.count({ where }),
+    ]);
+    return { items, total };
   }
 }

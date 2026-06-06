@@ -8,5 +8,6 @@ import { UsersService } from './users.service';
   imports: [AuthModule], // PasswordService + TokenService için (UserStatusCache global)
   controllers: [UsersController, AdminUsersController],
   providers: [UsersService],
+  exports: [UsersService],
 })
 export class UsersModule {}
