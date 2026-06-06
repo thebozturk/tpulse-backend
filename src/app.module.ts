@@ -13,6 +13,7 @@ import { LeaguesModule } from './leagues/leagues.module';
 import { NewsModule } from './news/news.module';
 import { PlayersModule } from './players/players.module';
 import { TeamsModule } from './teams/teams.module';
+import { TransfersModule } from './transfers/transfers.module';
 import { UsersModule } from './users/users.module';
 
 @Module({
@@ -30,6 +31,7 @@ import { UsersModule } from './users/users.module';
     EmailModule,
     AuthModule,
     UsersModule,
+    TransfersModule,
     LeaguesModule,
     TeamsModule,
     PlayersModule,

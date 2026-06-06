@@ -3,10 +3,17 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Public } from '../common/decorators/public.decorator';
 import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 import {
+  ListResponse,
   PagedResult,
   SingleResponse,
 } from '../common/interfaces/response.interface';
+import { TeamTransferLineDto } from '../transfers/dto/team-transfer-line.dto';
+import { LeagueTransferFilterDto } from '../transfers/dto/transfer-query.dto';
 import { LeagueResponseDto } from './dto/league-response.dto';
+import {
+  LeagueLatestTransfersDto,
+  LeagueTransfersQueryDto,
+} from './dto/league-transfers-query.dto';
 import { LeaguesService } from './leagues.service';
 
 @ApiTags('leagues')
@@ -31,6 +38,44 @@ export class LeaguesController {
     @Param('code') code: string,
   ): Promise<SingleResponse<LeagueResponseDto>> {
     return { data: await this.leagues.findByCode(code) };
+  }
+
+  @Get(':leagueId/transfers/latest')
+  @ApiOperation({ summary: 'Ligin son transferleri' })
+  async latestTransfers(
+    @Param('leagueId', ParseUUIDPipe) leagueId: string,
+    @Query() dto: LeagueLatestTransfersDto,
+  ): Promise<ListResponse<TeamTransferLineDto>> {
+    return {
+      items: await this.leagues.latestTransfers(leagueId, dto.take, dto.year),
+    };
+  }
+
+  @Get(':leagueId/transfers/incoming')
+  @ApiOperation({ summary: 'Lige gelen transferler' })
+  incoming(
+    @Param('leagueId', ParseUUIDPipe) leagueId: string,
+    @Query() filter: LeagueTransferFilterDto,
+  ): Promise<PagedResult<TeamTransferLineDto>> {
+    return this.leagues.directionalTransfers(leagueId, 'incoming', filter);
+  }
+
+  @Get(':leagueId/transfers/outgoing')
+  @ApiOperation({ summary: 'Ligden giden transferler' })
+  outgoing(
+    @Param('leagueId', ParseUUIDPipe) leagueId: string,
+    @Query() filter: LeagueTransferFilterDto,
+  ): Promise<PagedResult<TeamTransferLineDto>> {
+    return this.leagues.directionalTransfers(leagueId, 'outgoing', filter);
+  }
+
+  @Get(':leagueId/transfers')
+  @ApiOperation({ summary: 'Ligin transferleri (paged)' })
+  leagueTransfers(
+    @Param('leagueId', ParseUUIDPipe) leagueId: string,
+    @Query() query: LeagueTransfersQueryDto,
+  ): Promise<PagedResult<TeamTransferLineDto>> {
+    return this.leagues.transfers_(leagueId, query);
   }
 
   @Get(':id')
