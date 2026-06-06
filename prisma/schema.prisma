@@ -1,6 +1,7 @@
-// TransferPulse — Prisma schema
-// Faz 0: yalnızca datasource + generator. Domain modelleri Faz 1'de
-// docs/01-DATA-MODEL.md'den eklenir (greenfield migration).
+// TransferPulse — Prisma schema (Faz 1)
+// Kaynak: docs/01-DATA-MODEL.md. Greenfield; @@map/@map adları .NET şemasıyla tutulur.
+// Enum stratejisi (hibrit): smallint enum'lar → Int @db.SmallInt + TS const enum
+// (src/common/enums); string enum'lar → native enum (aşağıda).
 
 generator client {
   provider = "prisma-client-js"
@@ -9,4 +10,410 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+// ─── Native enum'lar (DB'de string saklanır) ──────────────────────────
+enum UserStatus {
+  Active
+  Inactive
+  Banned
+  Suspended
+}
+
+enum TransferSource {
+  Manual
+  ApiSports
+}
+
+// ─── Modeller ─────────────────────────────────────────────────────────
+model User {
+  id              String     @id @default(uuid()) @db.Uuid
+  username        String     @unique @db.VarChar(50)
+  email           String     @unique @db.VarChar(256)
+  passwordHash    String
+  nickname        String     @db.VarChar(50)
+  profilePic      String?    @db.VarChar(500)
+  isMailConfirm   Boolean    @default(false)
+  status          UserStatus @default(Active)
+  favouriteTeam   String?    @db.VarChar(100)
+  reputationScore Int        @default(0)
+  role            String     @default("User") @db.VarChar(20)
+  googleId        String?    @db.VarChar(256)
+  createdAt       DateTime   @default(now()) @db.Timestamptz
+  updatedAt       DateTime?  @db.Timestamptz
+
+  refreshTokens        RefreshToken[]
+  transfers            Transfer[]
+  posts                Post[]
+  comments             Comment[]
+  postLikes            PostLike[]
+  postVotes            PostVote[]
+  commentLikes         CommentLike[]
+  transferComments     TransferComment[]
+  transferCommentLikes TransferCommentLike[]
+
+  @@map("users")
+}
+
+model League {
+  id                  String  @id @default(uuid()) @db.Uuid
+  externalId          Int?    @unique
+  name                String  @unique @db.VarChar(30)
+  country             String  @db.VarChar(30)
+  countryLogo         String
+  leagueLogo          String
+  logoLockedByAdmin   Boolean @default(false)
+  leagueLogoSourceUrl String?
+  leagueCode          String? @unique @db.VarChar(10)
+
+  teams Team[]
+
+  @@map("league")
+}
+
+model Team {
+  id                String  @id @default(uuid()) @db.Uuid
+  externalId        Int?    @unique
+  name              String  @unique @db.VarChar(50)
+  logo              String?
+  logoLockedByAdmin Boolean @default(false)
+  logoSourceUrl     String?
+  founded           Int?
+  venueName         String? @db.VarChar(100)
+  venueCity         String? @db.VarChar(100)
+  venueCapacity     Int?
+  leagueId          String  @db.Uuid
+
+  league            League     @relation(fields: [leagueId], references: [id], onDelete: Restrict)
+  players           Player[]
+  incomingTransfers Transfer[] @relation("ToTeam")
+  outgoingTransfers Transfer[] @relation("FromTeam")
+
+  @@map("team")
+}
+
+model Position {
+  id     String @id @default(uuid()) @db.Uuid
+  codeEn String @db.VarChar(5)
+  nameEn String @db.VarChar(16)
+  codeTr String @db.VarChar(5)
+  nameTr String @db.VarChar(16)
+
+  players Player[]
+
+  @@map("position")
+}
+
+model Player {
+  id                 String    @id @default(uuid()) @db.Uuid
+  externalId         Int?      @unique
+  firstName          String    @db.VarChar(32)
+  lastName           String    @db.VarChar(32)
+  nationality        String    @db.VarChar(32)
+  birthDate          DateTime? @db.Date
+  height             Int?      @db.SmallInt
+  weight             Int?      @db.SmallInt
+  photo              String?
+  birthPlace         String?   @db.VarChar(32)
+  birthCountry       String?   @db.VarChar(32)
+  isFree             Boolean   @default(false)
+  photoLockedByAdmin Boolean   @default(false)
+  photoSourceUrl     String?
+  teamId             String    @db.Uuid
+  positionId         String?   @db.Uuid
+
+  team      Team       @relation(fields: [teamId], references: [id], onDelete: Restrict)
+  position  Position?  @relation(fields: [positionId], references: [id], onDelete: SetNull)
+  transfers Transfer[]
+
+  @@map("player")
+}
+
+model Transfer {
+  id              String         @id @default(uuid()) @db.Uuid
+  playerId        String         @db.Uuid
+  fromTeamId      String         @db.Uuid
+  toTeamId        String         @db.Uuid
+  transferDate    DateTime       @db.Timestamptz
+  feeAmount       Decimal        @db.Decimal(18, 2)
+  feeCurrency     String         @db.VarChar(10)
+  createdByUserId String?        @db.Uuid
+  isRumour        Boolean        @default(false)
+  isDeleted       Boolean        @default(false)
+  source          TransferSource @default(Manual)
+  createdAt       DateTime       @default(now()) @db.Timestamptz
+  updatedAt       DateTime?      @db.Timestamptz
+
+  player        Player            @relation(fields: [playerId], references: [id], onDelete: Restrict)
+  fromTeam      Team              @relation("FromTeam", fields: [fromTeamId], references: [id], onDelete: Restrict)
+  toTeam        Team              @relation("ToTeam", fields: [toTeamId], references: [id], onDelete: Restrict)
+  createdByUser User?             @relation(fields: [createdByUserId], references: [id], onDelete: SetNull)
+  comments      TransferComment[]
+
+  @@index([playerId, fromTeamId, toTeamId, transferDate])
+  @@index([transferDate])
+  @@index([feeAmount])
+  @@map("transfers")
+}
+
+model Post {
+  id              String   @id @default(uuid()) @db.Uuid
+  ownerId         String   @db.Uuid
+  content         String
+  postType        Int      @db.SmallInt
+  playerId        String?  @db.Uuid
+  teamId          String?  @db.Uuid
+  fromTeamId      String?  @db.Uuid
+  toTeamId        String?  @db.Uuid
+  likeCount       Int      @default(0) @db.SmallInt
+  isVotingEnabled Boolean  @default(false)
+  agreeCount      Int      @default(0)
+  disagreeCount   Int      @default(0)
+  commentCount    Int      @default(0)
+  createdAtUtc    DateTime @default(now()) @db.Timestamptz
+
+  owner    User       @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  comments Comment[]
+  likes    PostLike[]
+  votes    PostVote[]
+
+  @@index([createdAtUtc, id])
+  @@map("post")
+}
+
+model PostLike {
+  id           String   @id @default(uuid()) @db.Uuid
+  postId       String   @db.Uuid
+  userId       String   @db.Uuid
+  createdAtUtc DateTime @default(now()) @db.Timestamptz
+
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, userId])
+  @@map("post_like")
+}
+
+model PostVote {
+  id           String   @id @default(uuid()) @db.Uuid
+  postId       String   @db.Uuid
+  userId       String   @db.Uuid
+  choice       Int      @db.SmallInt
+  createdAtUtc DateTime @default(now()) @db.Timestamptz
+
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, userId])
+  @@map("post_vote")
+}
+
+model Comment {
+  id           String   @id @default(uuid()) @db.Uuid
+  ownerId      String   @db.Uuid
+  content      String?
+  postId       String   @db.Uuid
+  parentId     String?  @db.Uuid
+  likeCount    Int      @default(0) @db.SmallInt
+  createdAtUtc DateTime @default(now()) @db.Timestamptz
+
+  owner   User          @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  post    Post          @relation(fields: [postId], references: [id], onDelete: Cascade)
+  parent  Comment?      @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies Comment[]     @relation("CommentReplies")
+  likes   CommentLike[]
+
+  @@map("comment")
+}
+
+model CommentLike {
+  id           String   @id @default(uuid()) @db.Uuid
+  commentId    String   @db.Uuid
+  userId       String   @db.Uuid
+  createdAtUtc DateTime @default(now()) @db.Timestamptz
+
+  comment Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([commentId, userId])
+  @@map("comment_like")
+}
+
+model TransferComment {
+  id           String   @id @default(uuid()) @db.Uuid
+  transferId   String   @db.Uuid
+  ownerId      String   @db.Uuid
+  content      String?
+  parentId     String?  @db.Uuid
+  likeCount    Int      @default(0) @db.SmallInt
+  createdAtUtc DateTime @default(now()) @db.Timestamptz
+
+  transfer Transfer              @relation(fields: [transferId], references: [id], onDelete: Cascade)
+  owner    User                  @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  parent   TransferComment?      @relation("TCReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies  TransferComment[]     @relation("TCReplies")
+  likes    TransferCommentLike[]
+
+  @@map("transfer_comment")
+}
+
+model TransferCommentLike {
+  id                String   @id @default(uuid()) @db.Uuid
+  transferCommentId String   @db.Uuid
+  userId            String   @db.Uuid
+  createdAtUtc      DateTime @default(now()) @db.Timestamptz
+
+  transferComment TransferComment @relation(fields: [transferCommentId], references: [id], onDelete: Cascade)
+  user            User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([transferCommentId, userId])
+  @@map("transfer_comment_like")
+}
+
+model News {
+  id          String   @id @default(uuid()) @map("news_id") @db.Uuid
+  publishDate DateTime @default(now()) @db.Timestamptz
+  playerId    String?  @db.Uuid
+  fromTeamId  String?  @db.Uuid
+  toTeamId    String?  @db.Uuid
+  slug        String   @db.VarChar(256)
+  imageUrl    String?
+  sourceName  String?  @db.VarChar(128)
+  sourceUrl   String?
+  title       String
+  content     String?
+
+  @@index([playerId])
+  @@index([toTeamId])
+  @@index([fromTeamId])
+  @@index([sourceName])
+  @@index([publishDate])
+  @@map("news")
+}
+
+model CurrencyRate {
+  id               String   @id @default(uuid()) @db.Uuid
+  currencyCode     String   @db.VarChar(10)
+  baseCurrencyCode String   @db.VarChar(10)
+  rate             Decimal  @db.Decimal(18, 8)
+  rateDate         DateTime @db.Timestamptz
+  createdAt        DateTime @default(now()) @db.Timestamptz
+
+  @@unique([currencyCode, baseCurrencyCode, rateDate])
+  @@index([rateDate])
+  @@map("currency_rates")
+}
+
+model Notification {
+  id         String   @id @default(uuid()) @db.Uuid
+  userId     String   @db.Uuid
+  eventType  Int      @db.SmallInt
+  title      String   @db.VarChar(200)
+  body       String   @db.VarChar(500)
+  transferId String?  @db.Uuid
+  isRead     Boolean  @default(false)
+  createdAt  DateTime @default(now()) @db.Timestamptz
+
+  @@unique([userId, transferId, eventType])
+  @@index([userId, createdAt])
+  @@map("notification")
+}
+
+model NotificationPreference {
+  id        String  @id @default(uuid()) @db.Uuid
+  userId    String  @db.Uuid
+  eventType Int     @db.SmallInt
+  enabled   Boolean @default(true)
+
+  @@unique([userId, eventType])
+  @@map("notification_preference")
+}
+
+model PasswordResetToken {
+  id        String    @id @default(uuid()) @db.Uuid
+  userId    String    @db.Uuid
+  tokenHash String    @db.VarChar(128)
+  expiresAt DateTime  @db.Timestamptz
+  usedAt    DateTime? @db.Timestamptz
+  createdAt DateTime  @default(now()) @db.Timestamptz
+
+  @@index([tokenHash])
+  @@index([userId])
+  @@map("password_reset_token")
+}
+
+model RefreshToken {
+  id              String    @id @default(uuid()) @db.Uuid
+  userId          String    @db.Uuid
+  token           String    @unique @db.VarChar(256)
+  expiresAt       DateTime  @db.Timestamptz
+  createdAt       DateTime  @default(now()) @db.Timestamptz
+  revokedAt       DateTime? @db.Timestamptz
+  replacedByToken String?   @db.VarChar(256)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("refresh_tokens")
+}
+
+model OutboxMessage {
+  id             String    @id @default(uuid()) @db.Uuid
+  eventType      String    @db.VarChar(256)
+  payload        String
+  routingKey     String    @db.VarChar(256)
+  retryCount     Int       @default(0)
+  createdAtUtc   DateTime  @default(now()) @db.Timestamptz
+  processedAtUtc DateTime? @db.Timestamptz
+  lastError      String?
+
+  @@index([processedAtUtc, createdAtUtc])
+  @@map("outbox_message")
+}
+
+model SyncRun {
+  id                String   @id @default(uuid()) @db.Uuid
+  startedAt         DateTime @db.Timestamptz
+  completedAt       DateTime @db.Timestamptz
+  durationMs        Int
+  status            Int      @db.SmallInt
+  leaguesProcessed  Int
+  leaguesInserted   Int
+  leaguesUpdated    Int
+  teamsInserted     Int
+  teamsUpdated      Int
+  playersInserted   Int
+  playersUpdated    Int
+  positionsCreated  Int
+  transfersCreated  Int
+  playersMarkedFree Int
+  errorCount        Int
+  errors            String?
+  fatalError        String?
+
+  @@index([startedAt])
+  @@map("sync_run")
+}
+
+model UserFavourite {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @db.Uuid
+  type      Int      @db.SmallInt
+  targetId  String   @db.Uuid
+  createdAt DateTime @default(now()) @db.Timestamptz
+
+  @@unique([userId, type, targetId])
+  @@map("user_favourite")
+}
+
+model TransferPeriod {
+  id         String   @id @default(uuid()) @db.Uuid
+  name       String   @db.VarChar(120)
+  periodType String?  @db.VarChar(40)
+  startDate  DateTime @db.Timestamptz
+  endDate    DateTime @db.Timestamptz
+  createdAt  DateTime @default(now()) @db.Timestamptz
+
+  @@index([startDate, endDate])
+  @@map("transfer_periods")
 }
