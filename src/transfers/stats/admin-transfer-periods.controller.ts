@@ -14,6 +14,7 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
+import { ThrottlePolicies } from '../../common/throttle/throttle-policies';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import {
@@ -30,7 +31,7 @@ import { TransferPeriodDto } from './dto/transfer-period.dto';
 @Controller('api/admin/transfer-periods')
 @UseGuards(RolesGuard)
 @Roles('Admin')
-@Throttle({ default: { limit: 120, ttl: 60_000 } })
+@Throttle(ThrottlePolicies.write)
 export class AdminTransferPeriodsController {
   constructor(private readonly periods: AdminPeriodsService) {}
 

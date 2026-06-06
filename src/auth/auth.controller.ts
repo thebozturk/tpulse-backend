@@ -1,5 +1,6 @@
 import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
+import { ThrottlePolicies } from '../common/throttle/throttle-policies';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import {
   AuthUser,
@@ -18,7 +19,7 @@ import { ResetPasswordDto } from './dto/reset-password.dto';
 // docs/04 §7.5: auth policy 30/dk/IP (default throttler override).
 @ApiTags('auth')
 @Controller('api/auth')
-@Throttle({ default: { limit: 30, ttl: 60_000 } })
+@Throttle(ThrottlePolicies.auth)
 export class AuthController {
   constructor(private readonly auth: AuthService) {}
 

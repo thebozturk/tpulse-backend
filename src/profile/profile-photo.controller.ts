@@ -16,6 +16,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
+import { ThrottlePolicies } from '../common/throttle/throttle-policies';
 import {
   AuthUser,
   CurrentUser,
@@ -27,7 +28,7 @@ import { ProfileService } from './profile.service';
 @ApiTags('profile')
 @ApiBearerAuth()
 @Controller('api/profile/photo')
-@Throttle({ default: { limit: 120, ttl: 60_000 } })
+@Throttle(ThrottlePolicies.write)
 export class ProfilePhotoController {
   constructor(private readonly profile: ProfileService) {}
 

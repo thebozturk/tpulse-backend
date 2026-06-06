@@ -12,6 +12,7 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
+import { ThrottlePolicies } from '../common/throttle/throttle-policies';
 import { Roles } from '../common/decorators/roles.decorator';
 import { RolesGuard } from '../common/guards/roles.guard';
 import { SingleResponse } from '../common/interfaces/response.interface';
@@ -23,7 +24,7 @@ import { PlayersService } from './players.service';
 @Controller('api/admin/players')
 @UseGuards(RolesGuard)
 @Roles('Admin')
-@Throttle({ default: { limit: 120, ttl: 60_000 } })
+@Throttle(ThrottlePolicies.write)
 export class AdminPlayersController {
   constructor(private readonly players: PlayersService) {}
 

@@ -18,6 +18,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
+import { ThrottlePolicies } from '../common/throttle/throttle-policies';
 import { Roles } from '../common/decorators/roles.decorator';
 import { ImageUrlDto } from '../common/dto/image-url.dto';
 import { RolesGuard } from '../common/guards/roles.guard';
@@ -29,7 +30,7 @@ import { TeamsService } from './teams.service';
 @Controller('api/admin/teams/:teamId/image')
 @UseGuards(RolesGuard)
 @Roles('Admin')
-@Throttle({ default: { limit: 120, ttl: 60_000 } })
+@Throttle(ThrottlePolicies.write)
 export class TeamImageController {
   constructor(private readonly teams: TeamsService) {}
 

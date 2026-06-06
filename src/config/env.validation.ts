@@ -56,9 +56,24 @@ export const envSchema = z.object({
 
   GOOGLE_AUTH_CLIENT_ID: z.string().optional(),
   API_FOOTBALL_KEY: z.string().optional(),
+  API_FOOTBALL_BASE_URL: z
+    .string()
+    .default('https://v3.football.api-sports.io'),
+  API_FOOTBALL_LEAGUE_IDS: z.string().default(''),
+  API_FOOTBALL_SEASON: z.coerce.number().int().default(2024),
+  SYNC_CRON: z.string().optional(),
+  DETECT_TRANSFERS: z
+    .enum(['true', 'false'])
+    .default('false')
+    .transform((v) => v === 'true'),
+  MIRROR_IMAGES: z
+    .enum(['true', 'false'])
+    .default('false')
+    .transform((v) => v === 'true'),
   SMTP_HOST: z.string().optional(),
   SMTP_USERNAME: z.string().optional(),
   SMTP_PASSWORD: z.string().optional(),
+  IDEMPOTENCY_TTL_SECONDS: z.coerce.number().int().positive().default(600),
 });
 
 export type Env = z.infer<typeof envSchema>;

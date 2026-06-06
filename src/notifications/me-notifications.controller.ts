@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
+import { ThrottlePolicies } from '../common/throttle/throttle-policies';
 import {
   AuthUser,
   CurrentUser,
@@ -24,7 +25,7 @@ import { NotificationsService } from './notifications.service';
 @ApiTags('me-notifications')
 @ApiBearerAuth()
 @Controller('api/me/notifications')
-@Throttle({ default: { limit: 120, ttl: 60_000 } })
+@Throttle(ThrottlePolicies.write)
 export class MeNotificationsController {
   constructor(private readonly notifications: NotificationsService) {}
 

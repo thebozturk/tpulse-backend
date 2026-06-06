@@ -13,6 +13,7 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
+import { ThrottlePolicies } from '../common/throttle/throttle-policies';
 import {
   AuthUser,
   CurrentUser,
@@ -28,7 +29,7 @@ import { CreateTransferDto, PatchTransferDto } from './dto/transfer-write.dto';
 @Controller('api/admin/transfers')
 @UseGuards(RolesGuard)
 @Roles('Admin')
-@Throttle({ default: { limit: 120, ttl: 60_000 } })
+@Throttle(ThrottlePolicies.write)
 export class AdminTransfersController {
   constructor(private readonly admin: AdminTransfersService) {}
 
