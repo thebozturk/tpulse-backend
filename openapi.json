@@ -4799,7 +4799,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ImageUrlDto"
+                "$ref": "#/components/schemas/LeagueImageUrlDto"
               }
             }
           }
@@ -9295,12 +9295,12 @@
           "url"
         ]
       },
-      "ImageUrlDto": {
+      "LeagueImageUrlDto": {
         "type": "object",
         "properties": {
           "imageUrl": {
             "type": "string",
-            "description": "İndirilecek görsel URL"
+            "description": "İndirilecek görsel URL (SSRF korumalı)"
           }
         },
         "required": [
@@ -9473,6 +9473,18 @@
         },
         "required": [
           "url"
+        ]
+      },
+      "ImageUrlDto": {
+        "type": "object",
+        "properties": {
+          "imageUrl": {
+            "type": "string",
+            "description": "İndirilecek görsel URL"
+          }
+        },
+        "required": [
+          "imageUrl"
         ]
       },
       "PlayerResponseDto": {

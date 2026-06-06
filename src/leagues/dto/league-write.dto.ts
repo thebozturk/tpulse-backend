@@ -27,7 +27,8 @@ export class LeagueWriteDto {
   leagueCode?: string;
 }
 
-export class ImageUrlDto {
+// Swagger şema-adı çakışmasını önlemek için common ImageUrlDto'dan ayrı isim.
+export class LeagueImageUrlDto {
   @ApiProperty({ description: 'İndirilecek görsel URL (SSRF korumalı)' })
   @IsString()
   imageUrl: string;

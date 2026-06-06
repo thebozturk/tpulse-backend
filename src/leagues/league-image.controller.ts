@@ -26,7 +26,7 @@ import { RolesGuard } from '../common/guards/roles.guard';
 import { SuccessResponseDto } from '../common/dto/common-response.dto';
 import { ApiSingleResponse } from '../common/swagger/api-envelope.decorators';
 import { SingleResponse } from '../common/interfaces/response.interface';
-import { ImageUrlDto } from './dto/league-write.dto';
+import { LeagueImageUrlDto } from './dto/league-write.dto';
 import { LeagueImageResponseDto } from './dto/league-admin-response.dto';
 import { LeaguesService } from './leagues.service';
 
@@ -92,7 +92,7 @@ export class LeagueImageController {
   @ApiResponse({ status: 404, description: 'League not found' })
   async fromUrl(
     @Param('leagueId', ParseUUIDPipe) leagueId: string,
-    @Body() dto: ImageUrlDto,
+    @Body() dto: LeagueImageUrlDto,
   ): Promise<SingleResponse<{ url: string }>> {
     return {
       data: { url: await this.leagues.setImageFromUrl(leagueId, dto.imageUrl) },
