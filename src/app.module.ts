@@ -13,8 +13,10 @@ import { NotificationsModule } from './notifications/notifications.module';
 import { PostsModule } from './posts/posts.module';
 import { SyncModule } from './sync/sync.module';
 import { TransferCommentsModule } from './transfer-comments/transfer-comments.module';
+import { AuditLogsModule } from './admin/audit/audit-logs.module';
 import { DashboardModule } from './admin/dashboard/dashboard.module';
 import { AuthModule } from './auth/auth.module';
+import { AuditModule } from './common/audit/audit.module';
 import { UserStatusModule } from './common/auth/user-status.module';
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { PrismaModule } from './common/prisma/prisma.module';
@@ -82,6 +84,8 @@ import { UsersModule } from './users/users.module';
     HealthModule,
     DashboardModule,
     ReportsModule,
+    AuditModule,
+    AuditLogsModule,
   ],
   providers: [
     // Sıra: throttle önce (brute-force), sonra auth. JwtAuthGuard @Public bypass'lı.

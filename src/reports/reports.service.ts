@@ -12,6 +12,8 @@ import {
   UserStatus,
 } from '@prisma/client';
 import { CommentsService } from '../comments/comments.service';
+import { AuditAction } from '../common/audit/audit-actions';
+import { AuditService } from '../common/audit/audit.service';
 import { PagedResult } from '../common/interfaces/response.interface';
 import { buildPaged, toSkipTake } from '../common/pagination';
 import { PrismaService } from '../common/prisma/prisma.service';
@@ -33,6 +35,7 @@ export class ReportsService {
     private readonly posts: PostsService,
     private readonly comments: CommentsService,
     private readonly transferComments: TransferCommentsService,
+    private readonly audit: AuditService,
   ) {}
 
   /** Kullanıcı rapor oluşturur. Aynı hedefe tekrar rapor engellenir (unique). */
@@ -125,6 +128,21 @@ export class ReportsService {
         reviewedAt: new Date(),
       },
     });
+
+    // Explicit audit — çok aşamalı aksiyonun zengin metadata'sı.
+    await this.audit.log({
+      actorUserId: reviewerUserId,
+      action: AuditAction.ReportReview,
+      targetType: report.targetType,
+      targetId: report.targetId,
+      metadata: {
+        reportId: id,
+        status: dto.status,
+        deleteContent: dto.deleteContent ?? false,
+        banUser: dto.banUser ?? false,
+      },
+    });
+
     this.logger.log(`Rapor incelendi: ${id} → ${dto.status}`);
     return toReportResponse(updated);
   }

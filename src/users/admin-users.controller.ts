@@ -10,6 +10,8 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
+import { AuditAction } from '../common/audit/audit-actions';
+import { Audit } from '../common/audit/audit.decorator';
 import { Roles } from '../common/decorators/roles.decorator';
 import { RolesGuard } from '../common/guards/roles.guard';
 import { PagedResult } from '../common/interfaces/response.interface';
@@ -71,6 +73,7 @@ export class AdminUsersController {
 
   @Patch(':id/status')
   @Throttle(ThrottlePolicies.write)
+  @Audit(AuditAction.UserStatus, 'User')
   @ApiOperation({ summary: 'Durum güncelle (ban/suspend/activate)' })
   @ApiSingleResponse(AdminUserDetailResponseDto)
   async updateStatus(
@@ -82,6 +85,7 @@ export class AdminUsersController {
 
   @Patch(':id/role')
   @Throttle(ThrottlePolicies.write)
+  @Audit(AuditAction.UserRole, 'User')
   @ApiOperation({ summary: 'Rol güncelle (son admin korumalı)' })
   @ApiSingleResponse(AdminUserDetailResponseDto)
   async updateRole(
@@ -93,6 +97,7 @@ export class AdminUsersController {
 
   @Patch(':id/reputation')
   @Throttle(ThrottlePolicies.write)
+  @Audit(AuditAction.UserReputation, 'User')
   @ApiOperation({ summary: 'İtibar güncelle (delta veya value)' })
   @ApiSingleResponse(AdminUserDetailResponseDto)
   async updateReputation(
