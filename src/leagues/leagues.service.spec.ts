@@ -1,5 +1,6 @@
 import { NotFoundException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
+import { TRANSFER_REPOSITORY } from '../transfers/transfer.repository';
 import { LEAGUE_REPOSITORY } from './league.repository';
 import { LeaguesService } from './leagues.service';
 
@@ -23,6 +24,7 @@ describe('LeaguesService', () => {
       providers: [
         LeaguesService,
         { provide: LEAGUE_REPOSITORY, useValue: repo },
+        { provide: TRANSFER_REPOSITORY, useValue: {} },
       ],
     }).compile();
     service = module.get(LeaguesService);

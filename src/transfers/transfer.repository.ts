@@ -1,0 +1,110 @@
+import { Prisma } from '@prisma/client';
+
+export const TRANSFER_REPOSITORY = Symbol('TRANSFER_REPOSITORY');
+
+export const transferInclude = {
+  player: {
+    include: {
+      position: { select: { nameEn: true } },
+      team: { select: { name: true } },
+    },
+  },
+  fromTeam: { select: { id: true, name: true, logo: true } },
+  toTeam: { select: { id: true, name: true, logo: true } },
+  createdByUser: {
+    select: { id: true, username: true, profilePic: true, role: true },
+  },
+} satisfies Prisma.TransferInclude;
+
+export type TransferWithRel = Prisma.TransferGetPayload<{
+  include: typeof transferInclude;
+}>;
+
+export interface TransferFilter {
+  playerId?: string;
+  fromTeamId?: string;
+  toTeamId?: string;
+  ownerId?: string;
+  dateFrom?: Date;
+  dateTo?: Date;
+  feeMin?: number;
+  feeMax?: number;
+  currency?: string;
+  sort?: string;
+  page: number;
+  pageSize: number;
+}
+
+export type Paged<T> = { items: T[]; total: number };
+
+export interface ITransferRepository {
+  // Genel sorgu (isRumour ile transfer/rumour ayrımı)
+  query(
+    filter: TransferFilter,
+    isRumour: boolean,
+  ): Promise<Paged<TransferWithRel>>;
+  getById(id: string, isRumour: boolean): Promise<TransferWithRel | null>;
+  getLatest(
+    page: number,
+    pageSize: number,
+    isRumour: boolean,
+  ): Promise<Paged<TransferWithRel>>;
+  getTopExpensive(
+    currency: string | undefined,
+    page: number,
+    pageSize: number,
+  ): Promise<Paged<TransferWithRel>>;
+  getBetweenTeams(
+    fromTeamId: string,
+    toTeamId: string,
+    includeReverse: boolean,
+  ): Promise<TransferWithRel[]>;
+  getByYear(year: number): Promise<TransferWithRel[]>;
+  getByMonth(year: number, month: number): Promise<TransferWithRel[]>;
+
+  // Lig
+  getByLeagueId(
+    leagueId: string,
+    year: number | undefined,
+    page: number,
+    pageSize: number,
+  ): Promise<Paged<TransferWithRel>>;
+  getLatestByLeagueId(
+    leagueId: string,
+    take: number,
+    year?: number,
+  ): Promise<TransferWithRel[]>;
+  getLeagueDirectional(
+    leagueId: string,
+    direction: 'incoming' | 'outgoing',
+    filter: TransferFilter,
+  ): Promise<Paged<TransferWithRel>>;
+  getLatestByAllLeagues(
+    take: number,
+    year?: number,
+  ): Promise<
+    Array<{
+      league: { id: string; name: string; leagueLogo: string };
+      transfers: TransferWithRel[];
+    }>
+  >;
+
+  // Takım
+  getByTeamDirectional(
+    teamId: string,
+    direction: 'incoming' | 'outgoing' | 'all',
+  ): Promise<TransferWithRel[]>;
+  getRecentByTeam(
+    teamId: string,
+    direction: 'incoming' | 'outgoing',
+    take: number,
+  ): Promise<TransferWithRel[]>;
+
+  // Oyuncu
+  getByPlayerId(playerId: string): Promise<TransferWithRel[]>;
+  getLastByPlayerId(playerId: string): Promise<TransferWithRel | null>;
+
+  // Rumour kısayolları (isRumour:true)
+  getByPlayerIdRumour(playerId: string): Promise<TransferWithRel[]>;
+  getByTeamIdRumour(teamId: string): Promise<TransferWithRel[]>;
+}

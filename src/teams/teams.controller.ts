@@ -7,6 +7,8 @@ import {
   PagedResult,
   SingleResponse,
 } from '../common/interfaces/response.interface';
+import { TeamTransferLineDto } from '../transfers/dto/team-transfer-line.dto';
+import { TeamDetailDto } from './dto/team-detail.dto';
 import { TeamResponseDto } from './dto/team-response.dto';
 import { TeamsService } from './teams.service';
 
@@ -30,6 +32,40 @@ export class TeamsController {
     @Param('leagueId', ParseUUIDPipe) leagueId: string,
   ): Promise<ListResponse<TeamResponseDto>> {
     return { items: await this.teams.findByLeague(leagueId) };
+  }
+
+  @Get(':id/detail')
+  @ApiOperation({ summary: 'Takım detayı (kadro + son transferler)' })
+  @ApiResponse({ status: 200, type: TeamDetailDto })
+  @ApiResponse({ status: 404 })
+  async detail(
+    @Param('id', ParseUUIDPipe) id: string,
+  ): Promise<SingleResponse<TeamDetailDto>> {
+    return { data: await this.teams.getDetail(id) };
+  }
+
+  @Get(':teamId/incoming-transfers')
+  @ApiOperation({ summary: 'Takıma gelen transferler' })
+  async incoming(
+    @Param('teamId', ParseUUIDPipe) teamId: string,
+  ): Promise<ListResponse<TeamTransferLineDto>> {
+    return { items: await this.teams.transfersOf(teamId, 'incoming') };
+  }
+
+  @Get(':teamId/outgoing-transfers')
+  @ApiOperation({ summary: 'Takımdan giden transferler' })
+  async outgoing(
+    @Param('teamId', ParseUUIDPipe) teamId: string,
+  ): Promise<ListResponse<TeamTransferLineDto>> {
+    return { items: await this.teams.transfersOf(teamId, 'outgoing') };
+  }
+
+  @Get(':teamId/transfers')
+  @ApiOperation({ summary: 'Takımın tüm transferleri (gelen+giden)' })
+  async allTransfers(
+    @Param('teamId', ParseUUIDPipe) teamId: string,
+  ): Promise<ListResponse<TeamTransferLineDto>> {
+    return { items: await this.teams.transfersOf(teamId, 'all') };
   }
 
   @Get(':id')

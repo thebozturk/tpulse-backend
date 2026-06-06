@@ -6,6 +6,7 @@ import {
   PagedResult,
   SingleResponse,
 } from '../common/interfaces/response.interface';
+import { TeamTransferLineDto } from '../transfers/dto/team-transfer-line.dto';
 import { PlayerFilterDto } from './dto/player-filter.dto';
 import { PlayerResponseDto } from './dto/player-response.dto';
 import { PlayersService } from './players.service';
@@ -44,6 +45,24 @@ export class PlayersController {
     @Param('nationality') nationality: string,
   ): Promise<ListResponse<PlayerResponseDto>> {
     return { items: await this.players.findByNationality(nationality) };
+  }
+
+  @Get(':playerId/transfers')
+  @ApiOperation({ summary: 'Oyuncunun transferleri' })
+  async transfers(
+    @Param('playerId', ParseUUIDPipe) playerId: string,
+  ): Promise<ListResponse<TeamTransferLineDto>> {
+    return { items: await this.players.transfersOf(playerId) };
+  }
+
+  @Get(':playerId/last-transfer')
+  @ApiOperation({ summary: 'Oyuncunun son transferi' })
+  @ApiResponse({ status: 200, type: TeamTransferLineDto })
+  @ApiResponse({ status: 404 })
+  async lastTransfer(
+    @Param('playerId', ParseUUIDPipe) playerId: string,
+  ): Promise<SingleResponse<TeamTransferLineDto>> {
+    return { data: await this.players.lastTransfer(playerId) };
   }
 
   @Get(':id')

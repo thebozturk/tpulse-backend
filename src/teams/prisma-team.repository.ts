@@ -1,7 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../common/prisma/prisma.service';
 import { toSkipTake } from '../common/pagination';
-import { ITeamRepository, TeamWithRel } from './team.repository';
+import {
+  ITeamRepository,
+  TeamDetailWithRel,
+  TeamWithRel,
+} from './team.repository';
 
 const include = {
   league: { select: { name: true } },
@@ -38,6 +42,20 @@ export class PrismaTeamRepository implements ITeamRepository {
       where: { leagueId },
       orderBy: { name: 'asc' },
       include,
+    });
+  }
+
+  getDetailById(id: string): Promise<TeamDetailWithRel | null> {
+    return this.prisma.team.findUnique({
+      where: { id },
+      include: {
+        league: { select: { name: true, leagueLogo: true } },
+        players: {
+          include: { position: { select: { nameEn: true } } },
+          orderBy: [{ lastName: 'asc' }, { firstName: 'asc' }],
+        },
+        _count: { select: { players: true } },
+      },
     });
   }
 }

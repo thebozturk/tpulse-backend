@@ -1,6 +1,12 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { PagedResult } from '../common/interfaces/response.interface';
 import { buildPaged } from '../common/pagination';
+import { TeamTransferLineDto } from '../transfers/dto/team-transfer-line.dto';
+import { toTeamTransferLine } from '../transfers/transfer.mapper';
+import {
+  ITransferRepository,
+  TRANSFER_REPOSITORY,
+} from '../transfers/transfer.repository';
 import { PlayerFilterDto } from './dto/player-filter.dto';
 import { PlayerResponseDto } from './dto/player-response.dto';
 import { toPlayerResponse } from './player.mapper';
@@ -10,6 +16,8 @@ import { IPlayerRepository, PLAYER_REPOSITORY } from './player.repository';
 export class PlayersService {
   constructor(
     @Inject(PLAYER_REPOSITORY) private readonly repo: IPlayerRepository,
+    @Inject(TRANSFER_REPOSITORY)
+    private readonly transfers: ITransferRepository,
   ) {}
 
   async findAll(
@@ -44,5 +52,19 @@ export class PlayersService {
 
   async findFreeAgents(): Promise<PlayerResponseDto[]> {
     return (await this.repo.getFreeAgents()).map(toPlayerResponse);
+  }
+
+  async transfersOf(playerId: string): Promise<TeamTransferLineDto[]> {
+    return (await this.transfers.getByPlayerId(playerId)).map(
+      toTeamTransferLine,
+    );
+  }
+
+  async lastTransfer(playerId: string): Promise<TeamTransferLineDto> {
+    const last = await this.transfers.getLastByPlayerId(playerId);
+    if (!last) {
+      throw new NotFoundException('Transfer bulunamadı');
+    }
+    return toTeamTransferLine(last);
   }
 }

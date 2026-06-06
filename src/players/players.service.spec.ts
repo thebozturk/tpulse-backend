@@ -1,5 +1,6 @@
 import { NotFoundException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
+import { TRANSFER_REPOSITORY } from '../transfers/transfer.repository';
 import { PLAYER_REPOSITORY } from './player.repository';
 import { PlayersService } from './players.service';
 
@@ -19,6 +20,7 @@ describe('PlayersService', () => {
       providers: [
         PlayersService,
         { provide: PLAYER_REPOSITORY, useValue: repo },
+        { provide: TRANSFER_REPOSITORY, useValue: {} },
       ],
     }).compile();
     service = module.get(PlayersService);
