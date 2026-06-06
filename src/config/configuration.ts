@@ -38,11 +38,15 @@ export const configuration = () => {
     swagger: {
       enabled: env.ENABLE_SWAGGER,
     },
-    // İleride dolacak entegrasyonlar
-    r2: {
-      accountId: env.R2_ACCOUNT_ID,
-      accessKeyId: env.R2_ACCESS_KEY_ID,
-      secretAccessKey: env.R2_SECRET_ACCESS_KEY,
+    // Storage — AWS S3 (lokal MinIO)
+    s3: {
+      endpoint: env.S3_ENDPOINT,
+      region: env.S3_REGION,
+      bucket: env.S3_BUCKET,
+      accessKeyId: env.S3_ACCESS_KEY_ID,
+      secretAccessKey: env.S3_SECRET_ACCESS_KEY,
+      publicBaseUrl: env.S3_PUBLIC_BASE_URL,
+      forcePathStyle: env.S3_FORCE_PATH_STYLE,
     },
     google: {
       authClientId: env.GOOGLE_AUTH_CLIENT_ID,

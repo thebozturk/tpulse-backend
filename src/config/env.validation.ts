@@ -42,10 +42,18 @@ export const envSchema = z.object({
     .transform((v) => v === 'true'),
   SMTP_FROM: z.string().default('no-reply@transferpulse.app'),
 
-  // İleride dolacak entegrasyonlar — Faz 0'da opsiyonel
-  R2_ACCOUNT_ID: z.string().optional(),
-  R2_ACCESS_KEY_ID: z.string().optional(),
-  R2_SECRET_ACCESS_KEY: z.string().optional(),
+  // Storage — AWS S3 (lokal MinIO). Boşsa görsel upload pasif.
+  S3_ENDPOINT: z.string().optional(),
+  S3_REGION: z.string().default('us-east-1'),
+  S3_BUCKET: z.string().optional(),
+  S3_ACCESS_KEY_ID: z.string().optional(),
+  S3_SECRET_ACCESS_KEY: z.string().optional(),
+  S3_PUBLIC_BASE_URL: z.string().optional(),
+  S3_FORCE_PATH_STYLE: z
+    .enum(['true', 'false'])
+    .default('true')
+    .transform((v) => v === 'true'),
+
   GOOGLE_AUTH_CLIENT_ID: z.string().optional(),
   API_FOOTBALL_KEY: z.string().optional(),
   SMTP_HOST: z.string().optional(),
