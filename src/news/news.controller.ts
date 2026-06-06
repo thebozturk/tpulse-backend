@@ -3,6 +3,10 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Public } from '../common/decorators/public.decorator';
 import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 import {
+  ApiPagedResponse,
+  ApiSingleResponse,
+} from '../common/swagger/api-envelope.decorators';
+import {
   PagedResult,
   SingleResponse,
 } from '../common/interfaces/response.interface';
@@ -22,12 +26,14 @@ export class NewsController {
 
   @Get()
   @ApiOperation({ summary: 'Haberleri listele (paged + sort)' })
+  @ApiPagedResponse(NewsResponseDto)
   findAll(@Query() query: NewsQueryDto): Promise<PagedResult<NewsResponseDto>> {
     return this.news.findAll(query);
   }
 
   @Get('by-source')
-  @ApiOperation({ summary: 'Kaynağa göre haberler' })
+  @ApiOperation({ summary: 'Kaynaga gore haberler' })
+  @ApiPagedResponse(NewsResponseDto)
   bySource(
     @Query() query: NewsBySourceDto,
   ): Promise<PagedResult<NewsResponseDto>> {
@@ -35,7 +41,8 @@ export class NewsController {
   }
 
   @Get('by-date-range')
-  @ApiOperation({ summary: 'Tarih aralığına göre haberler' })
+  @ApiOperation({ summary: 'Tarih araligina gore haberler' })
+  @ApiPagedResponse(NewsResponseDto)
   byDateRange(
     @Query() query: NewsDateRangeDto,
   ): Promise<PagedResult<NewsResponseDto>> {
@@ -43,7 +50,8 @@ export class NewsController {
   }
 
   @Get('by-player/:playerId')
-  @ApiOperation({ summary: 'Oyuncuya göre haberler' })
+  @ApiOperation({ summary: 'Oyuncuya gore haberler' })
+  @ApiPagedResponse(NewsResponseDto)
   byPlayer(
     @Param('playerId', ParseUUIDPipe) playerId: string,
     @Query() page: PaginationQueryDto,
@@ -52,7 +60,8 @@ export class NewsController {
   }
 
   @Get('by-team/:teamId')
-  @ApiOperation({ summary: 'Hedef takıma göre haberler' })
+  @ApiOperation({ summary: 'Hedef takima gore haberler' })
+  @ApiPagedResponse(NewsResponseDto)
   byTeam(
     @Param('teamId', ParseUUIDPipe) teamId: string,
     @Query() page: PaginationQueryDto,
@@ -61,7 +70,8 @@ export class NewsController {
   }
 
   @Get('from-team/:teamId')
-  @ApiOperation({ summary: 'Kaynak takıma göre haberler' })
+  @ApiOperation({ summary: 'Kaynak takima gore haberler' })
+  @ApiPagedResponse(NewsResponseDto)
   fromTeam(
     @Param('teamId', ParseUUIDPipe) teamId: string,
     @Query() page: PaginationQueryDto,
@@ -71,7 +81,7 @@ export class NewsController {
 
   @Get(':newsId')
   @ApiOperation({ summary: 'Haberi getir' })
-  @ApiResponse({ status: 200, type: NewsResponseDto })
+  @ApiSingleResponse(NewsResponseDto)
   @ApiResponse({ status: 404 })
   async findOne(
     @Param('newsId', ParseUUIDPipe) newsId: string,

@@ -10,12 +10,20 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
 import { ThrottlePolicies } from '../common/throttle/throttle-policies';
 import { Roles } from '../common/decorators/roles.decorator';
 import { RolesGuard } from '../common/guards/roles.guard';
+import { SuccessResponseDto } from '../common/dto/common-response.dto';
+import { ApiSingleResponse } from '../common/swagger/api-envelope.decorators';
 import { SingleResponse } from '../common/interfaces/response.interface';
+import { TeamIdResponseDto } from './dto/team-id-response.dto';
 import { TeamWriteDto } from './dto/team-write.dto';
 import { TeamsService } from './teams.service';
 
@@ -30,7 +38,9 @@ export class AdminTeamsController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  @ApiOperation({ summary: 'Takım oluştur' })
+  @ApiOperation({ summary: 'Takim olustur' })
+  @ApiSingleResponse(TeamIdResponseDto, 201)
+  @ApiResponse({ status: 400, description: 'Validation failed' })
   async create(
     @Body() dto: TeamWriteDto,
   ): Promise<SingleResponse<{ teamId: string }>> {
@@ -39,7 +49,9 @@ export class AdminTeamsController {
   }
 
   @Put(':id')
-  @ApiOperation({ summary: 'Takım güncelle' })
+  @ApiOperation({ summary: 'Takim guncelle' })
+  @ApiResponse({ status: 200, type: SuccessResponseDto })
+  @ApiResponse({ status: 404, description: 'Team not found' })
   async update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: TeamWriteDto,
@@ -49,7 +61,9 @@ export class AdminTeamsController {
   }
 
   @Delete(':id')
-  @ApiOperation({ summary: 'Takım sil' })
+  @ApiOperation({ summary: 'Takim sil' })
+  @ApiResponse({ status: 200, type: SuccessResponseDto })
+  @ApiResponse({ status: 404, description: 'Team not found' })
   async remove(
     @Param('id', ParseUUIDPipe) id: string,
   ): Promise<{ success: boolean }> {

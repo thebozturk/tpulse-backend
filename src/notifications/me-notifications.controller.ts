@@ -8,7 +8,12 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
 import { ThrottlePolicies } from '../common/throttle/throttle-policies';
 import {
@@ -19,6 +24,14 @@ import {
   PagedResult,
   SingleResponse,
 } from '../common/interfaces/response.interface';
+import {
+  ApiPagedResponse,
+  ApiSingleResponse,
+} from '../common/swagger/api-envelope.decorators';
+import {
+  CountResponseDto,
+  SuccessResponseDto,
+} from '../common/dto/common-response.dto';
 import { NotificationDto, NotificationQueryDto } from './dto/notification.dto';
 import { NotificationsService } from './notifications.service';
 
@@ -31,6 +44,7 @@ export class MeNotificationsController {
 
   @Get()
   @ApiOperation({ summary: 'Bildirimlerim (paged)' })
+  @ApiPagedResponse(NotificationDto)
   list(
     @CurrentUser() user: AuthUser,
     @Query() query: NotificationQueryDto,
@@ -40,6 +54,7 @@ export class MeNotificationsController {
 
   @Get('unread-count')
   @ApiOperation({ summary: 'Okunmamış sayısı' })
+  @ApiResponse({ status: 200, type: CountResponseDto })
   async unreadCount(@CurrentUser() user: AuthUser): Promise<{ count: number }> {
     return { count: await this.notifications.unreadCount(user.userId) };
   }
@@ -47,6 +62,7 @@ export class MeNotificationsController {
   @Post('read-all')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Tümünü okundu işaretle' })
+  @ApiSingleResponse(CountResponseDto)
   async readAll(
     @CurrentUser() user: AuthUser,
   ): Promise<SingleResponse<{ count: number }>> {
@@ -58,6 +74,7 @@ export class MeNotificationsController {
   @Post(':id/read')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Bildirimi okundu işaretle' })
+  @ApiResponse({ status: 200, type: SuccessResponseDto })
   async read(
     @CurrentUser() user: AuthUser,
     @Param('id', ParseUUIDPipe) id: string,

@@ -10,13 +10,21 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
 import { ThrottlePolicies } from '../common/throttle/throttle-policies';
 import { Roles } from '../common/decorators/roles.decorator';
 import { RolesGuard } from '../common/guards/roles.guard';
+import { SuccessResponseDto } from '../common/dto/common-response.dto';
+import { ApiSingleResponse } from '../common/swagger/api-envelope.decorators';
 import { SingleResponse } from '../common/interfaces/response.interface';
 import { LeagueWriteDto } from './dto/league-write.dto';
+import { LeagueCreatedResponseDto } from './dto/league-admin-response.dto';
 import { LeaguesService } from './leagues.service';
 
 @ApiTags('admin-leagues')
@@ -30,7 +38,9 @@ export class AdminLeaguesController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  @ApiOperation({ summary: 'Lig oluştur' })
+  @ApiOperation({ summary: 'Lig olustur' })
+  @ApiSingleResponse(LeagueCreatedResponseDto, 201)
+  @ApiResponse({ status: 400, description: 'Validation failed' })
   async create(
     @Body() dto: LeagueWriteDto,
   ): Promise<SingleResponse<{ leagueId: string }>> {
@@ -39,7 +49,10 @@ export class AdminLeaguesController {
   }
 
   @Put(':id')
-  @ApiOperation({ summary: 'Lig güncelle' })
+  @ApiOperation({ summary: 'Lig guncelle' })
+  @ApiResponse({ status: 200, type: SuccessResponseDto })
+  @ApiResponse({ status: 400, description: 'Validation failed' })
+  @ApiResponse({ status: 404, description: 'League not found' })
   async update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: LeagueWriteDto,
@@ -50,6 +63,8 @@ export class AdminLeaguesController {
 
   @Delete(':id')
   @ApiOperation({ summary: 'Lig sil' })
+  @ApiResponse({ status: 200, type: SuccessResponseDto })
+  @ApiResponse({ status: 404, description: 'League not found' })
   async remove(
     @Param('id', ParseUUIDPipe) id: string,
   ): Promise<{ success: boolean }> {

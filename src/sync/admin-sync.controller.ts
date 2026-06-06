@@ -22,7 +22,12 @@ import {
 } from '../common/interfaces/response.interface';
 import { SyncRunDto } from '../integration/api-football/dto/seed-result.dto';
 import { FootballDataSyncService } from '../integration/api-football/football-data.sync.service';
+import {
+  ApiListResponse,
+  ApiSingleResponse,
+} from '../common/swagger/api-envelope.decorators';
 import { SYNC_QUEUE } from './sync.processor';
+import { SyncJobResponseDto } from './dto/sync-job-response.dto';
 
 @ApiTags('admin-sync')
 @ApiBearerAuth()
@@ -39,6 +44,7 @@ export class AdminSyncController {
   @Post('football-data')
   @HttpCode(HttpStatus.ACCEPTED)
   @ApiOperation({ summary: 'Tüm ligleri senkronla (async)' })
+  @ApiSingleResponse(SyncJobResponseDto, 202)
   async syncAll(): Promise<SingleResponse<{ jobId: string }>> {
     const job = await this.queue.add('sync', {});
     return { data: { jobId: String(job.id) } };
@@ -47,6 +53,7 @@ export class AdminSyncController {
   @Post('football-data/leagues/:leagueExternalId')
   @HttpCode(HttpStatus.ACCEPTED)
   @ApiOperation({ summary: 'Tek ligi senkronla (async)' })
+  @ApiSingleResponse(SyncJobResponseDto, 202)
   async syncLeague(
     @Param('leagueExternalId', ParseIntPipe) leagueExternalId: number,
   ): Promise<SingleResponse<{ jobId: string; leagueExternalId: number }>> {
@@ -56,6 +63,7 @@ export class AdminSyncController {
 
   @Get('runs')
   @ApiOperation({ summary: 'Sync audit kayıtları' })
+  @ApiListResponse(SyncRunDto)
   async runs(
     @Query('take', new ParseIntPipe({ optional: true })) take?: number,
   ): Promise<ListResponse<SyncRunDto>> {

@@ -13,6 +13,7 @@ import {
   ApiBearerAuth,
   ApiConsumes,
   ApiOperation,
+  ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
@@ -23,6 +24,9 @@ import {
 } from '../common/decorators/current-user.decorator';
 import { ImageUrlDto } from '../common/dto/image-url.dto';
 import { SingleResponse } from '../common/interfaces/response.interface';
+import { ApiSingleResponse } from '../common/swagger/api-envelope.decorators';
+import { SuccessResponseDto } from '../common/dto/common-response.dto';
+import { ProfilePhotoUrlDto } from './dto/profile-photo-url.dto';
 import { ProfileService } from './profile.service';
 
 @ApiTags('profile')
@@ -36,6 +40,7 @@ export class ProfilePhotoController {
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileInterceptor('image'))
   @ApiOperation({ summary: 'Profil fotoğrafı yükle' })
+  @ApiSingleResponse(ProfilePhotoUrlDto, 201)
   async upload(
     @CurrentUser() user: AuthUser,
     @UploadedFile() file: Express.Multer.File,
@@ -47,6 +52,7 @@ export class ProfilePhotoController {
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileInterceptor('image'))
   @ApiOperation({ summary: 'Profil fotoğrafı değiştir' })
+  @ApiSingleResponse(ProfilePhotoUrlDto)
   async replace(
     @CurrentUser() user: AuthUser,
     @UploadedFile() file: Express.Multer.File,
@@ -56,6 +62,7 @@ export class ProfilePhotoController {
 
   @Post('from-url')
   @ApiOperation({ summary: 'URL’den profil fotoğrafı' })
+  @ApiSingleResponse(ProfilePhotoUrlDto, 201)
   async fromUrl(
     @CurrentUser() user: AuthUser,
     @Body() dto: ImageUrlDto,
@@ -67,6 +74,7 @@ export class ProfilePhotoController {
 
   @Get()
   @ApiOperation({ summary: 'Profil fotoğrafını getir' })
+  @ApiSingleResponse(ProfilePhotoUrlDto)
   async get(
     @CurrentUser() user: AuthUser,
   ): Promise<SingleResponse<{ url: string }>> {
@@ -75,6 +83,7 @@ export class ProfilePhotoController {
 
   @Delete()
   @ApiOperation({ summary: 'Profil fotoğrafını sil' })
+  @ApiResponse({ status: 200, type: SuccessResponseDto })
   async remove(@CurrentUser() user: AuthUser): Promise<{ success: boolean }> {
     await this.profile.remove(user.userId);
     return { success: true };

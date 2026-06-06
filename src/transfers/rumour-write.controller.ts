@@ -10,7 +10,12 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
 import { ThrottlePolicies } from '../common/throttle/throttle-policies';
 import {
@@ -19,8 +24,12 @@ import {
 } from '../common/decorators/current-user.decorator';
 import { Roles } from '../common/decorators/roles.decorator';
 import { RolesGuard } from '../common/guards/roles.guard';
+import { SuccessResponseDto } from '../common/dto/common-response.dto';
+import { ApiSingleResponse } from '../common/swagger/api-envelope.decorators';
 import { SingleResponse } from '../common/interfaces/response.interface';
 import { ConfirmRumourDto, CreateRumourDto } from './dto/rumour-write.dto';
+import { RumourIdResponseDto } from './dto/rumour-id-response.dto';
+import { TransferIdResponseDto } from './dto/transfer-id-response.dto';
 import { RumourWriteService } from './rumour-write.service';
 
 @ApiTags('rumours')
@@ -35,6 +44,7 @@ export class RumourWriteController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Söylenti oluştur (Admin/Reporter) — bot kullanır' })
+  @ApiSingleResponse(RumourIdResponseDto, 201)
   async create(
     @Body() dto: CreateRumourDto,
     @CurrentUser() user: AuthUser,
@@ -45,6 +55,7 @@ export class RumourWriteController {
 
   @Put(':id')
   @ApiOperation({ summary: 'Söylenti güncelle (yazar veya admin)' })
+  @ApiResponse({ status: 200, type: SuccessResponseDto })
   async update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: CreateRumourDto,
@@ -56,6 +67,7 @@ export class RumourWriteController {
 
   @Delete(':id')
   @ApiOperation({ summary: 'Söylenti sil (soft, yazar veya admin)' })
+  @ApiResponse({ status: 200, type: SuccessResponseDto })
   async remove(
     @Param('id', ParseUUIDPipe) id: string,
     @CurrentUser() user: AuthUser,
@@ -68,6 +80,7 @@ export class RumourWriteController {
   @Roles('Admin')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Söylentiyi transfere çevir (Admin)' })
+  @ApiSingleResponse(TransferIdResponseDto)
   async confirm(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: ConfirmRumourDto,

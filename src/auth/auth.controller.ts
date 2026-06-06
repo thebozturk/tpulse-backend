@@ -7,8 +7,10 @@ import {
   CurrentUser,
 } from '../common/decorators/current-user.decorator';
 import { Public } from '../common/decorators/public.decorator';
+import { ApiActionResponse } from '../common/swagger/api-envelope.decorators';
 import { AuthService } from './auth.service';
 import { AuthResponseDto } from './dto/auth-response.dto';
+import { RefreshResponseDto } from './dto/refresh-response.dto';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import { GoogleAuthDto } from './dto/google-auth.dto';
 import { LoginDto } from './dto/login.dto';
@@ -47,6 +49,7 @@ export class AuthController {
   @Public()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Şifre sıfırlama isteği (her zaman 200)' })
+  @ApiActionResponse()
   async forgotPassword(
     @Body() dto: ForgotPasswordDto,
   ): Promise<{ success: boolean; message: string }> {
@@ -65,6 +68,7 @@ export class AuthController {
     status: 400,
     description: 'Geçersiz/expired token veya zayıf parola',
   })
+  @ApiActionResponse()
   async resetPassword(
     @Body() dto: ResetPasswordDto,
   ): Promise<{ success: boolean; message: string }> {
@@ -76,6 +80,7 @@ export class AuthController {
   @Public()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Access token yenile (refresh rotation)' })
+  @ApiResponse({ status: 200, type: RefreshResponseDto })
   @ApiResponse({ status: 401, description: 'Geçersiz refresh token' })
   refresh(@Body() dto: RefreshTokenDto): Promise<{
     accessToken: string;
@@ -88,6 +93,7 @@ export class AuthController {
   @Post('logout')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Çıkış (refresh token revoke)' })
+  @ApiActionResponse()
   async logout(
     @Body() dto: RefreshTokenDto,
   ): Promise<{ success: boolean; message: string }> {
@@ -98,6 +104,7 @@ export class AuthController {
   @Post('revoke-all')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Tüm cihazlardan çıkış' })
+  @ApiActionResponse()
   async revokeAll(
     @CurrentUser() user: AuthUser,
   ): Promise<{ success: boolean; message: string }> {

@@ -2,6 +2,11 @@ import { Controller, Get, Param, ParseUUIDPipe, Query } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Public } from '../common/decorators/public.decorator';
 import {
+  ApiListResponse,
+  ApiPagedResponse,
+  ApiSingleResponse,
+} from '../common/swagger/api-envelope.decorators';
+import {
   ListResponse,
   PagedResult,
   SingleResponse,
@@ -18,6 +23,7 @@ export class RumourController {
 
   @Get()
   @ApiOperation({ summary: 'Söylentileri filtrele (paged)' })
+  @ApiPagedResponse(TransferResponseDto)
   findAll(
     @Query() filter: RumourFilterDto,
   ): Promise<PagedResult<TransferResponseDto>> {
@@ -26,6 +32,7 @@ export class RumourController {
 
   @Get('latest')
   @ApiOperation({ summary: 'Son söylentiler' })
+  @ApiPagedResponse(TransferResponseDto)
   async latest(
     @Query() dto: LatestQueryDto,
   ): Promise<PagedResult<TransferResponseDto>> {
@@ -34,6 +41,7 @@ export class RumourController {
 
   @Get('by-player/:playerId')
   @ApiOperation({ summary: 'Oyuncuya göre söylentiler' })
+  @ApiListResponse(TransferResponseDto)
   async byPlayer(
     @Param('playerId', ParseUUIDPipe) playerId: string,
   ): Promise<ListResponse<TransferResponseDto>> {
@@ -42,6 +50,7 @@ export class RumourController {
 
   @Get('by-team/:teamId')
   @ApiOperation({ summary: 'Takıma göre söylentiler' })
+  @ApiListResponse(TransferResponseDto)
   async byTeam(
     @Param('teamId', ParseUUIDPipe) teamId: string,
   ): Promise<ListResponse<TransferResponseDto>> {
@@ -50,7 +59,7 @@ export class RumourController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Söylentiyi getir' })
-  @ApiResponse({ status: 200, type: TransferResponseDto })
+  @ApiSingleResponse(TransferResponseDto)
   @ApiResponse({ status: 404 })
   async findOne(
     @Param('id', ParseUUIDPipe) id: string,

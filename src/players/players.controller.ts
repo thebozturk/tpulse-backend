@@ -6,6 +6,11 @@ import {
   PagedResult,
   SingleResponse,
 } from '../common/interfaces/response.interface';
+import {
+  ApiListResponse,
+  ApiPagedResponse,
+  ApiSingleResponse,
+} from '../common/swagger/api-envelope.decorators';
 import { PlayerSearchDto } from '../search/dto/search-query.dto';
 import { SearchService } from '../search/search.service';
 import { TeamTransferLineDto } from '../transfers/dto/team-transfer-line.dto';
@@ -25,6 +30,7 @@ export class PlayersController {
 
   @Get()
   @ApiOperation({ summary: 'Oyuncuları listele (filtre + paged)' })
+  @ApiPagedResponse(PlayerResponseDto)
   findAll(
     @Query() filter: PlayerFilterDto,
   ): Promise<PagedResult<PlayerResponseDto>> {
@@ -33,12 +39,14 @@ export class PlayersController {
 
   @Get('free-agents')
   @ApiOperation({ summary: 'Serbest oyuncular' })
+  @ApiListResponse(PlayerResponseDto)
   async freeAgents(): Promise<ListResponse<PlayerResponseDto>> {
     return { items: await this.players.findFreeAgents() };
   }
 
   @Get('search')
   @ApiOperation({ summary: 'Oyuncu fuzzy arama (paged) — bot kullanır' })
+  @ApiPagedResponse(PlayerResponseDto)
   @ApiResponse({ status: 400, description: 'query boş' })
   searchPlayers(
     @Query() query: PlayerSearchDto,
@@ -48,6 +56,7 @@ export class PlayersController {
 
   @Get('by-team/:teamId')
   @ApiOperation({ summary: 'Takıma göre oyuncular' })
+  @ApiListResponse(PlayerResponseDto)
   async byTeam(
     @Param('teamId', ParseUUIDPipe) teamId: string,
   ): Promise<ListResponse<PlayerResponseDto>> {
@@ -56,6 +65,7 @@ export class PlayersController {
 
   @Get('by-nationality/:nationality')
   @ApiOperation({ summary: 'Uyruğa göre oyuncular' })
+  @ApiListResponse(PlayerResponseDto)
   async byNationality(
     @Param('nationality') nationality: string,
   ): Promise<ListResponse<PlayerResponseDto>> {
@@ -65,7 +75,7 @@ export class PlayersController {
   @Get(':id/profile')
   @Public()
   @ApiOperation({ summary: 'Oyuncu profili (transfer+haber+post)' })
-  @ApiResponse({ status: 200, type: PlayerProfileDto })
+  @ApiSingleResponse(PlayerProfileDto)
   @ApiResponse({ status: 404 })
   async profile(
     @Param('id', ParseUUIDPipe) id: string,
@@ -75,6 +85,7 @@ export class PlayersController {
 
   @Get(':playerId/transfers')
   @ApiOperation({ summary: 'Oyuncunun transferleri' })
+  @ApiListResponse(TeamTransferLineDto)
   async transfers(
     @Param('playerId', ParseUUIDPipe) playerId: string,
   ): Promise<ListResponse<TeamTransferLineDto>> {
@@ -83,7 +94,7 @@ export class PlayersController {
 
   @Get(':playerId/last-transfer')
   @ApiOperation({ summary: 'Oyuncunun son transferi' })
-  @ApiResponse({ status: 200, type: TeamTransferLineDto })
+  @ApiSingleResponse(TeamTransferLineDto)
   @ApiResponse({ status: 404 })
   async lastTransfer(
     @Param('playerId', ParseUUIDPipe) playerId: string,
@@ -93,7 +104,7 @@ export class PlayersController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Oyuncuyu getir' })
-  @ApiResponse({ status: 200, type: PlayerResponseDto })
+  @ApiSingleResponse(PlayerResponseDto)
   @ApiResponse({ status: 404 })
   async findOne(
     @Param('id', ParseUUIDPipe) id: string,

@@ -10,15 +10,19 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
 import { ThrottlePolicies } from '../common/throttle/throttle-policies';
+import { ApiSingleResponse } from '../common/swagger/api-envelope.decorators';
+import { SuccessResponseDto } from '../common/dto/common-response.dto';
 import { Roles } from '../common/decorators/roles.decorator';
 import { RolesGuard } from '../common/guards/roles.guard';
 import { SingleResponse } from '../common/interfaces/response.interface';
 import {
   BulkDeleteNewsDto,
   CreateNewsDto,
+  DeletedCountResponseDto,
+  NewsIdResponseDto,
   UpdateNewsDto,
 } from './dto/news-write.dto';
 import { NewsService } from './news.service';
@@ -34,7 +38,8 @@ export class AdminNewsController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  @ApiOperation({ summary: 'Haber oluştur' })
+  @ApiOperation({ summary: 'Haber olustur' })
+  @ApiSingleResponse(NewsIdResponseDto, 201)
   async create(
     @Body() dto: CreateNewsDto,
   ): Promise<SingleResponse<{ newsId: string }>> {
@@ -43,7 +48,8 @@ export class AdminNewsController {
   }
 
   @Delete('bulk')
-  @ApiOperation({ summary: 'Toplu haber sil (≤100)' })
+  @ApiOperation({ summary: 'Toplu haber sil (<=100)' })
+  @ApiSingleResponse(DeletedCountResponseDto)
   async removeBulk(
     @Body() dto: BulkDeleteNewsDto,
   ): Promise<SingleResponse<{ deletedCount: number }>> {
@@ -51,7 +57,8 @@ export class AdminNewsController {
   }
 
   @Put(':newsId')
-  @ApiOperation({ summary: 'Haber güncelle' })
+  @ApiOperation({ summary: 'Haber guncelle' })
+  @ApiResponse({ status: 200, type: SuccessResponseDto })
   async update(
     @Param('newsId', ParseUUIDPipe) newsId: string,
     @Body() dto: UpdateNewsDto,
@@ -62,6 +69,7 @@ export class AdminNewsController {
 
   @Delete(':newsId')
   @ApiOperation({ summary: 'Haber sil' })
+  @ApiResponse({ status: 200, type: SuccessResponseDto })
   async remove(
     @Param('newsId', ParseUUIDPipe) newsId: string,
   ): Promise<{ success: boolean }> {

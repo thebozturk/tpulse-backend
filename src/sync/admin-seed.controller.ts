@@ -19,6 +19,7 @@ import { RolesGuard } from '../common/guards/roles.guard';
 import { SingleResponse } from '../common/interfaces/response.interface';
 import { SeedResultDto } from '../integration/api-football/dto/seed-result.dto';
 import { FootballDataSeeder } from '../integration/api-football/football-data.seeder';
+import { ApiSingleResponse } from '../common/swagger/api-envelope.decorators';
 
 @ApiTags('admin-seed')
 @ApiBearerAuth()
@@ -35,6 +36,7 @@ export class AdminSeedController {
     FileInterceptor('file', { limits: { fileSize: 50 * 1024 * 1024 } }),
   )
   @ApiOperation({ summary: 'leagues_with_players.json seed (idempotent)' })
+  @ApiSingleResponse(SeedResultDto)
   async seed(
     @UploadedFile() file: Express.Multer.File,
   ): Promise<SingleResponse<SeedResultDto>> {

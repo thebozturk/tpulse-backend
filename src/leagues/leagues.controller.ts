@@ -3,6 +3,11 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Public } from '../common/decorators/public.decorator';
 import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 import {
+  ApiListResponse,
+  ApiPagedResponse,
+  ApiSingleResponse,
+} from '../common/swagger/api-envelope.decorators';
+import {
   ListResponse,
   PagedResult,
   SingleResponse,
@@ -24,6 +29,7 @@ export class LeaguesController {
 
   @Get()
   @ApiOperation({ summary: 'Ligleri listele (paged)' })
+  @ApiPagedResponse(LeagueResponseDto)
   findAll(
     @Query() query: PaginationQueryDto,
   ): Promise<PagedResult<LeagueResponseDto>> {
@@ -32,7 +38,7 @@ export class LeaguesController {
 
   @Get('by-code/:code')
   @ApiOperation({ summary: 'Lig kodu ile getir' })
-  @ApiResponse({ status: 200, type: LeagueResponseDto })
+  @ApiSingleResponse(LeagueResponseDto)
   @ApiResponse({ status: 404 })
   async findByCode(
     @Param('code') code: string,
@@ -42,6 +48,7 @@ export class LeaguesController {
 
   @Get(':leagueId/transfers/latest')
   @ApiOperation({ summary: 'Ligin son transferleri' })
+  @ApiListResponse(TeamTransferLineDto)
   async latestTransfers(
     @Param('leagueId', ParseUUIDPipe) leagueId: string,
     @Query() dto: LeagueLatestTransfersDto,
@@ -53,6 +60,7 @@ export class LeaguesController {
 
   @Get(':leagueId/transfers/incoming')
   @ApiOperation({ summary: 'Lige gelen transferler' })
+  @ApiPagedResponse(TeamTransferLineDto)
   incoming(
     @Param('leagueId', ParseUUIDPipe) leagueId: string,
     @Query() filter: LeagueTransferFilterDto,
@@ -62,6 +70,7 @@ export class LeaguesController {
 
   @Get(':leagueId/transfers/outgoing')
   @ApiOperation({ summary: 'Ligden giden transferler' })
+  @ApiPagedResponse(TeamTransferLineDto)
   outgoing(
     @Param('leagueId', ParseUUIDPipe) leagueId: string,
     @Query() filter: LeagueTransferFilterDto,
@@ -71,6 +80,7 @@ export class LeaguesController {
 
   @Get(':leagueId/transfers')
   @ApiOperation({ summary: 'Ligin transferleri (paged)' })
+  @ApiPagedResponse(TeamTransferLineDto)
   leagueTransfers(
     @Param('leagueId', ParseUUIDPipe) leagueId: string,
     @Query() query: LeagueTransfersQueryDto,
@@ -80,7 +90,7 @@ export class LeaguesController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Ligi getir' })
-  @ApiResponse({ status: 200, type: LeagueResponseDto })
+  @ApiSingleResponse(LeagueResponseDto)
   @ApiResponse({ status: 404 })
   async findOne(
     @Param('id', ParseUUIDPipe) id: string,

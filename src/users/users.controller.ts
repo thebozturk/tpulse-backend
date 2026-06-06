@@ -24,6 +24,7 @@ import { Roles } from '../common/decorators/roles.decorator';
 import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 import { RolesGuard } from '../common/guards/roles.guard';
 import { PagedResult } from '../common/interfaces/response.interface';
+import { ApiPagedResponse } from '../common/swagger/api-envelope.decorators';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserResponseDto } from './dto/user-response.dto';
@@ -58,6 +59,7 @@ export class UsersController {
 
   @Get()
   @ApiOperation({ summary: 'Kullanıcıları listele (paged)' })
+  @ApiPagedResponse(UserResponseDto)
   findAll(
     @Query() query: PaginationQueryDto,
   ): Promise<PagedResult<UserResponseDto>> {
@@ -66,6 +68,7 @@ export class UsersController {
 
   @Put(':id')
   @ApiOperation({ summary: 'Kullanıcı güncelle' })
+  @ApiResponse({ status: 200, type: UserResponseDto })
   @ApiResponse({ status: 400, description: 'id uyuşmazlığı' })
   @ApiResponse({ status: 404 })
   update(

@@ -48,3 +48,11 @@ export class PostVoteResultDto {
   @ApiProperty() disagreePercentage: number;
   @ApiPropertyOptional() userVote?: number;
 }
+
+/** Like/unlike toggle sonucu: zaten o durumdaysa `unchanged`, kuyruğa alındıysa `queued`. */
+export class ReactionResultDto {
+  @ApiPropertyOptional({ description: 'Zaten istenen durumda (200)' })
+  unchanged?: boolean;
+  @ApiPropertyOptional({ description: 'İşleme alındı (202)' })
+  queued?: boolean;
+}

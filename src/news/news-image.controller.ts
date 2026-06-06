@@ -15,14 +15,18 @@ import {
   ApiBearerAuth,
   ApiConsumes,
   ApiOperation,
+  ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
 import { ThrottlePolicies } from '../common/throttle/throttle-policies';
+import { ApiSingleResponse } from '../common/swagger/api-envelope.decorators';
+import { SuccessResponseDto } from '../common/dto/common-response.dto';
 import { Roles } from '../common/decorators/roles.decorator';
 import { ImageUrlDto } from '../common/dto/image-url.dto';
 import { RolesGuard } from '../common/guards/roles.guard';
 import { SingleResponse } from '../common/interfaces/response.interface';
+import { NewsImageUrlResponseDto } from './dto/news-image-response.dto';
 import { NewsService } from './news.service';
 
 @ApiTags('admin-news')
@@ -37,7 +41,8 @@ export class NewsImageController {
   @Post()
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileInterceptor('image'))
-  @ApiOperation({ summary: 'Haber görseli yükle' })
+  @ApiOperation({ summary: 'Haber gorseli yukle' })
+  @ApiSingleResponse(NewsImageUrlResponseDto, 201)
   async upload(
     @Param('newsId', ParseUUIDPipe) newsId: string,
     @UploadedFile() file: Express.Multer.File,
@@ -48,7 +53,8 @@ export class NewsImageController {
   @Put()
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileInterceptor('image'))
-  @ApiOperation({ summary: 'Haber görseli değiştir' })
+  @ApiOperation({ summary: 'Haber gorseli degistir' })
+  @ApiSingleResponse(NewsImageUrlResponseDto)
   async replace(
     @Param('newsId', ParseUUIDPipe) newsId: string,
     @UploadedFile() file: Express.Multer.File,
@@ -57,7 +63,8 @@ export class NewsImageController {
   }
 
   @Post('from-url')
-  @ApiOperation({ summary: 'URL’den haber görseli' })
+  @ApiOperation({ summary: 'URL den haber gorseli' })
+  @ApiSingleResponse(NewsImageUrlResponseDto, 201)
   async fromUrl(
     @Param('newsId', ParseUUIDPipe) newsId: string,
     @Body() dto: ImageUrlDto,
@@ -68,7 +75,8 @@ export class NewsImageController {
   }
 
   @Delete()
-  @ApiOperation({ summary: 'Haber görseli sil' })
+  @ApiOperation({ summary: 'Haber gorseli sil' })
+  @ApiResponse({ status: 200, type: SuccessResponseDto })
   async remove(
     @Param('newsId', ParseUUIDPipe) newsId: string,
   ): Promise<{ success: boolean }> {

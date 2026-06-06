@@ -38,7 +38,41 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/NotificationDto"
+                      }
+                    },
+                    "page": {
+                      "type": "number"
+                    },
+                    "pageSize": {
+                      "type": "number"
+                    },
+                    "totalCount": {
+                      "type": "number"
+                    },
+                    "totalPages": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "items",
+                    "page",
+                    "pageSize",
+                    "totalCount",
+                    "totalPages"
+                  ]
+                }
+              }
+            }
           }
         },
         "security": [
@@ -58,7 +92,14 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CountResponseDto"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -78,7 +119,22 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/CountResponseDto"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
           }
         },
         "security": [
@@ -107,7 +163,14 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseDto"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -127,7 +190,25 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/PreferenceDto"
+                      }
+                    }
+                  },
+                  "required": [
+                    "items"
+                  ]
+                }
+              }
+            }
           }
         },
         "security": [
@@ -155,7 +236,25 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/PreferenceDto"
+                      }
+                    }
+                  },
+                  "required": [
+                    "items"
+                  ]
+                }
+              }
+            }
           }
         },
         "security": [
@@ -184,7 +283,14 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CountResponseDto"
+                }
+              }
+            }
           }
         },
         "summary": "afterPostId sonrası yeni gönderi sayısı",
@@ -199,7 +305,25 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/PostResponseDto"
+                      }
+                    }
+                  },
+                  "required": [
+                    "items"
+                  ]
+                }
+              }
+            }
           }
         },
         "security": [
@@ -282,7 +406,41 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/PostResponseDto"
+                      }
+                    },
+                    "page": {
+                      "type": "number"
+                    },
+                    "pageSize": {
+                      "type": "number"
+                    },
+                    "totalCount": {
+                      "type": "number"
+                    },
+                    "totalPages": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "items",
+                    "page",
+                    "pageSize",
+                    "totalCount",
+                    "totalPages"
+                  ]
+                }
+              }
+            }
           }
         },
         "summary": "Feed (filtre + like-state)",
@@ -305,7 +463,26 @@
         },
         "responses": {
           "202": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "message"
+                  ]
+                }
+              }
+            }
           }
         },
         "security": [
@@ -334,7 +511,25 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/PostResponseDto"
+                      }
+                    }
+                  },
+                  "required": [
+                    "items"
+                  ]
+                }
+              }
+            }
           }
         },
         "summary": "Oyuncuya göre gönderiler",
@@ -358,7 +553,25 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/PostResponseDto"
+                      }
+                    }
+                  },
+                  "required": [
+                    "items"
+                  ]
+                }
+              }
+            }
           }
         },
         "summary": "Takıma göre gönderiler",
@@ -382,7 +595,22 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/PostResponseDto"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
           }
         },
         "summary": "Gönderiyi getir",
@@ -414,7 +642,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseDto"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -441,7 +676,14 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseDto"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -480,7 +722,22 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/PostVoteResultDto"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
           }
         },
         "security": [
@@ -508,8 +765,25 @@
           }
         ],
         "responses": {
-          "201": {
-            "description": ""
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReactionResultDto"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReactionResultDto"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -536,7 +810,24 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReactionResultDto"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReactionResultDto"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -556,7 +847,25 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/FavouriteDto"
+                      }
+                    }
+                  },
+                  "required": [
+                    "items"
+                  ]
+                }
+              }
+            }
           }
         },
         "security": [
@@ -583,8 +892,25 @@
           }
         },
         "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FavouriteAddResponseDto"
+                }
+              }
+            }
+          },
           "201": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FavouriteAddResponseDto"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -612,7 +938,25 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/FavouriteDto"
+                      }
+                    }
+                  },
+                  "required": [
+                    "items"
+                  ]
+                }
+              }
+            }
           }
         },
         "security": [
@@ -641,7 +985,14 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseDto"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -670,7 +1021,25 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/CommentDto"
+                      }
+                    }
+                  },
+                  "required": [
+                    "items"
+                  ]
+                }
+              }
+            }
           }
         },
         "summary": "Gönderi yorumları (2-seviye, like-state)",
@@ -702,7 +1071,26 @@
         },
         "responses": {
           "202": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "message"
+                  ]
+                }
+              }
+            }
           }
         },
         "security": [
@@ -741,7 +1129,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseDto"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -768,7 +1163,14 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseDto"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -797,7 +1199,14 @@
         ],
         "responses": {
           "202": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseDto"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -824,7 +1233,14 @@
         ],
         "responses": {
           "202": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseDto"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -853,7 +1269,25 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/TransferCommentDto"
+                      }
+                    }
+                  },
+                  "required": [
+                    "items"
+                  ]
+                }
+              }
+            }
           }
         },
         "summary": "Transfer yorumları (2-seviye, like-state)",
@@ -885,7 +1319,22 @@
         },
         "responses": {
           "201": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/TransferCommentCreatedDto"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
           }
         },
         "security": [
@@ -924,7 +1373,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseDto"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -951,7 +1407,14 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseDto"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -980,7 +1443,14 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseDto"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -1007,7 +1477,14 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseDto"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -1027,7 +1504,22 @@
         "parameters": [],
         "responses": {
           "202": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/SyncJobResponseDto"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
           }
         },
         "security": [
@@ -1056,7 +1548,22 @@
         ],
         "responses": {
           "202": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/SyncJobResponseDto"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
           }
         },
         "security": [
@@ -1085,7 +1592,25 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/SyncRunDto"
+                      }
+                    }
+                  },
+                  "required": [
+                    "items"
+                  ]
+                }
+              }
+            }
           }
         },
         "security": [
@@ -1104,8 +1629,23 @@
         "operationId": "AdminSeedController_seed",
         "parameters": [],
         "responses": {
-          "201": {
-            "description": ""
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/SeedResultDto"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
           }
         },
         "security": [
@@ -1205,7 +1745,26 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "message"
+                  ]
+                }
+              }
+            }
           }
         },
         "summary": "Şifre sıfırlama isteği (her zaman 200)",
@@ -1229,6 +1788,28 @@
           }
         },
         "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "message"
+                  ]
+                }
+              }
+            }
+          },
           "400": {
             "description": "Geçersiz/expired token veya zayıf parola"
           }
@@ -1254,6 +1835,16 @@
           }
         },
         "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RefreshResponseDto"
+                }
+              }
+            }
+          },
           "401": {
             "description": "Geçersiz refresh token"
           }
@@ -1280,7 +1871,26 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "message"
+                  ]
+                }
+              }
+            }
           }
         },
         "summary": "Çıkış (refresh token revoke)",
@@ -1295,7 +1905,26 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "message"
+                  ]
+                }
+              }
+            }
           }
         },
         "summary": "Tüm cihazlardan çıkış",
@@ -1405,7 +2034,41 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/UserResponseDto"
+                      }
+                    },
+                    "page": {
+                      "type": "number"
+                    },
+                    "pageSize": {
+                      "type": "number"
+                    },
+                    "totalCount": {
+                      "type": "number"
+                    },
+                    "totalPages": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "items",
+                    "page",
+                    "pageSize",
+                    "totalCount",
+                    "totalPages"
+                  ]
+                }
+              }
+            }
           }
         },
         "security": [
@@ -1480,6 +2143,16 @@
           }
         },
         "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponseDto"
+                }
+              }
+            }
+          },
           "400": {
             "description": "id uyuşmazlığı"
           },
@@ -1631,7 +2304,41 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/TransferResponseDto"
+                      }
+                    },
+                    "page": {
+                      "type": "number"
+                    },
+                    "pageSize": {
+                      "type": "number"
+                    },
+                    "totalCount": {
+                      "type": "number"
+                    },
+                    "totalPages": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "items",
+                    "page",
+                    "pageSize",
+                    "totalCount",
+                    "totalPages"
+                  ]
+                }
+              }
+            }
           }
         },
         "summary": "Transferleri filtrele (paged)",
@@ -1677,7 +2384,41 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/TransferResponseDto"
+                      }
+                    },
+                    "page": {
+                      "type": "number"
+                    },
+                    "pageSize": {
+                      "type": "number"
+                    },
+                    "totalCount": {
+                      "type": "number"
+                    },
+                    "totalPages": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "items",
+                    "page",
+                    "pageSize",
+                    "totalCount",
+                    "totalPages"
+                  ]
+                }
+              }
+            }
           }
         },
         "summary": "Son transferler",
@@ -1731,7 +2472,41 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/TransferResponseDto"
+                      }
+                    },
+                    "page": {
+                      "type": "number"
+                    },
+                    "pageSize": {
+                      "type": "number"
+                    },
+                    "totalCount": {
+                      "type": "number"
+                    },
+                    "totalPages": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "items",
+                    "page",
+                    "pageSize",
+                    "totalCount",
+                    "totalPages"
+                  ]
+                }
+              }
+            }
           }
         },
         "summary": "En pahalı transferler",
@@ -1772,7 +2547,25 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/TransferResponseDto"
+                      }
+                    }
+                  },
+                  "required": [
+                    "items"
+                  ]
+                }
+              }
+            }
           }
         },
         "summary": "İki takım arası transferler",
@@ -1796,7 +2589,25 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/TransferResponseDto"
+                      }
+                    }
+                  },
+                  "required": [
+                    "items"
+                  ]
+                }
+              }
+            }
           }
         },
         "summary": "Yıla göre transferler",
@@ -1828,7 +2639,25 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/TransferResponseDto"
+                      }
+                    }
+                  },
+                  "required": [
+                    "items"
+                  ]
+                }
+              }
+            }
           }
         },
         "summary": "Ay/yıla göre transferler",
@@ -1861,7 +2690,25 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/LeagueTransfersDto"
+                      }
+                    }
+                  },
+                  "required": [
+                    "items"
+                  ]
+                }
+              }
+            }
           }
         },
         "summary": "Liglere göre son transferler",
@@ -1973,6 +2820,27 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/TransferPeriodDto"
+                      }
+                    }
+                  },
+                  "required": [
+                    "items"
+                  ]
+                }
+              }
+            }
+          },
           "400": {
             "description": "Geçersiz yıl"
           }
@@ -2014,6 +2882,16 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransferPeriodSummaryDto"
+                }
+              }
+            }
+          },
           "400": {
             "description": "year veya transferPeriodId zorunlu"
           }
@@ -2064,6 +2942,16 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransferSeasonDashboardDto"
+                }
+              }
+            }
+          },
           "400": {
             "description": ""
           }
@@ -2093,7 +2981,15 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TransferResponseDto"
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/TransferResponseDto"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
                 }
               }
             }
@@ -2194,7 +3090,41 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/TransferResponseDto"
+                      }
+                    },
+                    "page": {
+                      "type": "number"
+                    },
+                    "pageSize": {
+                      "type": "number"
+                    },
+                    "totalCount": {
+                      "type": "number"
+                    },
+                    "totalPages": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "items",
+                    "page",
+                    "pageSize",
+                    "totalCount",
+                    "totalPages"
+                  ]
+                }
+              }
+            }
           }
         },
         "summary": "Söylentileri filtrele (paged)",
@@ -2217,7 +3147,22 @@
         },
         "responses": {
           "201": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/RumourIdResponseDto"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
           }
         },
         "security": [
@@ -2268,7 +3213,41 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/TransferResponseDto"
+                      }
+                    },
+                    "page": {
+                      "type": "number"
+                    },
+                    "pageSize": {
+                      "type": "number"
+                    },
+                    "totalCount": {
+                      "type": "number"
+                    },
+                    "totalPages": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "items",
+                    "page",
+                    "pageSize",
+                    "totalCount",
+                    "totalPages"
+                  ]
+                }
+              }
+            }
           }
         },
         "summary": "Son söylentiler",
@@ -2292,7 +3271,25 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/TransferResponseDto"
+                      }
+                    }
+                  },
+                  "required": [
+                    "items"
+                  ]
+                }
+              }
+            }
           }
         },
         "summary": "Oyuncuya göre söylentiler",
@@ -2316,7 +3313,25 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/TransferResponseDto"
+                      }
+                    }
+                  },
+                  "required": [
+                    "items"
+                  ]
+                }
+              }
+            }
           }
         },
         "summary": "Takıma göre söylentiler",
@@ -2344,7 +3359,15 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TransferResponseDto"
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/TransferResponseDto"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
                 }
               }
             }
@@ -2382,7 +3405,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseDto"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -2409,7 +3439,14 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseDto"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -2448,7 +3485,22 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/TransferIdResponseDto"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
           }
         },
         "security": [
@@ -2478,7 +3530,22 @@
         },
         "responses": {
           "201": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/TransferIdResponseDto"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
           }
         },
         "security": [
@@ -2517,7 +3584,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseDto"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -2554,7 +3628,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseDto"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -2581,7 +3662,14 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseDto"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -2610,7 +3698,25 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/TransferPeriodDto"
+                      }
+                    }
+                  },
+                  "required": [
+                    "items"
+                  ]
+                }
+              }
+            }
           }
         },
         "security": [
@@ -2638,7 +3744,22 @@
         },
         "responses": {
           "201": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/PeriodIdResponseDto"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
           }
         },
         "security": [
@@ -2646,7 +3767,7 @@
             "bearer": []
           }
         ],
-        "summary": "Dönem oluştur (endDate≥startDate)",
+        "summary": "Dönem oluştur (endDate>=startDate)",
         "tags": [
           "admin-transfer-periods"
         ]
@@ -2667,6 +3788,24 @@
         ],
         "responses": {
           "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/TransferPeriodDto"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
             "description": ""
           }
         },
@@ -2704,7 +3843,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseDto"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -2731,7 +3877,14 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseDto"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -2819,7 +3972,41 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/LeagueResponseDto"
+                      }
+                    },
+                    "page": {
+                      "type": "number"
+                    },
+                    "pageSize": {
+                      "type": "number"
+                    },
+                    "totalCount": {
+                      "type": "number"
+                    },
+                    "totalPages": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "items",
+                    "page",
+                    "pageSize",
+                    "totalCount",
+                    "totalPages"
+                  ]
+                }
+              }
+            }
           }
         },
         "summary": "Ligleri listele (paged)",
@@ -2847,7 +4034,15 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/LeagueResponseDto"
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/LeagueResponseDto"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
                 }
               }
             }
@@ -2894,7 +4089,25 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/TeamTransferLineDto"
+                      }
+                    }
+                  },
+                  "required": [
+                    "items"
+                  ]
+                }
+              }
+            }
           }
         },
         "summary": "Ligin son transferleri",
@@ -2973,7 +4186,41 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/TeamTransferLineDto"
+                      }
+                    },
+                    "page": {
+                      "type": "number"
+                    },
+                    "pageSize": {
+                      "type": "number"
+                    },
+                    "totalCount": {
+                      "type": "number"
+                    },
+                    "totalPages": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "items",
+                    "page",
+                    "pageSize",
+                    "totalCount",
+                    "totalPages"
+                  ]
+                }
+              }
+            }
           }
         },
         "summary": "Lige gelen transferler",
@@ -3052,7 +4299,41 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/TeamTransferLineDto"
+                      }
+                    },
+                    "page": {
+                      "type": "number"
+                    },
+                    "pageSize": {
+                      "type": "number"
+                    },
+                    "totalCount": {
+                      "type": "number"
+                    },
+                    "totalPages": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "items",
+                    "page",
+                    "pageSize",
+                    "totalCount",
+                    "totalPages"
+                  ]
+                }
+              }
+            }
           }
         },
         "summary": "Ligden giden transferler",
@@ -3105,7 +4386,41 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/TeamTransferLineDto"
+                      }
+                    },
+                    "page": {
+                      "type": "number"
+                    },
+                    "pageSize": {
+                      "type": "number"
+                    },
+                    "totalCount": {
+                      "type": "number"
+                    },
+                    "totalPages": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "items",
+                    "page",
+                    "pageSize",
+                    "totalCount",
+                    "totalPages"
+                  ]
+                }
+              }
+            }
           }
         },
         "summary": "Ligin transferleri (paged)",
@@ -3133,7 +4448,15 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/LeagueResponseDto"
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/LeagueResponseDto"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
                 }
               }
             }
@@ -3164,7 +4487,25 @@
         },
         "responses": {
           "201": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/LeagueCreatedResponseDto"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation failed"
           }
         },
         "security": [
@@ -3172,7 +4513,7 @@
             "bearer": []
           }
         ],
-        "summary": "Lig oluştur",
+        "summary": "Lig olustur",
         "tags": [
           "admin-leagues"
         ]
@@ -3203,7 +4544,20 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation failed"
+          },
+          "404": {
+            "description": "League not found"
           }
         },
         "security": [
@@ -3211,7 +4565,7 @@
             "bearer": []
           }
         ],
-        "summary": "Lig güncelle",
+        "summary": "Lig guncelle",
         "tags": [
           "admin-leagues"
         ]
@@ -3230,7 +4584,17 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "League not found"
           }
         },
         "security": [
@@ -3257,9 +4621,49 @@
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "image": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                },
+                "required": [
+                  "image"
+                ]
+              }
+            }
+          }
+        },
         "responses": {
-          "201": {
-            "description": ""
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/LeagueImageResponseDto"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dosya gecersiz veya eksik"
+          },
+          "404": {
+            "description": "League not found"
           }
         },
         "security": [
@@ -3267,7 +4671,7 @@
             "bearer": []
           }
         ],
-        "summary": "Lig logosu yükle",
+        "summary": "Lig logosu yukle",
         "tags": [
           "admin-leagues"
         ]
@@ -3284,9 +4688,49 @@
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "image": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                },
+                "required": [
+                  "image"
+                ]
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/LeagueImageResponseDto"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dosya gecersiz veya eksik"
+          },
+          "404": {
+            "description": "League not found"
           }
         },
         "security": [
@@ -3294,7 +4738,7 @@
             "bearer": []
           }
         ],
-        "summary": "Lig logosu değiştir",
+        "summary": "Lig logosu degistir",
         "tags": [
           "admin-leagues"
         ]
@@ -3313,7 +4757,17 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "League not found"
           }
         },
         "security": [
@@ -3351,8 +4805,29 @@
           }
         },
         "responses": {
-          "201": {
-            "description": ""
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/LeagueImageResponseDto"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Gecersiz URL"
+          },
+          "404": {
+            "description": "League not found"
           }
         },
         "security": [
@@ -3360,7 +4835,7 @@
             "bearer": []
           }
         ],
-        "summary": "URL’den lig logosu",
+        "summary": "URL'den lig logosu",
         "tags": [
           "admin-leagues"
         ]
@@ -3394,10 +4869,44 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/TeamResponseDto"
+                      }
+                    },
+                    "page": {
+                      "type": "number"
+                    },
+                    "pageSize": {
+                      "type": "number"
+                    },
+                    "totalCount": {
+                      "type": "number"
+                    },
+                    "totalPages": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "items",
+                    "page",
+                    "pageSize",
+                    "totalCount",
+                    "totalPages"
+                  ]
+                }
+              }
+            }
           }
         },
-        "summary": "Takımları listele (paged)",
+        "summary": "Takim listele (paged)",
         "tags": [
           "teams"
         ]
@@ -3418,10 +4927,31 @@
         ],
         "responses": {
           "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/TeamResponseDto"
+                      }
+                    }
+                  },
+                  "required": [
+                    "items"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
             "description": ""
           }
         },
-        "summary": "Lige göre takımlar",
+        "summary": "Lige gore takimlar",
         "tags": [
           "teams"
         ]
@@ -3446,7 +4976,15 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TeamDetailDto"
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/TeamDetailDto"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
                 }
               }
             }
@@ -3455,7 +4993,7 @@
             "description": ""
           }
         },
-        "summary": "Takım detayı (kadro + son transferler)",
+        "summary": "Takim detayi (kadro + son transferler)",
         "tags": [
           "teams"
         ]
@@ -3476,10 +5014,31 @@
         ],
         "responses": {
           "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/TeamTransferLineDto"
+                      }
+                    }
+                  },
+                  "required": [
+                    "items"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
             "description": ""
           }
         },
-        "summary": "Takıma gelen transferler",
+        "summary": "Takima gelen transferler",
         "tags": [
           "teams"
         ]
@@ -3500,10 +5059,31 @@
         ],
         "responses": {
           "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/TeamTransferLineDto"
+                      }
+                    }
+                  },
+                  "required": [
+                    "items"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
             "description": ""
           }
         },
-        "summary": "Takımdan giden transferler",
+        "summary": "Takimdan giden transferler",
         "tags": [
           "teams"
         ]
@@ -3524,10 +5104,31 @@
         ],
         "responses": {
           "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/TeamTransferLineDto"
+                      }
+                    }
+                  },
+                  "required": [
+                    "items"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
             "description": ""
           }
         },
-        "summary": "Takımın tüm transferleri (gelen+giden)",
+        "summary": "Takimin tum transferleri (gelen+giden)",
         "tags": [
           "teams"
         ]
@@ -3552,7 +5153,15 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TeamResponseDto"
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/TeamResponseDto"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
                 }
               }
             }
@@ -3561,7 +5170,7 @@
             "description": ""
           }
         },
-        "summary": "Takımı getir",
+        "summary": "Takimi getir",
         "tags": [
           "teams"
         ]
@@ -3583,7 +5192,25 @@
         },
         "responses": {
           "201": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/TeamIdResponseDto"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation failed"
           }
         },
         "security": [
@@ -3591,7 +5218,7 @@
             "bearer": []
           }
         ],
-        "summary": "Takım oluştur",
+        "summary": "Takim olustur",
         "tags": [
           "admin-teams"
         ]
@@ -3622,7 +5249,17 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Team not found"
           }
         },
         "security": [
@@ -3630,7 +5267,7 @@
             "bearer": []
           }
         ],
-        "summary": "Takım güncelle",
+        "summary": "Takim guncelle",
         "tags": [
           "admin-teams"
         ]
@@ -3649,7 +5286,17 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Team not found"
           }
         },
         "security": [
@@ -3657,7 +5304,7 @@
             "bearer": []
           }
         ],
-        "summary": "Takım sil",
+        "summary": "Takim sil",
         "tags": [
           "admin-teams"
         ]
@@ -3678,7 +5325,25 @@
         ],
         "responses": {
           "201": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/TeamImageUrlResponseDto"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Team not found"
           }
         },
         "security": [
@@ -3686,7 +5351,7 @@
             "bearer": []
           }
         ],
-        "summary": "Takım logosu yükle",
+        "summary": "Takim logosu yukle",
         "tags": [
           "admin-teams"
         ]
@@ -3705,7 +5370,25 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/TeamImageUrlResponseDto"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Team not found"
           }
         },
         "security": [
@@ -3713,7 +5396,7 @@
             "bearer": []
           }
         ],
-        "summary": "Takım logosu değiştir",
+        "summary": "Takim logosu degistir",
         "tags": [
           "admin-teams"
         ]
@@ -3732,7 +5415,17 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Team not found"
           }
         },
         "security": [
@@ -3740,7 +5433,7 @@
             "bearer": []
           }
         ],
-        "summary": "Takım logosu sil",
+        "summary": "Takim logosu sil",
         "tags": [
           "admin-teams"
         ]
@@ -3771,7 +5464,25 @@
         },
         "responses": {
           "201": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/TeamImageUrlResponseDto"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Team not found"
           }
         },
         "security": [
@@ -3779,7 +5490,7 @@
             "bearer": []
           }
         ],
-        "summary": "URL’den takım logosu",
+        "summary": "URL den takim logosu",
         "tags": [
           "admin-teams"
         ]
@@ -3853,7 +5564,41 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/PlayerResponseDto"
+                      }
+                    },
+                    "page": {
+                      "type": "number"
+                    },
+                    "pageSize": {
+                      "type": "number"
+                    },
+                    "totalCount": {
+                      "type": "number"
+                    },
+                    "totalPages": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "items",
+                    "page",
+                    "pageSize",
+                    "totalCount",
+                    "totalPages"
+                  ]
+                }
+              }
+            }
           }
         },
         "summary": "Oyuncuları listele (filtre + paged)",
@@ -3868,7 +5613,25 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/PlayerResponseDto"
+                      }
+                    }
+                  },
+                  "required": [
+                    "items"
+                  ]
+                }
+              }
+            }
           }
         },
         "summary": "Serbest oyuncular",
@@ -3913,6 +5676,43 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/PlayerResponseDto"
+                      }
+                    },
+                    "page": {
+                      "type": "number"
+                    },
+                    "pageSize": {
+                      "type": "number"
+                    },
+                    "totalCount": {
+                      "type": "number"
+                    },
+                    "totalPages": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "items",
+                    "page",
+                    "pageSize",
+                    "totalCount",
+                    "totalPages"
+                  ]
+                }
+              }
+            }
+          },
           "400": {
             "description": "query boş"
           }
@@ -3938,7 +5738,25 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/PlayerResponseDto"
+                      }
+                    }
+                  },
+                  "required": [
+                    "items"
+                  ]
+                }
+              }
+            }
           }
         },
         "summary": "Takıma göre oyuncular",
@@ -3962,7 +5780,25 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/PlayerResponseDto"
+                      }
+                    }
+                  },
+                  "required": [
+                    "items"
+                  ]
+                }
+              }
+            }
           }
         },
         "summary": "Uyruğa göre oyuncular",
@@ -3990,7 +5826,15 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PlayerProfileDto"
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/PlayerProfileDto"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
                 }
               }
             }
@@ -4020,7 +5864,25 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/TeamTransferLineDto"
+                      }
+                    }
+                  },
+                  "required": [
+                    "items"
+                  ]
+                }
+              }
+            }
           }
         },
         "summary": "Oyuncunun transferleri",
@@ -4048,7 +5910,15 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TeamTransferLineDto"
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/TeamTransferLineDto"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
                 }
               }
             }
@@ -4082,7 +5952,15 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PlayerResponseDto"
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/PlayerResponseDto"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
                 }
               }
             }
@@ -4113,7 +5991,22 @@
         },
         "responses": {
           "201": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/PlayerIdResponseDto"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
           }
         },
         "security": [
@@ -4152,7 +6045,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseDto"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -4179,7 +6079,14 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseDto"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -4208,7 +6115,22 @@
         ],
         "responses": {
           "201": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/ImageUploadResponseDto"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
           }
         },
         "security": [
@@ -4235,7 +6157,22 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/ImageUploadResponseDto"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
           }
         },
         "security": [
@@ -4262,7 +6199,14 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseDto"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -4301,7 +6245,22 @@
         },
         "responses": {
           "201": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/ImageUploadResponseDto"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
           }
         },
         "security": [
@@ -4369,7 +6328,41 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/NewsResponseDto"
+                      }
+                    },
+                    "page": {
+                      "type": "number"
+                    },
+                    "pageSize": {
+                      "type": "number"
+                    },
+                    "totalCount": {
+                      "type": "number"
+                    },
+                    "totalPages": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "items",
+                    "page",
+                    "pageSize",
+                    "totalCount",
+                    "totalPages"
+                  ]
+                }
+              }
+            }
           }
         },
         "summary": "Haberleri listele (paged + sort)",
@@ -4414,10 +6407,44 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/NewsResponseDto"
+                      }
+                    },
+                    "page": {
+                      "type": "number"
+                    },
+                    "pageSize": {
+                      "type": "number"
+                    },
+                    "totalCount": {
+                      "type": "number"
+                    },
+                    "totalPages": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "items",
+                    "page",
+                    "pageSize",
+                    "totalCount",
+                    "totalPages"
+                  ]
+                }
+              }
+            }
           }
         },
-        "summary": "Kaynağa göre haberler",
+        "summary": "Kaynaga gore haberler",
         "tags": [
           "news"
         ]
@@ -4469,10 +6496,44 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/NewsResponseDto"
+                      }
+                    },
+                    "page": {
+                      "type": "number"
+                    },
+                    "pageSize": {
+                      "type": "number"
+                    },
+                    "totalCount": {
+                      "type": "number"
+                    },
+                    "totalPages": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "items",
+                    "page",
+                    "pageSize",
+                    "totalCount",
+                    "totalPages"
+                  ]
+                }
+              }
+            }
           }
         },
-        "summary": "Tarih aralığına göre haberler",
+        "summary": "Tarih araligina gore haberler",
         "tags": [
           "news"
         ]
@@ -4514,10 +6575,44 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/NewsResponseDto"
+                      }
+                    },
+                    "page": {
+                      "type": "number"
+                    },
+                    "pageSize": {
+                      "type": "number"
+                    },
+                    "totalCount": {
+                      "type": "number"
+                    },
+                    "totalPages": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "items",
+                    "page",
+                    "pageSize",
+                    "totalCount",
+                    "totalPages"
+                  ]
+                }
+              }
+            }
           }
         },
-        "summary": "Oyuncuya göre haberler",
+        "summary": "Oyuncuya gore haberler",
         "tags": [
           "news"
         ]
@@ -4559,10 +6654,44 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/NewsResponseDto"
+                      }
+                    },
+                    "page": {
+                      "type": "number"
+                    },
+                    "pageSize": {
+                      "type": "number"
+                    },
+                    "totalCount": {
+                      "type": "number"
+                    },
+                    "totalPages": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "items",
+                    "page",
+                    "pageSize",
+                    "totalCount",
+                    "totalPages"
+                  ]
+                }
+              }
+            }
           }
         },
-        "summary": "Hedef takıma göre haberler",
+        "summary": "Hedef takima gore haberler",
         "tags": [
           "news"
         ]
@@ -4604,10 +6733,44 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/NewsResponseDto"
+                      }
+                    },
+                    "page": {
+                      "type": "number"
+                    },
+                    "pageSize": {
+                      "type": "number"
+                    },
+                    "totalCount": {
+                      "type": "number"
+                    },
+                    "totalPages": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "items",
+                    "page",
+                    "pageSize",
+                    "totalCount",
+                    "totalPages"
+                  ]
+                }
+              }
+            }
           }
         },
-        "summary": "Kaynak takıma göre haberler",
+        "summary": "Kaynak takima gore haberler",
         "tags": [
           "news"
         ]
@@ -4632,7 +6795,15 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/NewsResponseDto"
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/NewsResponseDto"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
                 }
               }
             }
@@ -4663,7 +6834,22 @@
         },
         "responses": {
           "201": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/NewsIdResponseDto"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
           }
         },
         "security": [
@@ -4671,7 +6857,7 @@
             "bearer": []
           }
         ],
-        "summary": "Haber oluştur",
+        "summary": "Haber olustur",
         "tags": [
           "admin-news"
         ]
@@ -4693,7 +6879,22 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/DeletedCountResponseDto"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
           }
         },
         "security": [
@@ -4701,7 +6902,7 @@
             "bearer": []
           }
         ],
-        "summary": "Toplu haber sil (≤100)",
+        "summary": "Toplu haber sil (<=100)",
         "tags": [
           "admin-news"
         ]
@@ -4732,7 +6933,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseDto"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -4740,7 +6948,7 @@
             "bearer": []
           }
         ],
-        "summary": "Haber güncelle",
+        "summary": "Haber guncelle",
         "tags": [
           "admin-news"
         ]
@@ -4759,7 +6967,14 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseDto"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -4788,7 +7003,22 @@
         ],
         "responses": {
           "201": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/NewsImageUrlResponseDto"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
           }
         },
         "security": [
@@ -4796,7 +7026,7 @@
             "bearer": []
           }
         ],
-        "summary": "Haber görseli yükle",
+        "summary": "Haber gorseli yukle",
         "tags": [
           "admin-news"
         ]
@@ -4815,7 +7045,22 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/NewsImageUrlResponseDto"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
           }
         },
         "security": [
@@ -4823,7 +7068,7 @@
             "bearer": []
           }
         ],
-        "summary": "Haber görseli değiştir",
+        "summary": "Haber gorseli degistir",
         "tags": [
           "admin-news"
         ]
@@ -4842,7 +7087,14 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseDto"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -4850,7 +7102,7 @@
             "bearer": []
           }
         ],
-        "summary": "Haber görseli sil",
+        "summary": "Haber gorseli sil",
         "tags": [
           "admin-news"
         ]
@@ -4881,7 +7133,22 @@
         },
         "responses": {
           "201": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/NewsImageUrlResponseDto"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
           }
         },
         "security": [
@@ -4889,7 +7156,7 @@
             "bearer": []
           }
         ],
-        "summary": "URL’den haber görseli",
+        "summary": "URL den haber gorseli",
         "tags": [
           "admin-news"
         ]
@@ -4901,7 +7168,22 @@
         "parameters": [],
         "responses": {
           "201": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/ProfilePhotoUrlDto"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
           }
         },
         "security": [
@@ -4919,7 +7201,22 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/ProfilePhotoUrlDto"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
           }
         },
         "security": [
@@ -4937,7 +7234,22 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/ProfilePhotoUrlDto"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
           }
         },
         "security": [
@@ -4955,7 +7267,14 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseDto"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -4985,7 +7304,22 @@
         },
         "responses": {
           "201": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/ProfilePhotoUrlDto"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
           }
         },
         "security": [
@@ -5186,6 +7520,65 @@
       }
     },
     "schemas": {
+      "NotificationDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "eventType": {
+            "type": "number"
+          },
+          "title": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          },
+          "transferId": {
+            "type": "string"
+          },
+          "isRead": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "eventType",
+          "title",
+          "body",
+          "isRead",
+          "createdAt"
+        ]
+      },
+      "CountResponseDto": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "number",
+            "example": 12
+          }
+        },
+        "required": [
+          "count"
+        ]
+      },
+      "SuccessResponseDto": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          }
+        },
+        "required": [
+          "success"
+        ]
+      },
       "PreferenceDto": {
         "type": "object",
         "properties": {
@@ -5217,6 +7610,124 @@
         },
         "required": [
           "preferences"
+        ]
+      },
+      "PostResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "ownerId": {
+            "type": "string"
+          },
+          "ownerName": {
+            "type": "string"
+          },
+          "ownerPhoto": {
+            "type": "string"
+          },
+          "isMailConfirm": {
+            "type": "boolean"
+          },
+          "userRole": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "postType": {
+            "type": "number"
+          },
+          "playerId": {
+            "type": "string"
+          },
+          "playerName": {
+            "type": "string"
+          },
+          "playerPhoto": {
+            "type": "string"
+          },
+          "teamId": {
+            "type": "string"
+          },
+          "teamName": {
+            "type": "string"
+          },
+          "teamLogo": {
+            "type": "string"
+          },
+          "fromTeamId": {
+            "type": "string"
+          },
+          "fromTeamName": {
+            "type": "string"
+          },
+          "fromTeamLogo": {
+            "type": "string"
+          },
+          "toTeamId": {
+            "type": "string"
+          },
+          "toTeamName": {
+            "type": "string"
+          },
+          "toTeamLogo": {
+            "type": "string"
+          },
+          "likeCount": {
+            "type": "number"
+          },
+          "isLiked": {
+            "type": "boolean"
+          },
+          "isVotingEnabled": {
+            "type": "boolean"
+          },
+          "agreeCount": {
+            "type": "number"
+          },
+          "disagreeCount": {
+            "type": "number"
+          },
+          "totalVotes": {
+            "type": "number"
+          },
+          "agreePercentage": {
+            "type": "number"
+          },
+          "disagreePercentage": {
+            "type": "number"
+          },
+          "userVote": {
+            "type": "number"
+          },
+          "createdAtUtc": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "commentCount": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "ownerId",
+          "ownerName",
+          "isMailConfirm",
+          "userRole",
+          "content",
+          "postType",
+          "likeCount",
+          "isLiked",
+          "isVotingEnabled",
+          "agreeCount",
+          "disagreeCount",
+          "totalVotes",
+          "agreePercentage",
+          "disagreePercentage",
+          "createdAtUtc",
+          "commentCount"
         ]
       },
       "CreatePostDto": {
@@ -5255,6 +7766,45 @@
           "content",
           "postType",
           "isVotingEnabled"
+        ]
+      },
+      "PostVoteResultDto": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "type": "string",
+            "enum": [
+              "Invalid",
+              "Unchanged",
+              "Applied"
+            ]
+          },
+          "agreeCount": {
+            "type": "number"
+          },
+          "disagreeCount": {
+            "type": "number"
+          },
+          "totalVotes": {
+            "type": "number"
+          },
+          "agreePercentage": {
+            "type": "number"
+          },
+          "disagreePercentage": {
+            "type": "number"
+          },
+          "userVote": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "result",
+          "agreeCount",
+          "disagreeCount",
+          "totalVotes",
+          "agreePercentage",
+          "disagreePercentage"
         ]
       },
       "VotePostDto": {
@@ -5296,6 +7846,56 @@
           "content"
         ]
       },
+      "ReactionResultDto": {
+        "type": "object",
+        "properties": {
+          "unchanged": {
+            "type": "boolean",
+            "description": "Zaten istenen durumda (200)"
+          },
+          "queued": {
+            "type": "boolean",
+            "description": "İşleme alındı (202)"
+          }
+        }
+      },
+      "FavouriteDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "number",
+            "enum": [
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          "targetId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "imageUrl": {
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "type",
+          "targetId",
+          "name",
+          "createdAt"
+        ]
+      },
       "AddFavouriteDto": {
         "type": "object",
         "properties": {
@@ -5317,6 +7917,19 @@
           "targetId"
         ]
       },
+      "FavouriteAddResponseDto": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Yeni eklendi (201)"
+          },
+          "unchanged": {
+            "type": "boolean",
+            "description": "Zaten favoride (200)"
+          }
+        }
+      },
       "SetFavouritesDto": {
         "type": "object",
         "properties": {
@@ -5329,6 +7942,58 @@
         },
         "required": [
           "favourites"
+        ]
+      },
+      "CommentDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "ownerId": {
+            "type": "string"
+          },
+          "ownerName": {
+            "type": "string"
+          },
+          "ownerPhoto": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "postId": {
+            "type": "string"
+          },
+          "parentId": {
+            "type": "string"
+          },
+          "likeCount": {
+            "type": "number"
+          },
+          "isLiked": {
+            "type": "boolean"
+          },
+          "createdAtUtc": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "replies": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CommentDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "ownerId",
+          "ownerName",
+          "postId",
+          "likeCount",
+          "isLiked",
+          "createdAtUtc",
+          "replies"
         ]
       },
       "CreateCommentDto": {
@@ -5358,6 +8023,69 @@
           "content"
         ]
       },
+      "TransferCommentDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "ownerId": {
+            "type": "string"
+          },
+          "ownerName": {
+            "type": "string"
+          },
+          "ownerPhoto": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "transferId": {
+            "type": "string"
+          },
+          "parentId": {
+            "type": "string"
+          },
+          "likeCount": {
+            "type": "number"
+          },
+          "isLiked": {
+            "type": "boolean"
+          },
+          "createdAtUtc": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "replies": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TransferCommentDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "ownerId",
+          "ownerName",
+          "transferId",
+          "likeCount",
+          "isLiked",
+          "createdAtUtc",
+          "replies"
+        ]
+      },
+      "TransferCommentCreatedDto": {
+        "type": "object",
+        "properties": {
+          "commentId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "commentId"
+        ]
+      },
       "CreateTransferCommentDto": {
         "type": "object",
         "properties": {
@@ -5383,6 +8111,120 @@
         },
         "required": [
           "content"
+        ]
+      },
+      "SyncJobResponseDto": {
+        "type": "object",
+        "properties": {
+          "jobId": {
+            "type": "string",
+            "example": "42",
+            "description": "BullMQ job ID"
+          },
+          "leagueExternalId": {
+            "type": "number",
+            "example": 7009,
+            "description": "Sadece tek-lig sync isteğinde dolu"
+          }
+        },
+        "required": [
+          "jobId"
+        ]
+      },
+      "SyncRunDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "startedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "completedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "durationMs": {
+            "type": "number"
+          },
+          "status": {
+            "type": "number"
+          },
+          "leaguesProcessed": {
+            "type": "number"
+          },
+          "teamsInserted": {
+            "type": "number"
+          },
+          "teamsUpdated": {
+            "type": "number"
+          },
+          "playersInserted": {
+            "type": "number"
+          },
+          "playersUpdated": {
+            "type": "number"
+          },
+          "transfersCreated": {
+            "type": "number"
+          },
+          "playersMarkedFree": {
+            "type": "number"
+          },
+          "errorCount": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "startedAt",
+          "completedAt",
+          "durationMs",
+          "status",
+          "leaguesProcessed",
+          "teamsInserted",
+          "teamsUpdated",
+          "playersInserted",
+          "playersUpdated",
+          "transfersCreated",
+          "playersMarkedFree",
+          "errorCount"
+        ]
+      },
+      "SeedResultDto": {
+        "type": "object",
+        "properties": {
+          "leaguesInserted": {
+            "type": "number"
+          },
+          "leaguesUpdated": {
+            "type": "number"
+          },
+          "teamsInserted": {
+            "type": "number"
+          },
+          "teamsUpdated": {
+            "type": "number"
+          },
+          "playersInserted": {
+            "type": "number"
+          },
+          "playersUpdated": {
+            "type": "number"
+          },
+          "positionsCreated": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "leaguesInserted",
+          "leaguesUpdated",
+          "teamsInserted",
+          "teamsUpdated",
+          "playersInserted",
+          "playersUpdated",
+          "positionsCreated"
         ]
       },
       "RegisterDto": {
@@ -5573,6 +8415,29 @@
           "refreshToken"
         ]
       },
+      "RefreshResponseDto": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "description": "Yeni access token"
+          },
+          "refreshToken": {
+            "type": "string",
+            "description": "Yeni refresh token (rotation)"
+          },
+          "expiresAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Access token sona erme zamanı"
+          }
+        },
+        "required": [
+          "accessToken",
+          "refreshToken",
+          "expiresAt"
+        ]
+      },
       "GoogleAuthDto": {
         "type": "object",
         "properties": {
@@ -5648,171 +8513,6 @@
         },
         "required": [
           "id"
-        ]
-      },
-      "TeamTransferLineDto": {
-        "type": "object",
-        "properties": {
-          "transferId": {
-            "type": "string"
-          },
-          "playerId": {
-            "type": "string"
-          },
-          "playerName": {
-            "type": "string"
-          },
-          "playerPhoto": {
-            "type": "string"
-          },
-          "fromTeamId": {
-            "type": "string"
-          },
-          "fromTeamName": {
-            "type": "string"
-          },
-          "fromTeamLogo": {
-            "type": "string"
-          },
-          "toTeamId": {
-            "type": "string"
-          },
-          "toTeamName": {
-            "type": "string"
-          },
-          "toTeamLogo": {
-            "type": "string"
-          },
-          "transferDate": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "feeAmount": {
-            "type": "number"
-          },
-          "feeCurrency": {
-            "type": "string"
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string"
-          }
-        },
-        "required": [
-          "transferId",
-          "playerId",
-          "playerName",
-          "fromTeamId",
-          "toTeamId",
-          "transferDate",
-          "feeAmount",
-          "feeCurrency",
-          "createdAt"
-        ]
-      },
-      "TeamActivityDto": {
-        "type": "object",
-        "properties": {
-          "teamId": {
-            "type": "string"
-          },
-          "teamName": {
-            "type": "string"
-          },
-          "count": {
-            "type": "number"
-          }
-        },
-        "required": [
-          "teamId",
-          "teamName",
-          "count"
-        ]
-      },
-      "PlayerActivityDto": {
-        "type": "object",
-        "properties": {
-          "playerId": {
-            "type": "string"
-          },
-          "playerName": {
-            "type": "string"
-          },
-          "count": {
-            "type": "number"
-          }
-        },
-        "required": [
-          "playerId",
-          "playerName",
-          "count"
-        ]
-      },
-      "HighestFeePlayerDto": {
-        "type": "object",
-        "properties": {
-          "playerId": {
-            "type": "string"
-          },
-          "playerName": {
-            "type": "string"
-          },
-          "feeAmount": {
-            "type": "number"
-          }
-        },
-        "required": [
-          "playerId",
-          "playerName",
-          "feeAmount"
-        ]
-      },
-      "TransferStatsDto": {
-        "type": "object",
-        "properties": {
-          "totalTransfers": {
-            "type": "number"
-          },
-          "totalSpent": {
-            "type": "number"
-          },
-          "averageFee": {
-            "type": "number"
-          },
-          "maxFee": {
-            "type": "number"
-          },
-          "minFee": {
-            "type": "number"
-          },
-          "mostExpensiveTransfer": {
-            "$ref": "#/components/schemas/TeamTransferLineDto"
-          },
-          "latestTransfer": {
-            "$ref": "#/components/schemas/TeamTransferLineDto"
-          },
-          "earliestTransfer": {
-            "$ref": "#/components/schemas/TeamTransferLineDto"
-          },
-          "mostActiveBuyerTeam": {
-            "$ref": "#/components/schemas/TeamActivityDto"
-          },
-          "mostActiveSellerTeam": {
-            "$ref": "#/components/schemas/TeamActivityDto"
-          },
-          "mostTransferredPlayer": {
-            "$ref": "#/components/schemas/PlayerActivityDto"
-          },
-          "highestFeePlayer": {
-            "$ref": "#/components/schemas/HighestFeePlayerDto"
-          }
-        },
-        "required": [
-          "totalTransfers",
-          "totalSpent",
-          "averageFee",
-          "maxFee",
-          "minFee"
         ]
       },
       "TransferPlayerDto": {
@@ -5944,6 +8644,351 @@
           "createdAt"
         ]
       },
+      "LeagueBriefDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "logo": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "logo"
+        ]
+      },
+      "TeamTransferLineDto": {
+        "type": "object",
+        "properties": {
+          "transferId": {
+            "type": "string"
+          },
+          "playerId": {
+            "type": "string"
+          },
+          "playerName": {
+            "type": "string"
+          },
+          "playerPhoto": {
+            "type": "string"
+          },
+          "fromTeamId": {
+            "type": "string"
+          },
+          "fromTeamName": {
+            "type": "string"
+          },
+          "fromTeamLogo": {
+            "type": "string"
+          },
+          "toTeamId": {
+            "type": "string"
+          },
+          "toTeamName": {
+            "type": "string"
+          },
+          "toTeamLogo": {
+            "type": "string"
+          },
+          "transferDate": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "feeAmount": {
+            "type": "number"
+          },
+          "feeCurrency": {
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "transferId",
+          "playerId",
+          "playerName",
+          "fromTeamId",
+          "toTeamId",
+          "transferDate",
+          "feeAmount",
+          "feeCurrency",
+          "createdAt"
+        ]
+      },
+      "LeagueTransfersDto": {
+        "type": "object",
+        "properties": {
+          "league": {
+            "$ref": "#/components/schemas/LeagueBriefDto"
+          },
+          "transfers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TeamTransferLineDto"
+            }
+          }
+        },
+        "required": [
+          "league",
+          "transfers"
+        ]
+      },
+      "TeamActivityDto": {
+        "type": "object",
+        "properties": {
+          "teamId": {
+            "type": "string"
+          },
+          "teamName": {
+            "type": "string"
+          },
+          "count": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "teamId",
+          "teamName",
+          "count"
+        ]
+      },
+      "PlayerActivityDto": {
+        "type": "object",
+        "properties": {
+          "playerId": {
+            "type": "string"
+          },
+          "playerName": {
+            "type": "string"
+          },
+          "count": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "playerId",
+          "playerName",
+          "count"
+        ]
+      },
+      "HighestFeePlayerDto": {
+        "type": "object",
+        "properties": {
+          "playerId": {
+            "type": "string"
+          },
+          "playerName": {
+            "type": "string"
+          },
+          "feeAmount": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "playerId",
+          "playerName",
+          "feeAmount"
+        ]
+      },
+      "TransferStatsDto": {
+        "type": "object",
+        "properties": {
+          "totalTransfers": {
+            "type": "number"
+          },
+          "totalSpent": {
+            "type": "number"
+          },
+          "averageFee": {
+            "type": "number"
+          },
+          "maxFee": {
+            "type": "number"
+          },
+          "minFee": {
+            "type": "number"
+          },
+          "mostExpensiveTransfer": {
+            "$ref": "#/components/schemas/TeamTransferLineDto"
+          },
+          "latestTransfer": {
+            "$ref": "#/components/schemas/TeamTransferLineDto"
+          },
+          "earliestTransfer": {
+            "$ref": "#/components/schemas/TeamTransferLineDto"
+          },
+          "mostActiveBuyerTeam": {
+            "$ref": "#/components/schemas/TeamActivityDto"
+          },
+          "mostActiveSellerTeam": {
+            "$ref": "#/components/schemas/TeamActivityDto"
+          },
+          "mostTransferredPlayer": {
+            "$ref": "#/components/schemas/PlayerActivityDto"
+          },
+          "highestFeePlayer": {
+            "$ref": "#/components/schemas/HighestFeePlayerDto"
+          }
+        },
+        "required": [
+          "totalTransfers",
+          "totalSpent",
+          "averageFee",
+          "maxFee",
+          "minFee"
+        ]
+      },
+      "TransferPeriodDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "periodType": {
+            "type": "string"
+          },
+          "startDate": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "endDate": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "startDate",
+          "endDate"
+        ]
+      },
+      "TransferPeriodSummaryDto": {
+        "type": "object",
+        "properties": {
+          "periodName": {
+            "type": "string"
+          },
+          "year": {
+            "type": "number"
+          },
+          "startDate": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "endDate": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "baseCurrency": {
+            "type": "string"
+          },
+          "totalTransfers": {
+            "type": "number"
+          },
+          "totalSpent": {
+            "type": "number",
+            "description": "baseCurrency cinsinden toplam harcama"
+          },
+          "topTransfers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TeamTransferLineDto"
+            }
+          }
+        },
+        "required": [
+          "baseCurrency",
+          "totalTransfers",
+          "totalSpent",
+          "topTransfers"
+        ]
+      },
+      "TopSpenderDto": {
+        "type": "object",
+        "properties": {
+          "teamId": {
+            "type": "string"
+          },
+          "teamName": {
+            "type": "string"
+          },
+          "total": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "teamId",
+          "teamName",
+          "total"
+        ]
+      },
+      "TransferSeasonDashboardDto": {
+        "type": "object",
+        "properties": {
+          "baseCurrency": {
+            "type": "string"
+          },
+          "year": {
+            "type": "number"
+          },
+          "periodName": {
+            "type": "string"
+          },
+          "totalTransfers": {
+            "type": "number"
+          },
+          "totalSpent": {
+            "type": "number"
+          },
+          "topN": {
+            "type": "number"
+          },
+          "topTransfers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TeamTransferLineDto"
+            }
+          },
+          "topSpenders": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TopSpenderDto"
+            }
+          }
+        },
+        "required": [
+          "baseCurrency",
+          "totalTransfers",
+          "totalSpent",
+          "topN",
+          "topTransfers",
+          "topSpenders"
+        ]
+      },
+      "RumourIdResponseDto": {
+        "type": "object",
+        "properties": {
+          "rumourId": {
+            "type": "string",
+            "example": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+          }
+        },
+        "required": [
+          "rumourId"
+        ]
+      },
       "CreateRumourDto": {
         "type": "object",
         "properties": {
@@ -5968,6 +9013,18 @@
           "playerId",
           "fromTeamId",
           "toTeamId"
+        ]
+      },
+      "TransferIdResponseDto": {
+        "type": "object",
+        "properties": {
+          "transferId": {
+            "type": "string",
+            "example": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+          }
+        },
+        "required": [
+          "transferId"
         ]
       },
       "ConfirmRumourDto": {
@@ -6039,6 +9096,18 @@
             "type": "string"
           }
         }
+      },
+      "PeriodIdResponseDto": {
+        "type": "object",
+        "properties": {
+          "transferPeriodId": {
+            "type": "string",
+            "example": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+          }
+        },
+        "required": [
+          "transferPeriodId"
+        ]
       },
       "PeriodWriteDto": {
         "type": "object",
@@ -6173,6 +9242,18 @@
           "teamCount"
         ]
       },
+      "LeagueCreatedResponseDto": {
+        "type": "object",
+        "properties": {
+          "leagueId": {
+            "type": "string",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          }
+        },
+        "required": [
+          "leagueId"
+        ]
+      },
       "LeagueWriteDto": {
         "type": "object",
         "properties": {
@@ -6202,6 +9283,18 @@
           "leagueLogo"
         ]
       },
+      "LeagueImageResponseDto": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "example": "https://cdn.example.com/leagues/abc.png"
+          }
+        },
+        "required": [
+          "url"
+        ]
+      },
       "ImageUrlDto": {
         "type": "object",
         "properties": {
@@ -6212,6 +9305,36 @@
         },
         "required": [
           "imageUrl"
+        ]
+      },
+      "TeamResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "logo": {
+            "type": "string"
+          },
+          "leagueId": {
+            "type": "string"
+          },
+          "leagueName": {
+            "type": "string"
+          },
+          "playerCount": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "leagueId",
+          "leagueName",
+          "playerCount"
         ]
       },
       "SquadPlayerDto": {
@@ -6309,34 +9432,16 @@
           "recentOutgoing"
         ]
       },
-      "TeamResponseDto": {
+      "TeamIdResponseDto": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          },
-          "logo": {
-            "type": "string"
-          },
-          "leagueId": {
-            "type": "string"
-          },
-          "leagueName": {
-            "type": "string"
-          },
-          "playerCount": {
-            "type": "number"
+          "teamId": {
+            "type": "string",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
           }
         },
         "required": [
-          "id",
-          "name",
-          "leagueId",
-          "leagueName",
-          "playerCount"
+          "teamId"
         ]
       },
       "TeamWriteDto": {
@@ -6356,6 +9461,18 @@
         "required": [
           "name",
           "leagueId"
+        ]
+      },
+      "TeamImageUrlResponseDto": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "example": "https://bucket.s3.amazonaws.com/teams/uuid.png"
+          }
+        },
+        "required": [
+          "url"
         ]
       },
       "PlayerResponseDto": {
@@ -6491,124 +9608,6 @@
           "title"
         ]
       },
-      "PostResponseDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "ownerId": {
-            "type": "string"
-          },
-          "ownerName": {
-            "type": "string"
-          },
-          "ownerPhoto": {
-            "type": "string"
-          },
-          "isMailConfirm": {
-            "type": "boolean"
-          },
-          "userRole": {
-            "type": "string"
-          },
-          "content": {
-            "type": "string"
-          },
-          "postType": {
-            "type": "number"
-          },
-          "playerId": {
-            "type": "string"
-          },
-          "playerName": {
-            "type": "string"
-          },
-          "playerPhoto": {
-            "type": "string"
-          },
-          "teamId": {
-            "type": "string"
-          },
-          "teamName": {
-            "type": "string"
-          },
-          "teamLogo": {
-            "type": "string"
-          },
-          "fromTeamId": {
-            "type": "string"
-          },
-          "fromTeamName": {
-            "type": "string"
-          },
-          "fromTeamLogo": {
-            "type": "string"
-          },
-          "toTeamId": {
-            "type": "string"
-          },
-          "toTeamName": {
-            "type": "string"
-          },
-          "toTeamLogo": {
-            "type": "string"
-          },
-          "likeCount": {
-            "type": "number"
-          },
-          "isLiked": {
-            "type": "boolean"
-          },
-          "isVotingEnabled": {
-            "type": "boolean"
-          },
-          "agreeCount": {
-            "type": "number"
-          },
-          "disagreeCount": {
-            "type": "number"
-          },
-          "totalVotes": {
-            "type": "number"
-          },
-          "agreePercentage": {
-            "type": "number"
-          },
-          "disagreePercentage": {
-            "type": "number"
-          },
-          "userVote": {
-            "type": "number"
-          },
-          "createdAtUtc": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "commentCount": {
-            "type": "number"
-          }
-        },
-        "required": [
-          "id",
-          "ownerId",
-          "ownerName",
-          "isMailConfirm",
-          "userRole",
-          "content",
-          "postType",
-          "likeCount",
-          "isLiked",
-          "isVotingEnabled",
-          "agreeCount",
-          "disagreeCount",
-          "totalVotes",
-          "agreePercentage",
-          "disagreePercentage",
-          "createdAtUtc",
-          "commentCount"
-        ]
-      },
       "PlayerProfileDto": {
         "type": "object",
         "properties": {
@@ -6639,6 +9638,18 @@
           "transfers",
           "news",
           "posts"
+        ]
+      },
+      "PlayerIdResponseDto": {
+        "type": "object",
+        "properties": {
+          "playerId": {
+            "type": "string",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          }
+        },
+        "required": [
+          "playerId"
         ]
       },
       "PlayerWriteDto": {
@@ -6694,6 +9705,31 @@
           "teamId"
         ]
       },
+      "ImageUploadResponseDto": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "example": "https://cdn.example.com/players/uuid.jpg"
+          }
+        },
+        "required": [
+          "url"
+        ]
+      },
+      "NewsIdResponseDto": {
+        "type": "object",
+        "properties": {
+          "newsId": {
+            "type": "string",
+            "example": "uuid-v4",
+            "description": "Olusturulan haberin IDsi"
+          }
+        },
+        "required": [
+          "newsId"
+        ]
+      },
       "CreateNewsDto": {
         "type": "object",
         "properties": {
@@ -6734,6 +9770,19 @@
         "required": [
           "slug",
           "title"
+        ]
+      },
+      "DeletedCountResponseDto": {
+        "type": "object",
+        "properties": {
+          "deletedCount": {
+            "type": "number",
+            "example": 5,
+            "description": "Silinen haber sayisi"
+          }
+        },
+        "required": [
+          "deletedCount"
         ]
       },
       "BulkDeleteNewsDto": {
@@ -6789,13 +9838,38 @@
           },
           "newsId": {
             "type": "string",
-            "description": "Route :newsId ile eşleşmeli (uyuşmazsa 400)"
+            "description": "Route :newsId ile eslesemeli (uyusmazsa 400)"
           }
         },
         "required": [
           "slug",
           "title",
           "newsId"
+        ]
+      },
+      "NewsImageUrlResponseDto": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "example": "https://cdn.example.com/news/abc.jpg",
+            "description": "Yuklenen gorselin URL-si"
+          }
+        },
+        "required": [
+          "url"
+        ]
+      },
+      "ProfilePhotoUrlDto": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "example": "https://cdn.example.com/photos/abc.jpg"
+          }
+        },
+        "required": [
+          "url"
         ]
       }
     }

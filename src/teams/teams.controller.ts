@@ -3,6 +3,11 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Public } from '../common/decorators/public.decorator';
 import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 import {
+  ApiListResponse,
+  ApiPagedResponse,
+  ApiSingleResponse,
+} from '../common/swagger/api-envelope.decorators';
+import {
   ListResponse,
   PagedResult,
   SingleResponse,
@@ -19,7 +24,8 @@ export class TeamsController {
   constructor(private readonly teams: TeamsService) {}
 
   @Get()
-  @ApiOperation({ summary: 'Takımları listele (paged)' })
+  @ApiOperation({ summary: 'Takim listele (paged)' })
+  @ApiPagedResponse(TeamResponseDto)
   findAll(
     @Query() query: PaginationQueryDto,
   ): Promise<PagedResult<TeamResponseDto>> {
@@ -27,7 +33,9 @@ export class TeamsController {
   }
 
   @Get('by-league/:leagueId')
-  @ApiOperation({ summary: 'Lige göre takımlar' })
+  @ApiOperation({ summary: 'Lige gore takimlar' })
+  @ApiListResponse(TeamResponseDto)
+  @ApiResponse({ status: 404 })
   async findByLeague(
     @Param('leagueId', ParseUUIDPipe) leagueId: string,
   ): Promise<ListResponse<TeamResponseDto>> {
@@ -35,8 +43,8 @@ export class TeamsController {
   }
 
   @Get(':id/detail')
-  @ApiOperation({ summary: 'Takım detayı (kadro + son transferler)' })
-  @ApiResponse({ status: 200, type: TeamDetailDto })
+  @ApiOperation({ summary: 'Takim detayi (kadro + son transferler)' })
+  @ApiSingleResponse(TeamDetailDto)
   @ApiResponse({ status: 404 })
   async detail(
     @Param('id', ParseUUIDPipe) id: string,
@@ -45,7 +53,9 @@ export class TeamsController {
   }
 
   @Get(':teamId/incoming-transfers')
-  @ApiOperation({ summary: 'Takıma gelen transferler' })
+  @ApiOperation({ summary: 'Takima gelen transferler' })
+  @ApiListResponse(TeamTransferLineDto)
+  @ApiResponse({ status: 404 })
   async incoming(
     @Param('teamId', ParseUUIDPipe) teamId: string,
   ): Promise<ListResponse<TeamTransferLineDto>> {
@@ -53,7 +63,9 @@ export class TeamsController {
   }
 
   @Get(':teamId/outgoing-transfers')
-  @ApiOperation({ summary: 'Takımdan giden transferler' })
+  @ApiOperation({ summary: 'Takimdan giden transferler' })
+  @ApiListResponse(TeamTransferLineDto)
+  @ApiResponse({ status: 404 })
   async outgoing(
     @Param('teamId', ParseUUIDPipe) teamId: string,
   ): Promise<ListResponse<TeamTransferLineDto>> {
@@ -61,7 +73,9 @@ export class TeamsController {
   }
 
   @Get(':teamId/transfers')
-  @ApiOperation({ summary: 'Takımın tüm transferleri (gelen+giden)' })
+  @ApiOperation({ summary: 'Takimin tum transferleri (gelen+giden)' })
+  @ApiListResponse(TeamTransferLineDto)
+  @ApiResponse({ status: 404 })
   async allTransfers(
     @Param('teamId', ParseUUIDPipe) teamId: string,
   ): Promise<ListResponse<TeamTransferLineDto>> {
@@ -69,8 +83,8 @@ export class TeamsController {
   }
 
   @Get(':id')
-  @ApiOperation({ summary: 'Takımı getir' })
-  @ApiResponse({ status: 200, type: TeamResponseDto })
+  @ApiOperation({ summary: 'Takimi getir' })
+  @ApiSingleResponse(TeamResponseDto)
   @ApiResponse({ status: 404 })
   async findOne(
     @Param('id', ParseUUIDPipe) id: string,

@@ -7,6 +7,7 @@ import {
   CurrentUser,
 } from '../common/decorators/current-user.decorator';
 import { ListResponse } from '../common/interfaces/response.interface';
+import { ApiListResponse } from '../common/swagger/api-envelope.decorators';
 import { PreferenceDto, SetPreferencesDto } from './dto/notification.dto';
 import { NotificationsService } from './notifications.service';
 
@@ -19,6 +20,7 @@ export class MeNotificationPreferencesController {
 
   @Get()
   @ApiOperation({ summary: 'Bildirim tercihleri' })
+  @ApiListResponse(PreferenceDto)
   async get(
     @CurrentUser() user: AuthUser,
   ): Promise<ListResponse<PreferenceDto>> {
@@ -27,6 +29,7 @@ export class MeNotificationPreferencesController {
 
   @Put()
   @ApiOperation({ summary: 'Bildirim tercihlerini güncelle' })
+  @ApiListResponse(PreferenceDto)
   async set(
     @CurrentUser() user: AuthUser,
     @Body() dto: SetPreferencesDto,

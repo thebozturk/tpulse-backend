@@ -11,7 +11,12 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
 import { ThrottlePolicies } from '../common/throttle/throttle-policies';
 import {
@@ -21,7 +26,10 @@ import {
 import { Roles } from '../common/decorators/roles.decorator';
 import { RolesGuard } from '../common/guards/roles.guard';
 import { SingleResponse } from '../common/interfaces/response.interface';
+import { ApiSingleResponse } from '../common/swagger/api-envelope.decorators';
+import { SuccessResponseDto } from '../common/dto/common-response.dto';
 import { AdminTransfersService } from './admin-transfers.service';
+import { TransferIdResponseDto } from './dto/transfer-id-response.dto';
 import { CreateTransferDto, PatchTransferDto } from './dto/transfer-write.dto';
 
 @ApiTags('admin-transfers')
@@ -36,6 +44,7 @@ export class AdminTransfersController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Transfer oluştur (dup 409)' })
+  @ApiSingleResponse(TransferIdResponseDto, 201)
   async create(
     @Body() dto: CreateTransferDto,
     @CurrentUser() user: AuthUser,
@@ -46,6 +55,7 @@ export class AdminTransfersController {
 
   @Put(':id')
   @ApiOperation({ summary: 'Transfer güncelle' })
+  @ApiResponse({ status: 200, type: SuccessResponseDto })
   async update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: CreateTransferDto,
@@ -56,6 +66,7 @@ export class AdminTransfersController {
 
   @Patch(':id')
   @ApiOperation({ summary: 'Transfer kısmi güncelle' })
+  @ApiResponse({ status: 200, type: SuccessResponseDto })
   async patch(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: PatchTransferDto,
@@ -66,6 +77,7 @@ export class AdminTransfersController {
 
   @Delete(':id')
   @ApiOperation({ summary: 'Transfer sil (soft-delete)' })
+  @ApiResponse({ status: 200, type: SuccessResponseDto })
   async remove(
     @Param('id', ParseUUIDPipe) id: string,
   ): Promise<{ success: boolean }> {

@@ -13,6 +13,11 @@ import {
   PagedResult,
   SingleResponse,
 } from '../common/interfaces/response.interface';
+import {
+  ApiListResponse,
+  ApiPagedResponse,
+  ApiSingleResponse,
+} from '../common/swagger/api-envelope.decorators';
 import { LeagueTransfersDto } from './dto/league-transfers.dto';
 import { TransferResponseDto } from './dto/transfer-response.dto';
 import {
@@ -46,6 +51,7 @@ export class TransferQueryController {
 
   @Get()
   @ApiOperation({ summary: 'Transferleri filtrele (paged)' })
+  @ApiPagedResponse(TransferResponseDto)
   findAll(
     @Query() filter: TransferFilterDto,
   ): Promise<PagedResult<TransferResponseDto>> {
@@ -54,6 +60,7 @@ export class TransferQueryController {
 
   @Get('latest')
   @ApiOperation({ summary: 'Son transferler' })
+  @ApiPagedResponse(TransferResponseDto)
   latest(
     @Query() dto: LatestQueryDto,
   ): Promise<PagedResult<TransferResponseDto>> {
@@ -62,6 +69,7 @@ export class TransferQueryController {
 
   @Get('top-expensive')
   @ApiOperation({ summary: 'En pahalı transferler' })
+  @ApiPagedResponse(TransferResponseDto)
   topExpensive(
     @Query() dto: TopExpensiveDto,
   ): Promise<PagedResult<TransferResponseDto>> {
@@ -70,6 +78,7 @@ export class TransferQueryController {
 
   @Get('between-teams')
   @ApiOperation({ summary: 'İki takım arası transferler' })
+  @ApiListResponse(TransferResponseDto)
   async betweenTeams(
     @Query() dto: BetweenTeamsDto,
   ): Promise<ListResponse<TransferResponseDto>> {
@@ -78,6 +87,7 @@ export class TransferQueryController {
 
   @Get('by-year/:year')
   @ApiOperation({ summary: 'Yıla göre transferler' })
+  @ApiListResponse(TransferResponseDto)
   async byYear(
     @Param('year', ParseIntPipe) year: number,
   ): Promise<ListResponse<TransferResponseDto>> {
@@ -86,6 +96,7 @@ export class TransferQueryController {
 
   @Get('by-month/:year/:month')
   @ApiOperation({ summary: 'Ay/yıla göre transferler' })
+  @ApiListResponse(TransferResponseDto)
   async byMonth(
     @Param('year', ParseIntPipe) year: number,
     @Param('month', ParseIntPipe) month: number,
@@ -95,6 +106,7 @@ export class TransferQueryController {
 
   @Get('latest-by-leagues')
   @ApiOperation({ summary: 'Liglere göre son transferler' })
+  @ApiListResponse(LeagueTransfersDto)
   async latestByLeagues(
     @Query() dto: LatestByLeaguesDto,
   ): Promise<ListResponse<LeagueTransfersDto>> {
@@ -110,6 +122,7 @@ export class TransferQueryController {
 
   @Get('periods')
   @ApiOperation({ summary: 'Transfer dönemleri' })
+  @ApiListResponse(TransferPeriodDto)
   @ApiResponse({ status: 400, description: 'Geçersiz yıl' })
   async periods(
     @Query() query: PeriodsQueryDto,
@@ -119,6 +132,7 @@ export class TransferQueryController {
 
   @Get('period-summary')
   @ApiOperation({ summary: 'Dönem özeti (baseCurrency çevrimi)' })
+  @ApiResponse({ status: 200, type: TransferPeriodSummaryDto })
   @ApiResponse({
     status: 400,
     description: 'year veya transferPeriodId zorunlu',
@@ -131,6 +145,7 @@ export class TransferQueryController {
 
   @Get('season-dashboard')
   @ApiOperation({ summary: 'Sezon dashboard (topN + baseCurrency)' })
+  @ApiResponse({ status: 200, type: TransferSeasonDashboardDto })
   @ApiResponse({ status: 400 })
   seasonDashboard(
     @Query() query: SeasonDashboardQueryDto,
@@ -140,7 +155,7 @@ export class TransferQueryController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Transferi getir' })
-  @ApiResponse({ status: 200, type: TransferResponseDto })
+  @ApiSingleResponse(TransferResponseDto)
   @ApiResponse({ status: 404 })
   async findOne(
     @Param('id', ParseUUIDPipe) id: string,

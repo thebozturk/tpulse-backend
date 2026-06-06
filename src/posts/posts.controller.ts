@@ -13,7 +13,12 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
 import { ThrottlePolicies } from '../common/throttle/throttle-policies';
 import { Response } from 'express';
@@ -28,12 +33,23 @@ import {
   PagedResult,
   SingleResponse,
 } from '../common/interfaces/response.interface';
+import {
+  ApiActionResponse,
+  ApiListResponse,
+  ApiPagedResponse,
+  ApiSingleResponse,
+} from '../common/swagger/api-envelope.decorators';
+import {
+  CountResponseDto,
+  SuccessResponseDto,
+} from '../common/dto/common-response.dto';
 import { CreatePostDto, UpdatePostDto } from './dto/create-post.dto';
 import { PostResponseDto } from './dto/post-response.dto';
 import {
   NewCountDto,
   PostFilterDto,
   PostVoteResultDto,
+  ReactionResultDto,
   VotePostDto,
 } from './dto/post-query.dto';
 import { PostsService } from './posts.service';
@@ -47,6 +63,7 @@ export class PostsController {
   @Get('new-count')
   @Public()
   @ApiOperation({ summary: 'afterPostId sonrası yeni gönderi sayısı' })
+  @ApiResponse({ status: 200, type: CountResponseDto })
   async newCount(@Query() query: NewCountDto): Promise<{ count: number }> {
     return { count: await this.posts.newCount(query.afterPostId) };
   }
@@ -54,6 +71,7 @@ export class PostsController {
   @Get('my')
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Kendi gönderilerim' })
+  @ApiListResponse(PostResponseDto)
   async my(
     @CurrentUser() user: AuthUser,
   ): Promise<ListResponse<PostResponseDto>> {
@@ -64,6 +82,7 @@ export class PostsController {
   @Public()
   @UseGuards(OptionalJwtAuthGuard)
   @ApiOperation({ summary: 'Feed (filtre + like-state)' })
+  @ApiPagedResponse(PostResponseDto)
   feed(
     @Query() filter: PostFilterDto,
     @CurrentUser() user: AuthUser | undefined,
@@ -75,6 +94,7 @@ export class PostsController {
   @Public()
   @UseGuards(OptionalJwtAuthGuard)
   @ApiOperation({ summary: 'Oyuncuya göre gönderiler' })
+  @ApiListResponse(PostResponseDto)
   async byPlayer(
     @Param('playerId', ParseUUIDPipe) playerId: string,
     @CurrentUser() user: AuthUser | undefined,
@@ -86,6 +106,7 @@ export class PostsController {
   @Public()
   @UseGuards(OptionalJwtAuthGuard)
   @ApiOperation({ summary: 'Takıma göre gönderiler' })
+  @ApiListResponse(PostResponseDto)
   async byTeam(
     @Param('teamId', ParseUUIDPipe) teamId: string,
     @CurrentUser() user: AuthUser | undefined,
@@ -97,6 +118,7 @@ export class PostsController {
   @Public()
   @UseGuards(OptionalJwtAuthGuard)
   @ApiOperation({ summary: 'Gönderiyi getir' })
+  @ApiSingleResponse(PostResponseDto)
   async findOne(
     @Param('id', ParseUUIDPipe) id: string,
     @CurrentUser() user: AuthUser | undefined,
@@ -108,6 +130,7 @@ export class PostsController {
   @ApiBearerAuth()
   @HttpCode(HttpStatus.ACCEPTED)
   @ApiOperation({ summary: 'Gönderi oluştur (async 202)' })
+  @ApiActionResponse(undefined, 202)
   async create(
     @Body() dto: CreatePostDto,
     @CurrentUser() user: AuthUser,
@@ -120,6 +143,7 @@ export class PostsController {
   @ApiBearerAuth()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Oy ver (senkron)' })
+  @ApiSingleResponse(PostVoteResultDto)
   async vote(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: VotePostDto,
@@ -131,6 +155,7 @@ export class PostsController {
   @Put(':id')
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Gönderi güncelle' })
+  @ApiResponse({ status: 200, type: SuccessResponseDto })
   async update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: UpdatePostDto,
@@ -143,6 +168,7 @@ export class PostsController {
   @Delete(':id')
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Gönderi sil' })
+  @ApiResponse({ status: 200, type: SuccessResponseDto })
   async remove(
     @Param('id', ParseUUIDPipe) id: string,
     @CurrentUser() user: AuthUser,
@@ -154,6 +180,8 @@ export class PostsController {
   @Post(':id/like')
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Beğen (202) / zaten beğenili (200)' })
+  @ApiResponse({ status: 202, type: ReactionResultDto })
+  @ApiResponse({ status: 200, type: ReactionResultDto })
   like(
     @Param('id', ParseUUIDPipe) id: string,
     @CurrentUser() user: AuthUser,
@@ -165,6 +193,8 @@ export class PostsController {
   @Delete(':id/like')
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Beğeniyi kaldır (202) / zaten değil (200)' })
+  @ApiResponse({ status: 202, type: ReactionResultDto })
+  @ApiResponse({ status: 200, type: ReactionResultDto })
   unlike(
     @Param('id', ParseUUIDPipe) id: string,
     @CurrentUser() user: AuthUser,

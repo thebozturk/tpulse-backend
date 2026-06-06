@@ -12,11 +12,21 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
 import { ThrottlePolicies } from '../../common/throttle/throttle-policies';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { RolesGuard } from '../../common/guards/roles.guard';
+import { SuccessResponseDto } from '../../common/dto/common-response.dto';
+import {
+  ApiListResponse,
+  ApiSingleResponse,
+} from '../../common/swagger/api-envelope.decorators';
 import {
   ListResponse,
   SingleResponse,
@@ -24,6 +34,7 @@ import {
 import { AdminPeriodsService } from './admin-periods.service';
 import { PeriodWriteDto } from './dto/period-write.dto';
 import { PeriodsQueryDto } from './dto/stats-query.dto';
+import { PeriodIdResponseDto } from './dto/period-id-response.dto';
 import { TransferPeriodDto } from './dto/transfer-period.dto';
 
 @ApiTags('admin-transfer-periods')
@@ -37,6 +48,7 @@ export class AdminTransferPeriodsController {
 
   @Get()
   @ApiOperation({ summary: 'Dönemleri listele' })
+  @ApiListResponse(TransferPeriodDto)
   async list(
     @Query() query: PeriodsQueryDto,
   ): Promise<ListResponse<TransferPeriodDto>> {
@@ -45,6 +57,8 @@ export class AdminTransferPeriodsController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Dönemi getir' })
+  @ApiSingleResponse(TransferPeriodDto)
+  @ApiResponse({ status: 404 })
   async getById(
     @Param('id', ParseUUIDPipe) id: string,
   ): Promise<SingleResponse<TransferPeriodDto>> {
@@ -53,7 +67,8 @@ export class AdminTransferPeriodsController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  @ApiOperation({ summary: 'Dönem oluştur (endDate≥startDate)' })
+  @ApiOperation({ summary: 'Dönem oluştur (endDate>=startDate)' })
+  @ApiSingleResponse(PeriodIdResponseDto, 201)
   async create(
     @Body() dto: PeriodWriteDto,
   ): Promise<SingleResponse<{ transferPeriodId: string }>> {
@@ -63,6 +78,7 @@ export class AdminTransferPeriodsController {
 
   @Put(':id')
   @ApiOperation({ summary: 'Dönem güncelle' })
+  @ApiResponse({ status: 200, type: SuccessResponseDto })
   async update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: PeriodWriteDto,
@@ -73,6 +89,7 @@ export class AdminTransferPeriodsController {
 
   @Delete(':id')
   @ApiOperation({ summary: 'Dönem sil' })
+  @ApiResponse({ status: 200, type: SuccessResponseDto })
   async remove(
     @Param('id', ParseUUIDPipe) id: string,
   ): Promise<{ success: boolean }> {

@@ -33,7 +33,7 @@ export class CreateNewsDto {
 }
 
 export class UpdateNewsDto extends CreateNewsDto {
-  @ApiProperty({ description: 'Route :newsId ile eşleşmeli (uyuşmazsa 400)' })
+  @ApiProperty({ description: 'Route :newsId ile eslesemeli (uyusmazsa 400)' })
   @IsUUID()
   newsId: string;
 }
@@ -45,4 +45,16 @@ export class BulkDeleteNewsDto {
   @ArrayMaxSize(100)
   @IsUUID('all', { each: true })
   ids: string[];
+}
+
+/** POST /api/admin/news => { data: { newsId } } */
+export class NewsIdResponseDto {
+  @ApiProperty({ example: 'uuid-v4', description: 'Olusturulan haberin IDsi' })
+  newsId: string;
+}
+
+/** DELETE /api/admin/news/bulk => { data: { deletedCount } } */
+export class DeletedCountResponseDto {
+  @ApiProperty({ example: 5, description: 'Silinen haber sayisi' })
+  deletedCount: number;
 }

@@ -11,7 +11,12 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
 import { ThrottlePolicies } from '../common/throttle/throttle-policies';
 import {
@@ -21,6 +26,11 @@ import {
 import { Public } from '../common/decorators/public.decorator';
 import { OptionalJwtAuthGuard } from '../common/guards/optional-jwt.guard';
 import { ListResponse } from '../common/interfaces/response.interface';
+import {
+  ApiActionResponse,
+  ApiListResponse,
+} from '../common/swagger/api-envelope.decorators';
+import { SuccessResponseDto } from '../common/dto/common-response.dto';
 import { CommentsService } from './comments.service';
 import {
   CommentDto,
@@ -38,6 +48,7 @@ export class CommentController {
   @Public()
   @UseGuards(OptionalJwtAuthGuard)
   @ApiOperation({ summary: 'Gönderi yorumları (2-seviye, like-state)' })
+  @ApiListResponse(CommentDto)
   async list(
     @Param('postId', ParseUUIDPipe) postId: string,
     @CurrentUser() user: AuthUser | undefined,
@@ -49,6 +60,7 @@ export class CommentController {
   @ApiBearerAuth()
   @HttpCode(HttpStatus.ACCEPTED)
   @ApiOperation({ summary: 'Yorum ekle (async 202)' })
+  @ApiActionResponse(undefined, 202)
   async create(
     @Param('postId', ParseUUIDPipe) postId: string,
     @Body() dto: CreateCommentDto,
@@ -61,6 +73,7 @@ export class CommentController {
   @Put('comments/:id')
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Yorum güncelle' })
+  @ApiResponse({ status: 200, type: SuccessResponseDto })
   async update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: UpdateCommentDto,
@@ -73,6 +86,7 @@ export class CommentController {
   @Delete('comments/:id')
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Yorum sil' })
+  @ApiResponse({ status: 200, type: SuccessResponseDto })
   async remove(
     @Param('id', ParseUUIDPipe) id: string,
     @CurrentUser() user: AuthUser,
@@ -85,6 +99,7 @@ export class CommentController {
   @ApiBearerAuth()
   @HttpCode(HttpStatus.ACCEPTED)
   @ApiOperation({ summary: 'Yorumu beğen (async 202)' })
+  @ApiResponse({ status: 202, type: SuccessResponseDto })
   async like(
     @Param('id', ParseUUIDPipe) id: string,
     @CurrentUser() user: AuthUser,
@@ -97,6 +112,7 @@ export class CommentController {
   @ApiBearerAuth()
   @HttpCode(HttpStatus.ACCEPTED)
   @ApiOperation({ summary: 'Yorum beğenisini kaldır (async 202)' })
+  @ApiResponse({ status: 202, type: SuccessResponseDto })
   async unlike(
     @Param('id', ParseUUIDPipe) id: string,
     @CurrentUser() user: AuthUser,

@@ -10,7 +10,12 @@ import {
   Put,
   Res,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
 import { ThrottlePolicies } from '../common/throttle/throttle-policies';
 import { Response } from 'express';
@@ -19,8 +24,11 @@ import {
   CurrentUser,
 } from '../common/decorators/current-user.decorator';
 import { ListResponse } from '../common/interfaces/response.interface';
+import { ApiListResponse } from '../common/swagger/api-envelope.decorators';
+import { SuccessResponseDto } from '../common/dto/common-response.dto';
 import {
   AddFavouriteDto,
+  FavouriteAddResponseDto,
   FavouriteDto,
   SetFavouritesDto,
 } from './dto/favourite.dto';
@@ -35,6 +43,7 @@ export class MeFavouritesController {
 
   @Get()
   @ApiOperation({ summary: 'Favorilerim (çözülmüş)' })
+  @ApiListResponse(FavouriteDto)
   async list(
     @CurrentUser() user: AuthUser,
   ): Promise<ListResponse<FavouriteDto>> {
@@ -43,6 +52,8 @@ export class MeFavouritesController {
 
   @Post()
   @ApiOperation({ summary: 'Favori ekle (201 / 200 unchanged / 404)' })
+  @ApiResponse({ status: 201, type: FavouriteAddResponseDto })
+  @ApiResponse({ status: 200, type: FavouriteAddResponseDto })
   async add(
     @CurrentUser() user: AuthUser,
     @Body() dto: AddFavouriteDto,
@@ -63,6 +74,7 @@ export class MeFavouritesController {
 
   @Put()
   @ApiOperation({ summary: 'Favori setini değiştir' })
+  @ApiListResponse(FavouriteDto)
   async set(
     @CurrentUser() user: AuthUser,
     @Body() dto: SetFavouritesDto,
@@ -72,6 +84,7 @@ export class MeFavouritesController {
 
   @Delete(':favouriteId')
   @ApiOperation({ summary: 'Favori sil' })
+  @ApiResponse({ status: 200, type: SuccessResponseDto })
   async remove(
     @CurrentUser() user: AuthUser,
     @Param('favouriteId', ParseUUIDPipe) favouriteId: string,
