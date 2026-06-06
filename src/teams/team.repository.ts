@@ -17,6 +17,12 @@ export type TeamDetailWithRel = Prisma.TeamGetPayload<{
   };
 }>;
 
+export interface TeamWriteInput {
+  name: string;
+  logo?: string;
+  leagueId: string;
+}
+
 export interface ITeamRepository {
   getAll(
     page: number,
@@ -25,4 +31,13 @@ export interface ITeamRepository {
   getById(id: string): Promise<TeamWithRel | null>;
   getByLeagueId(leagueId: string): Promise<TeamWithRel[]>;
   getDetailById(id: string): Promise<TeamDetailWithRel | null>;
+  create(data: TeamWriteInput): Promise<{ id: string }>;
+  update(id: string, data: TeamWriteInput): Promise<boolean>;
+  remove(id: string): Promise<boolean>;
+  updateImage(
+    id: string,
+    url: string | null,
+    locked: boolean,
+  ): Promise<boolean>;
+  exists(id: string): Promise<boolean>;
 }

@@ -8,6 +8,7 @@ import { TransferWithRel, transferInclude } from '../transfer.repository';
 import {
   AggregateResult,
   IStatsRepository,
+  PeriodWriteInput,
   PlayerCount,
   TeamCount,
 } from './stats.repository';
@@ -131,5 +132,41 @@ export class PrismaStatsRepository implements IStatsRepository {
 
   getPeriodById(id: string): Promise<TransferPeriod | null> {
     return this.prisma.transferPeriod.findUnique({ where: { id } });
+  }
+
+  createPeriod(data: PeriodWriteInput): Promise<TransferPeriod> {
+    return this.prisma.transferPeriod.create({ data });
+  }
+
+  async updatePeriod(
+    id: string,
+    data: PeriodWriteInput,
+  ): Promise<TransferPeriod | null> {
+    try {
+      return await this.prisma.transferPeriod.update({ where: { id }, data });
+    } catch (e) {
+      if (
+        e instanceof Prisma.PrismaClientKnownRequestError &&
+        e.code === 'P2025'
+      ) {
+        return null;
+      }
+      throw e;
+    }
+  }
+
+  async deletePeriod(id: string): Promise<boolean> {
+    try {
+      await this.prisma.transferPeriod.delete({ where: { id } });
+      return true;
+    } catch (e) {
+      if (
+        e instanceof Prisma.PrismaClientKnownRequestError &&
+        e.code === 'P2025'
+      ) {
+        return false;
+      }
+      throw e;
+    }
   }
 }

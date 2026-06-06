@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../common/prisma/prisma.service';
 import { toSkipTake } from '../common/pagination';
@@ -6,7 +6,21 @@ import {
   IPlayerRepository,
   PlayerFilter,
   PlayerWithRel,
+  PlayerWriteInput,
 } from './player.repository';
+
+function isNotFound(e: unknown): boolean {
+  return (
+    e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2025'
+  );
+}
+
+function mapWriteError(e: unknown): never {
+  if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2003') {
+    throw new NotFoundException('Takım veya pozisyon bulunamadı');
+  }
+  throw e;
+}
 
 const include = {
   team: { select: { name: true, logo: true } },
@@ -74,5 +88,61 @@ export class PrismaPlayerRepository implements IPlayerRepository {
       orderBy: [{ lastName: 'asc' }, { firstName: 'asc' }],
       include,
     });
+  }
+
+  async create(data: PlayerWriteInput): Promise<{ id: string }> {
+    try {
+      const player = await this.prisma.player.create({ data });
+      return { id: player.id };
+    } catch (e) {
+      mapWriteError(e);
+    }
+  }
+
+  async update(id: string, data: PlayerWriteInput): Promise<boolean> {
+    try {
+      await this.prisma.player.update({ where: { id }, data });
+      return true;
+    } catch (e) {
+      if (isNotFound(e)) {
+        return false;
+      }
+      mapWriteError(e);
+    }
+  }
+
+  async remove(id: string): Promise<boolean> {
+    try {
+      await this.prisma.player.delete({ where: { id } });
+      return true;
+    } catch (e) {
+      if (isNotFound(e)) {
+        return false;
+      }
+      throw e;
+    }
+  }
+
+  async updateImage(
+    id: string,
+    url: string | null,
+    locked: boolean,
+  ): Promise<boolean> {
+    try {
+      await this.prisma.player.update({
+        where: { id },
+        data: { photo: url, photoLockedByAdmin: locked },
+      });
+      return true;
+    } catch (e) {
+      if (isNotFound(e)) {
+        return false;
+      }
+      throw e;
+    }
+  }
+
+  async exists(id: string): Promise<boolean> {
+    return (await this.prisma.player.count({ where: { id } })) > 0;
   }
 }

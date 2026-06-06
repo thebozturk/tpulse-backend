@@ -107,4 +107,32 @@ export interface ITransferRepository {
   // Rumour kısayolları (isRumour:true)
   getByPlayerIdRumour(playerId: string): Promise<TransferWithRel[]>;
   getByTeamIdRumour(teamId: string): Promise<TransferWithRel[]>;
+
+  // Admin yazma
+  existsDuplicate(
+    playerId: string,
+    fromTeamId: string,
+    toTeamId: string,
+    transferDate: Date,
+  ): Promise<boolean>;
+  createTransfer(data: TransferWriteInput): Promise<{ id: string }>;
+  updateTransfer(id: string, data: TransferWriteInput): Promise<boolean>;
+  patchTransfer(id: string, data: TransferPatchInput): Promise<boolean>;
+  softDelete(id: string): Promise<boolean>;
+}
+
+export interface TransferWriteInput {
+  playerId: string;
+  fromTeamId: string;
+  toTeamId: string;
+  transferDate: Date;
+  feeAmount: number;
+  feeCurrency: string;
+  createdByUserId?: string;
+}
+
+export interface TransferPatchInput {
+  feeAmount?: number;
+  feeCurrency?: string;
+  transferDate?: Date;
 }

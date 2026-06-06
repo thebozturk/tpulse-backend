@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import {
   EXTENDED_PRISMA,
@@ -9,11 +9,26 @@ import {
   ITransferRepository,
   Paged,
   TransferFilter,
+  TransferPatchInput,
   TransferWithRel,
+  TransferWriteInput,
   transferInclude,
 } from './transfer.repository';
 
 const SORT_FIELDS = new Set(['createdAt', 'transferDate', 'feeAmount']);
+
+function isNotFound(e: unknown): boolean {
+  return (
+    e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2025'
+  );
+}
+
+function mapWriteError(e: unknown): never {
+  if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2003') {
+    throw new NotFoundException('Oyuncu veya takım bulunamadı');
+  }
+  throw e;
+}
 
 @Injectable()
 export class PrismaTransferRepository implements ITransferRepository {
@@ -272,6 +287,65 @@ export class PrismaTransferRepository implements ITransferRepository {
 
   getByPlayerIdRumour(playerId: string) {
     return this.list({ isRumour: true, playerId });
+  }
+
+  async existsDuplicate(
+    playerId: string,
+    fromTeamId: string,
+    toTeamId: string,
+    transferDate: Date,
+  ): Promise<boolean> {
+    const dup = await this.prisma.transfer.findFirst({
+      where: { playerId, fromTeamId, toTeamId, transferDate },
+      select: { id: true },
+    });
+    return dup !== null;
+  }
+
+  async createTransfer(data: TransferWriteInput): Promise<{ id: string }> {
+    try {
+      const t = await this.prisma.transfer.create({ data });
+      return { id: t.id };
+    } catch (e) {
+      mapWriteError(e);
+    }
+  }
+
+  async updateTransfer(id: string, data: TransferWriteInput): Promise<boolean> {
+    try {
+      await this.prisma.transfer.update({ where: { id }, data });
+      return true;
+    } catch (e) {
+      if (isNotFound(e)) {
+        return false;
+      }
+      mapWriteError(e);
+    }
+  }
+
+  async patchTransfer(id: string, data: TransferPatchInput): Promise<boolean> {
+    try {
+      await this.prisma.transfer.update({ where: { id }, data });
+      return true;
+    } catch (e) {
+      if (isNotFound(e)) {
+        return false;
+      }
+      throw e;
+    }
+  }
+
+  async softDelete(id: string): Promise<boolean> {
+    // EXTENDED_PRISMA delete → update isDeleted:true
+    try {
+      await this.prisma.transfer.delete({ where: { id } });
+      return true;
+    } catch (e) {
+      if (isNotFound(e)) {
+        return false;
+      }
+      throw e;
+    }
   }
 
   getByTeamIdRumour(teamId: string) {

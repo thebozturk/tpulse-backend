@@ -1,6 +1,7 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { PagedResult } from '../common/interfaces/response.interface';
 import { buildPaged } from '../common/pagination';
+import { ImageUploadService } from '../storage/image-upload.service';
 import { TeamTransferLineDto } from '../transfers/dto/team-transfer-line.dto';
 import { toTeamTransferLine } from '../transfers/transfer.mapper';
 import {
@@ -9,10 +10,13 @@ import {
 } from '../transfers/transfer.repository';
 import { TeamDetailDto } from './dto/team-detail.dto';
 import { TeamResponseDto } from './dto/team-response.dto';
+import { TeamWriteDto } from './dto/team-write.dto';
 import { toSquadPlayer, toTeamResponse } from './team.mapper';
 import { ITeamRepository, TEAM_REPOSITORY } from './team.repository';
 
 const RECENT_TAKE = 10;
+const IMAGE_FOLDER = 'teams';
+const IMAGE_QUALITY = 85;
 
 @Injectable()
 export class TeamsService {
@@ -20,7 +24,61 @@ export class TeamsService {
     @Inject(TEAM_REPOSITORY) private readonly repo: ITeamRepository,
     @Inject(TRANSFER_REPOSITORY)
     private readonly transfers: ITransferRepository,
+    private readonly imageUpload: ImageUploadService,
   ) {}
+
+  create(dto: TeamWriteDto): Promise<{ id: string }> {
+    return this.repo.create(dto);
+  }
+
+  async update(id: string, dto: TeamWriteDto): Promise<void> {
+    if (!(await this.repo.update(id, dto))) {
+      throw new NotFoundException('Takım bulunamadı');
+    }
+  }
+
+  async remove(id: string): Promise<void> {
+    if (!(await this.repo.remove(id))) {
+      throw new NotFoundException('Takım bulunamadı');
+    }
+  }
+
+  async setImageFromFile(
+    id: string,
+    file: Express.Multer.File,
+  ): Promise<string> {
+    if (!(await this.repo.exists(id))) {
+      throw new NotFoundException('Takım bulunamadı');
+    }
+    const url = await this.imageUpload.fromFile(
+      file,
+      IMAGE_FOLDER,
+      id,
+      IMAGE_QUALITY,
+    );
+    await this.repo.updateImage(id, url, true);
+    return url;
+  }
+
+  async setImageFromUrl(id: string, imageUrl: string): Promise<string> {
+    if (!(await this.repo.exists(id))) {
+      throw new NotFoundException('Takım bulunamadı');
+    }
+    const url = await this.imageUpload.fromUrl(
+      imageUrl,
+      IMAGE_FOLDER,
+      id,
+      IMAGE_QUALITY,
+    );
+    await this.repo.updateImage(id, url, true);
+    return url;
+  }
+
+  async deleteImage(id: string): Promise<void> {
+    if (!(await this.repo.updateImage(id, null, false))) {
+      throw new NotFoundException('Takım bulunamadı');
+    }
+  }
 
   async findAll(
     page: number,

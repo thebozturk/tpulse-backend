@@ -12,7 +12,9 @@ import { HealthModule } from './health/health.module';
 import { LeaguesModule } from './leagues/leagues.module';
 import { NewsModule } from './news/news.module';
 import { PlayersModule } from './players/players.module';
+import { ProfileModule } from './profile/profile.module';
 import { SearchModule } from './search/search.module';
+import { StorageModule } from './storage/storage.module';
 import { TeamsModule } from './teams/teams.module';
 import { TransfersModule } from './transfers/transfers.module';
 import { UsersModule } from './users/users.module';
@@ -29,6 +31,7 @@ import { UsersModule } from './users/users.module';
     ThrottlerModule.forRoot([{ ttl: 60_000, limit: 300 }]),
     PrismaModule,
     RedisModule,
+    StorageModule,
     EmailModule,
     AuthModule,
     UsersModule,
@@ -38,6 +41,7 @@ import { UsersModule } from './users/users.module';
     TeamsModule,
     PlayersModule,
     NewsModule,
+    ProfileModule,
     HealthModule,
   ],
   providers: [

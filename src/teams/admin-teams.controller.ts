@@ -1,0 +1,58 @@
+import {
+  Body,
+  Controller,
+  Delete,
+  HttpCode,
+  HttpStatus,
+  Param,
+  ParseUUIDPipe,
+  Post,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Throttle } from '@nestjs/throttler';
+import { Roles } from '../common/decorators/roles.decorator';
+import { RolesGuard } from '../common/guards/roles.guard';
+import { SingleResponse } from '../common/interfaces/response.interface';
+import { TeamWriteDto } from './dto/team-write.dto';
+import { TeamsService } from './teams.service';
+
+@ApiTags('admin-teams')
+@ApiBearerAuth()
+@Controller('api/admin/teams')
+@UseGuards(RolesGuard)
+@Roles('Admin')
+@Throttle({ default: { limit: 120, ttl: 60_000 } })
+export class AdminTeamsController {
+  constructor(private readonly teams: TeamsService) {}
+
+  @Post()
+  @HttpCode(HttpStatus.CREATED)
+  @ApiOperation({ summary: 'Takım oluştur' })
+  async create(
+    @Body() dto: TeamWriteDto,
+  ): Promise<SingleResponse<{ teamId: string }>> {
+    const { id } = await this.teams.create(dto);
+    return { data: { teamId: id } };
+  }
+
+  @Put(':id')
+  @ApiOperation({ summary: 'Takım güncelle' })
+  async update(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: TeamWriteDto,
+  ): Promise<{ success: boolean }> {
+    await this.teams.update(id, dto);
+    return { success: true };
+  }
+
+  @Delete(':id')
+  @ApiOperation({ summary: 'Takım sil' })
+  async remove(
+    @Param('id', ParseUUIDPipe) id: string,
+  ): Promise<{ success: boolean }> {
+    await this.teams.remove(id);
+    return { success: true };
+  }
+}

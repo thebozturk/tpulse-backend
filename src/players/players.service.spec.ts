@@ -1,5 +1,6 @@
 import { NotFoundException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
+import { ImageUploadService } from '../storage/image-upload.service';
 import { TRANSFER_REPOSITORY } from '../transfers/transfer.repository';
 import { PLAYER_REPOSITORY } from './player.repository';
 import { PlayersService } from './players.service';
@@ -21,6 +22,7 @@ describe('PlayersService', () => {
         PlayersService,
         { provide: PLAYER_REPOSITORY, useValue: repo },
         { provide: TRANSFER_REPOSITORY, useValue: {} },
+        { provide: ImageUploadService, useValue: {} },
       ],
     }).compile();
     service = module.get(PlayersService);

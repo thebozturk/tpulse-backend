@@ -1,6 +1,7 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { PagedResult } from '../common/interfaces/response.interface';
 import { buildPaged } from '../common/pagination';
+import { ImageUploadService } from '../storage/image-upload.service';
 import { TeamTransferLineDto } from '../transfers/dto/team-transfer-line.dto';
 import { LeagueTransferFilterDto } from '../transfers/dto/transfer-query.dto';
 import { toTeamTransferLine } from '../transfers/transfer.mapper';
@@ -10,8 +11,12 @@ import {
 } from '../transfers/transfer.repository';
 import { LeagueResponseDto } from './dto/league-response.dto';
 import { LeagueTransfersQueryDto } from './dto/league-transfers-query.dto';
+import { LeagueWriteDto } from './dto/league-write.dto';
 import { toLeagueResponse } from './league.mapper';
 import { ILeagueRepository, LEAGUE_REPOSITORY } from './league.repository';
+
+const IMAGE_FOLDER = 'leagues';
+const IMAGE_QUALITY = 90;
 
 @Injectable()
 export class LeaguesService {
@@ -19,7 +24,63 @@ export class LeaguesService {
     @Inject(LEAGUE_REPOSITORY) private readonly repo: ILeagueRepository,
     @Inject(TRANSFER_REPOSITORY)
     private readonly transfers: ITransferRepository,
+    private readonly imageUpload: ImageUploadService,
   ) {}
+
+  create(dto: LeagueWriteDto): Promise<{ id: string }> {
+    return this.repo.create(dto);
+  }
+
+  async update(id: string, dto: LeagueWriteDto): Promise<void> {
+    if (!(await this.repo.update(id, dto))) {
+      throw new NotFoundException('Lig bulunamadı');
+    }
+  }
+
+  async remove(id: string): Promise<void> {
+    if (!(await this.repo.remove(id))) {
+      throw new NotFoundException('Lig bulunamadı');
+    }
+  }
+
+  async setImageFromFile(
+    id: string,
+    file: Express.Multer.File,
+  ): Promise<string> {
+    await this.ensureExists(id);
+    const url = await this.imageUpload.fromFile(
+      file,
+      IMAGE_FOLDER,
+      id,
+      IMAGE_QUALITY,
+    );
+    await this.repo.updateImage(id, url, true);
+    return url;
+  }
+
+  async setImageFromUrl(id: string, imageUrl: string): Promise<string> {
+    await this.ensureExists(id);
+    const url = await this.imageUpload.fromUrl(
+      imageUrl,
+      IMAGE_FOLDER,
+      id,
+      IMAGE_QUALITY,
+    );
+    await this.repo.updateImage(id, url, true);
+    return url;
+  }
+
+  async deleteImage(id: string): Promise<void> {
+    if (!(await this.repo.updateImage(id, null, false))) {
+      throw new NotFoundException('Lig bulunamadı');
+    }
+  }
+
+  private async ensureExists(id: string): Promise<void> {
+    if (!(await this.repo.exists(id))) {
+      throw new NotFoundException('Lig bulunamadı');
+    }
+  }
 
   async findAll(
     page: number,

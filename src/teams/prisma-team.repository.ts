@@ -1,11 +1,35 @@
-import { Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from '../common/prisma/prisma.service';
 import { toSkipTake } from '../common/pagination';
 import {
   ITeamRepository,
   TeamDetailWithRel,
   TeamWithRel,
+  TeamWriteInput,
 } from './team.repository';
+
+function mapWriteError(e: unknown): never {
+  if (e instanceof Prisma.PrismaClientKnownRequestError) {
+    if (e.code === 'P2002') {
+      throw new ConflictException('Takım adı zaten kullanımda');
+    }
+    if (e.code === 'P2003') {
+      throw new NotFoundException('Lig bulunamadı');
+    }
+  }
+  throw e;
+}
+
+function isNotFound(e: unknown): boolean {
+  return (
+    e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2025'
+  );
+}
 
 const include = {
   league: { select: { name: true } },
@@ -57,5 +81,61 @@ export class PrismaTeamRepository implements ITeamRepository {
         _count: { select: { players: true } },
       },
     });
+  }
+
+  async create(data: TeamWriteInput): Promise<{ id: string }> {
+    try {
+      const team = await this.prisma.team.create({ data });
+      return { id: team.id };
+    } catch (e) {
+      mapWriteError(e);
+    }
+  }
+
+  async update(id: string, data: TeamWriteInput): Promise<boolean> {
+    try {
+      await this.prisma.team.update({ where: { id }, data });
+      return true;
+    } catch (e) {
+      if (isNotFound(e)) {
+        return false;
+      }
+      mapWriteError(e);
+    }
+  }
+
+  async remove(id: string): Promise<boolean> {
+    try {
+      await this.prisma.team.delete({ where: { id } });
+      return true;
+    } catch (e) {
+      if (isNotFound(e)) {
+        return false;
+      }
+      throw e;
+    }
+  }
+
+  async updateImage(
+    id: string,
+    url: string | null,
+    locked: boolean,
+  ): Promise<boolean> {
+    try {
+      await this.prisma.team.update({
+        where: { id },
+        data: { logo: url, logoLockedByAdmin: locked },
+      });
+      return true;
+    } catch (e) {
+      if (isNotFound(e)) {
+        return false;
+      }
+      throw e;
+    }
+  }
+
+  async exists(id: string): Promise<boolean> {
+    return (await this.prisma.team.count({ where: { id } })) > 0;
   }
 }
