@@ -3,9 +3,11 @@ import { Logger } from '@nestjs/common';
 import { Job } from 'bullmq';
 import { PrismaService } from '../common/prisma/prisma.service';
 import { RedisService } from '../common/redis/redis.service';
+import { NotificationsService } from '../notifications/notifications.service';
 import {
   CommentCreateEvent,
   CommentReactionEvent,
+  NotificationGenerateEvent,
   OUTBOX_QUEUE,
   OutboxEventType,
   OutboxJobData,
@@ -24,6 +26,7 @@ export class ReactionProcessor extends WorkerHost {
   constructor(
     private readonly prisma: PrismaService,
     private readonly redis: RedisService,
+    private readonly notifications: NotificationsService,
   ) {
     super();
   }
@@ -62,6 +65,11 @@ export class ReactionProcessor extends WorkerHost {
           break;
         case OutboxEventType.CommentReaction:
           await this.handleCommentReaction(payload as CommentReactionEvent);
+          break;
+        case OutboxEventType.NotificationGenerate:
+          await this.notifications.generateForTransfer(
+            (payload as NotificationGenerateEvent).transferId,
+          );
           break;
         default:
           this.logger.warn(`Bilinmeyen event: ${msg.eventType}`);

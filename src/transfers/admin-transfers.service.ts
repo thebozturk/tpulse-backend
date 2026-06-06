@@ -4,20 +4,20 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { OutboxEventType } from '../messaging/events';
+import { OutboxService } from '../messaging/outbox.service';
 import { CreateTransferDto, PatchTransferDto } from './dto/transfer-write.dto';
 import {
   ITransferRepository,
   TRANSFER_REPOSITORY,
 } from './transfer.repository';
 
-/**
- * Admin transfer CRUD. NOT: docs'a göre create "bildirim tetikler" — notification
- * Faz 6'da eklenecek (burada saf CRUD).
- */
+/** Admin transfer CRUD. create → notification.generate job (outbox). */
 @Injectable()
 export class AdminTransfersService {
   constructor(
     @Inject(TRANSFER_REPOSITORY) private readonly repo: ITransferRepository,
+    private readonly outbox: OutboxService,
   ) {}
 
   async create(
@@ -33,7 +33,11 @@ export class AdminTransfersService {
     if (dup) {
       throw new ConflictException('Aynı transfer zaten mevcut');
     }
-    return this.repo.createTransfer({ ...dto, createdByUserId });
+    const created = await this.repo.createTransfer({ ...dto, createdByUserId });
+    await this.outbox.enqueue(OutboxEventType.NotificationGenerate, {
+      transferId: created.id,
+    });
+    return created;
   }
 
   async update(id: string, dto: CreateTransferDto): Promise<void> {
