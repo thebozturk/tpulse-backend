@@ -12,6 +12,8 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
+import { AuditAction } from '../common/audit/audit-actions';
+import { Audit } from '../common/audit/audit.decorator';
 import { SuccessResponseDto } from '../common/dto/common-response.dto';
 import { Roles } from '../common/decorators/roles.decorator';
 import { RolesGuard } from '../common/guards/roles.guard';
@@ -28,6 +30,7 @@ export class AdminTransferCommentsController {
 
   @Delete(':id')
   @Throttle(ThrottlePolicies.write)
+  @Audit(AuditAction.TransferCommentDelete, 'TransferComment')
   @ApiOperation({ summary: 'Transfer yorumu sil (admin, owner-bypass)' })
   @ApiResponse({ status: 200, type: SuccessResponseDto })
   @ApiResponse({ status: 404 })

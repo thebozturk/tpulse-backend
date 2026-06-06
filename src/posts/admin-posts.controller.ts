@@ -14,6 +14,8 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
+import { AuditAction } from '../common/audit/audit-actions';
+import { Audit } from '../common/audit/audit.decorator';
 import { SuccessResponseDto } from '../common/dto/common-response.dto';
 import { ModerationListQueryDto } from '../common/dto/moderation-list.query.dto';
 import { Roles } from '../common/decorators/roles.decorator';
@@ -43,6 +45,7 @@ export class AdminPostsController {
 
   @Delete(':id')
   @Throttle(ThrottlePolicies.write)
+  @Audit(AuditAction.PostDelete, 'Post')
   @ApiOperation({ summary: 'Gönderi sil (admin, owner-bypass)' })
   @ApiResponse({ status: 200, type: SuccessResponseDto })
   @ApiResponse({ status: 404 })

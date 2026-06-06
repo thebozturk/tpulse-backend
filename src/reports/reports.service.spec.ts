@@ -7,6 +7,7 @@ import {
   UserStatus,
 } from '@prisma/client';
 import { CommentsService } from '../comments/comments.service';
+import { AuditService } from '../common/audit/audit.service';
 import { PrismaService } from '../common/prisma/prisma.service';
 import { PostsService } from '../posts/posts.service';
 import { TransferCommentsService } from '../transfer-comments/transfer-comments.service';
@@ -69,6 +70,7 @@ describe('ReportsService', () => {
         { provide: PostsService, useValue: posts },
         { provide: CommentsService, useValue: comments },
         { provide: TransferCommentsService, useValue: transferComments },
+        { provide: AuditService, useValue: { log: jest.fn() } },
       ],
     }).compile();
     service = module.get(ReportsService);

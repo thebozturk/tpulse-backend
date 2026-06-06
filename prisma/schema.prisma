@@ -473,3 +473,17 @@ model Report {
   @@index([targetType, targetId])
   @@map("reports")
 }
+
+model AuditLog {
+  id          String   @id @default(uuid()) @db.Uuid
+  actorUserId String   @db.Uuid
+  action      String   @db.VarChar(60)
+  targetType  String?  @db.VarChar(40)
+  targetId    String?  @db.Uuid
+  metadata    Json?
+  createdAt   DateTime @default(now()) @db.Timestamptz
+
+  @@index([actorUserId, createdAt])
+  @@index([action, createdAt])
+  @@map("audit_logs")
+}
