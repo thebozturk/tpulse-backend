@@ -7,6 +7,7 @@ export const AuditAction = {
   CommentDelete: 'comment.delete',
   TransferCommentDelete: 'transferComment.delete',
   ReportReview: 'report.review',
+  NotificationBroadcast: 'notification.broadcast',
 } as const;
 
 export type AuditActionType = (typeof AuditAction)[keyof typeof AuditAction];
