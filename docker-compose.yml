@@ -1,0 +1,65 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: transferpulse
+      POSTGRES_USER: tpulse
+      POSTGRES_PASSWORD: tpulse_dev
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U tpulse -d transferpulse']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: ['redis-server', '--appendonly', 'yes']
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    # NOT (Faz 0): henüz migration yok. 'prisma migrate deploy' Faz 1'de eklenir.
+    command: ['node', 'dist/main.js']
+    environment:
+      NODE_ENV: production
+      PORT: 8080
+      DATABASE_URL: postgresql://tpulse:tpulse_dev@postgres:5432/transferpulse
+      REDIS_CONNECTION_STRING: redis://redis:6379
+      # Dev-only fallback; prod'da secret manager'dan inject edilir.
+      JWT_SECRET: ${JWT_SECRET:-dev_only_secret_change_me_min_32_chars}
+      CORS_ALLOWED_ORIGINS: http://localhost:3000
+      ENABLE_SWAGGER: 'true'
+    ports:
+      - '8080:8080'
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ['CMD', 'wget', '--spider', '-q', 'http://localhost:8080/health']
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+volumes:
+  postgres-data:
+  redis-data:

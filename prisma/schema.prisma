@@ -1,0 +1,12 @@
+// TransferPulse — Prisma schema
+// Faz 0: yalnızca datasource + generator. Domain modelleri Faz 1'de
+// docs/01-DATA-MODEL.md'den eklenir (greenfield migration).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
