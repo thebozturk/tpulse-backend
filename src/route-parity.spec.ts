@@ -35,6 +35,13 @@ const IMAGE_ENDPOINTS = ['leagues', 'teams', 'players', 'news'].flatMap((e) => [
 const ALLOWED_EXTRA = new Set([
   'GET /health',
   'GET /api/admin/dashboard/overview', // faz-bo-1
+  // faz-bo-2 — kullanıcı yönetimi
+  'GET /api/admin/users',
+  'GET /api/admin/users/:p',
+  'GET /api/admin/users/:p/content',
+  'PATCH /api/admin/users/:p/status',
+  'PATCH /api/admin/users/:p/role',
+  'PATCH /api/admin/users/:p/reputation',
 ]);
 
 // docs/02 "Sıralama Notları": kesinlikle korunması gereken bot uçları

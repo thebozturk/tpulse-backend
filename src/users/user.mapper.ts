@@ -1,4 +1,5 @@
 import { User } from '@prisma/client';
+import { AdminUserDetailResponseDto } from './dto/admin-user-detail.response.dto';
 import { UserResponseDto } from './dto/user-response.dto';
 
 /** Prisma User → UserResponseDto (hassas alanları düşürür). */
@@ -15,5 +16,15 @@ export function toUserResponse(user: User): UserResponseDto {
     reputationScore: user.reputationScore,
     role: user.role,
     createdAt: user.createdAt,
+  };
+}
+
+/** Prisma User → AdminUserDetailResponseDto (moderasyon alanları dahil). */
+export function toUserDetailResponse(user: User): AdminUserDetailResponseDto {
+  return {
+    ...toUserResponse(user),
+    bannedAt: user.bannedAt ?? undefined,
+    banReason: user.banReason ?? undefined,
+    updatedAt: user.updatedAt ?? undefined,
   };
 }

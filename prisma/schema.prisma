@@ -39,6 +39,8 @@ model User {
   reputationScore Int        @default(0)
   role            String     @default("User") @db.VarChar(20)
   googleId        String?    @db.VarChar(256)
+  bannedAt        DateTime?  @db.Timestamptz
+  banReason       String?    @db.VarChar(500)
   createdAt       DateTime   @default(now()) @db.Timestamptz
   updatedAt       DateTime?  @db.Timestamptz
 
