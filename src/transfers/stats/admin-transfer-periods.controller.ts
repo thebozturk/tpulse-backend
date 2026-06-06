@@ -1,0 +1,81 @@
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  ParseUUIDPipe,
+  Post,
+  Put,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Throttle } from '@nestjs/throttler';
+import { Roles } from '../../common/decorators/roles.decorator';
+import { RolesGuard } from '../../common/guards/roles.guard';
+import {
+  ListResponse,
+  SingleResponse,
+} from '../../common/interfaces/response.interface';
+import { AdminPeriodsService } from './admin-periods.service';
+import { PeriodWriteDto } from './dto/period-write.dto';
+import { PeriodsQueryDto } from './dto/stats-query.dto';
+import { TransferPeriodDto } from './dto/transfer-period.dto';
+
+@ApiTags('admin-transfer-periods')
+@ApiBearerAuth()
+@Controller('api/admin/transfer-periods')
+@UseGuards(RolesGuard)
+@Roles('Admin')
+@Throttle({ default: { limit: 120, ttl: 60_000 } })
+export class AdminTransferPeriodsController {
+  constructor(private readonly periods: AdminPeriodsService) {}
+
+  @Get()
+  @ApiOperation({ summary: 'Dönemleri listele' })
+  async list(
+    @Query() query: PeriodsQueryDto,
+  ): Promise<ListResponse<TransferPeriodDto>> {
+    return { items: await this.periods.list(query.year) };
+  }
+
+  @Get(':id')
+  @ApiOperation({ summary: 'Dönemi getir' })
+  async getById(
+    @Param('id', ParseUUIDPipe) id: string,
+  ): Promise<SingleResponse<TransferPeriodDto>> {
+    return { data: await this.periods.getById(id) };
+  }
+
+  @Post()
+  @HttpCode(HttpStatus.CREATED)
+  @ApiOperation({ summary: 'Dönem oluştur (endDate≥startDate)' })
+  async create(
+    @Body() dto: PeriodWriteDto,
+  ): Promise<SingleResponse<{ transferPeriodId: string }>> {
+    const { id } = await this.periods.create(dto);
+    return { data: { transferPeriodId: id } };
+  }
+
+  @Put(':id')
+  @ApiOperation({ summary: 'Dönem güncelle' })
+  async update(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: PeriodWriteDto,
+  ): Promise<{ success: boolean }> {
+    await this.periods.update(id, dto);
+    return { success: true };
+  }
+
+  @Delete(':id')
+  @ApiOperation({ summary: 'Dönem sil' })
+  async remove(
+    @Param('id', ParseUUIDPipe) id: string,
+  ): Promise<{ success: boolean }> {
+    await this.periods.remove(id);
+    return { success: true };
+  }
+}

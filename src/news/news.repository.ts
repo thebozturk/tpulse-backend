@@ -55,4 +55,23 @@ export interface INewsRepository {
     page: number,
     pageSize: number,
   ): Promise<{ items: NewsWithRel[]; total: number }>;
+  create(data: NewsWriteInput): Promise<{ id: string }>;
+  update(id: string, data: NewsWriteInput): Promise<boolean>;
+  remove(id: string): Promise<boolean>;
+  removeBulk(ids: string[]): Promise<number>;
+  updateImage(id: string, url: string | null): Promise<boolean>;
+  exists(id: string): Promise<boolean>;
+}
+
+export interface NewsWriteInput {
+  publishDate?: Date;
+  playerId?: string;
+  fromTeamId?: string;
+  toTeamId?: string;
+  slug: string;
+  imageUrl?: string;
+  sourceName?: string;
+  sourceUrl?: string;
+  title: string;
+  content?: string;
 }

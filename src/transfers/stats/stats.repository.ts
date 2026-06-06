@@ -40,4 +40,17 @@ export interface IStatsRepository {
   listInRange(where: Prisma.TransferWhereInput): Promise<TransferWithRel[]>;
   getPeriods(year?: number): Promise<TransferPeriod[]>;
   getPeriodById(id: string): Promise<TransferPeriod | null>;
+  createPeriod(data: PeriodWriteInput): Promise<TransferPeriod>;
+  updatePeriod(
+    id: string,
+    data: PeriodWriteInput,
+  ): Promise<TransferPeriod | null>;
+  deletePeriod(id: string): Promise<boolean>;
+}
+
+export interface PeriodWriteInput {
+  name: string;
+  periodType?: string;
+  startDate: Date;
+  endDate: Date;
 }

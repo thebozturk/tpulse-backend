@@ -12,6 +12,7 @@ import { HealthModule } from './health/health.module';
 import { LeaguesModule } from './leagues/leagues.module';
 import { NewsModule } from './news/news.module';
 import { PlayersModule } from './players/players.module';
+import { ProfileModule } from './profile/profile.module';
 import { SearchModule } from './search/search.module';
 import { StorageModule } from './storage/storage.module';
 import { TeamsModule } from './teams/teams.module';
@@ -40,6 +41,7 @@ import { UsersModule } from './users/users.module';
     TeamsModule,
     PlayersModule,
     NewsModule,
+    ProfileModule,
     HealthModule,
   ],
   providers: [
