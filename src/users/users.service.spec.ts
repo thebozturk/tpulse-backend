@@ -5,6 +5,8 @@ import {
 } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { PasswordService } from '../auth/password.service';
+import { TokenService } from '../auth/token.service';
+import { UserStatusCache } from '../common/auth/user-status.cache';
 import { PrismaService } from '../common/prisma/prisma.service';
 import { UsersService } from './users.service';
 
@@ -40,11 +42,15 @@ describe('UsersService', () => {
       },
     };
     const passwords = { hash: jest.fn().mockResolvedValue('hashed') };
+    const tokens = { revokeAllForUser: jest.fn().mockResolvedValue(undefined) };
+    const statusCache = { setStatus: jest.fn().mockResolvedValue(undefined) };
     const module = await Test.createTestingModule({
       providers: [
         UsersService,
         { provide: PrismaService, useValue: prisma },
         { provide: PasswordService, useValue: passwords },
+        { provide: TokenService, useValue: tokens },
+        { provide: UserStatusCache, useValue: statusCache },
       ],
     }).compile();
     service = module.get(UsersService);
