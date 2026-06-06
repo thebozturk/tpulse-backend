@@ -12,6 +12,7 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
+import { ThrottlePolicies } from '../common/throttle/throttle-policies';
 import {
   AuthUser,
   CurrentUser,
@@ -27,7 +28,7 @@ import { RumourWriteService } from './rumour-write.service';
 @Controller('api/rumours')
 @UseGuards(RolesGuard)
 @Roles('Admin', 'Reporter')
-@Throttle({ default: { limit: 120, ttl: 60_000 } })
+@Throttle(ThrottlePolicies.write)
 export class RumourWriteController {
   constructor(private readonly rumours: RumourWriteService) {}
 

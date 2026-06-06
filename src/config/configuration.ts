@@ -30,6 +30,9 @@ export const configuration = () => {
     redis: {
       connectionString: env.REDIS_CONNECTION_STRING,
     },
+    idempotency: {
+      ttlSeconds: env.IDEMPOTENCY_TTL_SECONDS,
+    },
     cors: {
       allowedOrigins: env.CORS_ALLOWED_ORIGINS.split(',')
         .map((o) => o.trim())

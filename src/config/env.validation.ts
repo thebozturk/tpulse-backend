@@ -73,6 +73,7 @@ export const envSchema = z.object({
   SMTP_HOST: z.string().optional(),
   SMTP_USERNAME: z.string().optional(),
   SMTP_PASSWORD: z.string().optional(),
+  IDEMPOTENCY_TTL_SECONDS: z.coerce.number().int().positive().default(600),
 });
 
 export type Env = z.infer<typeof envSchema>;

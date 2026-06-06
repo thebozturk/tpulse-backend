@@ -1,9 +1,11 @@
 import { BullModule } from '@nestjs/bullmq';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { APP_GUARD } from '@nestjs/core';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { IdempotencyInterceptor } from './common/interceptors/idempotency.interceptor';
+import { GLOBAL_THROTTLE } from './common/throttle/throttle-policies';
 import { CommentsModule } from './comments/comments.module';
 import { FavouritesModule } from './favourites/favourites.module';
 import { MessagingModule } from './messaging/messaging.module';
@@ -37,7 +39,7 @@ import { UsersModule } from './users/users.module';
     }),
     // Global rate limit: 300/dk/IP (docs/04). Route'lar @Throttle ile sıkı
     // policy (auth 30/dk, write 120/dk) override eder.
-    ThrottlerModule.forRoot([{ ttl: 60_000, limit: 300 }]),
+    ThrottlerModule.forRoot([GLOBAL_THROTTLE]),
     ScheduleModule.forRoot(),
     BullModule.forRootAsync({
       inject: [ConfigService],
@@ -79,6 +81,8 @@ import { UsersModule } from './users/users.module';
     // Sıra: throttle önce (brute-force), sonra auth. JwtAuthGuard @Public bypass'lı.
     { provide: APP_GUARD, useClass: ThrottlerGuard },
     { provide: APP_GUARD, useClass: JwtAuthGuard },
+    // Idempotency: mutating uçlarda Idempotency-Key header'ı ile tekrar koruması.
+    { provide: APP_INTERCEPTOR, useClass: IdempotencyInterceptor },
   ],
 })
 export class AppModule {}
