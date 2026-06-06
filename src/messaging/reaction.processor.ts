@@ -4,6 +4,8 @@ import { Job } from 'bullmq';
 import { PrismaService } from '../common/prisma/prisma.service';
 import { RedisService } from '../common/redis/redis.service';
 import {
+  CommentCreateEvent,
+  CommentReactionEvent,
   OUTBOX_QUEUE,
   OutboxEventType,
   OutboxJobData,
@@ -54,6 +56,12 @@ export class ReactionProcessor extends WorkerHost {
           break;
         case OutboxEventType.PostReaction:
           await this.handlePostReaction(payload as PostReactionEvent);
+          break;
+        case OutboxEventType.CommentCreate:
+          await this.handleCommentCreate(payload as CommentCreateEvent);
+          break;
+        case OutboxEventType.CommentReaction:
+          await this.handleCommentReaction(payload as CommentReactionEvent);
           break;
         default:
           this.logger.warn(`Bilinmeyen event: ${msg.eventType}`);
@@ -113,6 +121,59 @@ export class ReactionProcessor extends WorkerHost {
       if (count > 0) {
         await this.prisma.post.update({
           where: { id: e.postId },
+          data: { likeCount: { decrement: 1 } },
+        });
+      }
+    }
+  }
+
+  private async handleCommentCreate(e: CommentCreateEvent): Promise<void> {
+    const post = await this.prisma.post.findUnique({
+      where: { id: e.postId },
+      select: { id: true },
+    });
+    if (!post) {
+      return; // parent post yok → no-op (job başarılı sayılır)
+    }
+    await this.prisma.$transaction([
+      this.prisma.comment.create({
+        data: {
+          ownerId: e.userId,
+          postId: e.postId,
+          content: e.content,
+          parentId: e.parentId,
+          createdAtUtc: new Date(e.createdAtUtc),
+        },
+      }),
+      this.prisma.post.update({
+        where: { id: e.postId },
+        data: { commentCount: { increment: 1 } },
+      }),
+    ]);
+  }
+
+  private async handleCommentReaction(e: CommentReactionEvent): Promise<void> {
+    if (e.isLike) {
+      try {
+        await this.prisma.commentLike.create({
+          data: { commentId: e.commentId, userId: e.userId },
+        });
+        await this.prisma.comment.update({
+          where: { id: e.commentId },
+          data: { likeCount: { increment: 1 } },
+        });
+      } catch (err) {
+        if (!isUniqueViolation(err)) {
+          throw err;
+        }
+      }
+    } else {
+      const { count } = await this.prisma.commentLike.deleteMany({
+        where: { commentId: e.commentId, userId: e.userId },
+      });
+      if (count > 0) {
+        await this.prisma.comment.update({
+          where: { id: e.commentId },
           data: { likeCount: { decrement: 1 } },
         });
       }

@@ -10,6 +10,7 @@ import { PlayerSearchDto } from '../search/dto/search-query.dto';
 import { SearchService } from '../search/search.service';
 import { TeamTransferLineDto } from '../transfers/dto/team-transfer-line.dto';
 import { PlayerFilterDto } from './dto/player-filter.dto';
+import { PlayerProfileDto } from './dto/player-profile.dto';
 import { PlayerResponseDto } from './dto/player-response.dto';
 import { PlayersService } from './players.service';
 
@@ -59,6 +60,17 @@ export class PlayersController {
     @Param('nationality') nationality: string,
   ): Promise<ListResponse<PlayerResponseDto>> {
     return { items: await this.players.findByNationality(nationality) };
+  }
+
+  @Get(':id/profile')
+  @Public()
+  @ApiOperation({ summary: 'Oyuncu profili (transfer+haber+post)' })
+  @ApiResponse({ status: 200, type: PlayerProfileDto })
+  @ApiResponse({ status: 404 })
+  async profile(
+    @Param('id', ParseUUIDPipe) id: string,
+  ): Promise<SingleResponse<PlayerProfileDto>> {
+    return { data: await this.players.getProfile(id) };
   }
 
   @Get(':playerId/transfers')

@@ -4,8 +4,10 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { CommentsModule } from './comments/comments.module';
 import { MessagingModule } from './messaging/messaging.module';
 import { PostsModule } from './posts/posts.module';
+import { TransferCommentsModule } from './transfer-comments/transfer-comments.module';
 import { AuthModule } from './auth/auth.module';
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { PrismaModule } from './common/prisma/prisma.module';
@@ -53,6 +55,8 @@ import { UsersModule } from './users/users.module';
     StorageModule,
     MessagingModule,
     PostsModule,
+    CommentsModule,
+    TransferCommentsModule,
     EmailModule,
     AuthModule,
     UsersModule,
