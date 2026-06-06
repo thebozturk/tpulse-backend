@@ -39,7 +39,7 @@ export class BroadcastController {
 
   @Post('broadcast')
   @HttpCode(HttpStatus.ACCEPTED)
-  @Throttle(ThrottlePolicies.write)
+  @Throttle(ThrottlePolicies.adminBulk)
   @Audit(AuditAction.NotificationBroadcast)
   @ApiOperation({ summary: 'Toplu bildirim gönder (kuyruğa alınır)' })
   @ApiSingleResponse(BroadcastResponseDto, 202)
