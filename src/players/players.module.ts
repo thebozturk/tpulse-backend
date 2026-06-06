@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { SearchModule } from '../search/search.module';
 import { TransfersModule } from '../transfers/transfers.module';
 import { PLAYER_REPOSITORY } from './player.repository';
 import { PlayersController } from './players.controller';
@@ -6,7 +7,7 @@ import { PlayersService } from './players.service';
 import { PrismaPlayerRepository } from './prisma-player.repository';
 
 @Module({
-  imports: [TransfersModule],
+  imports: [TransfersModule, SearchModule],
   controllers: [PlayersController],
   providers: [
     PlayersService,

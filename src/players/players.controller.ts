@@ -6,6 +6,8 @@ import {
   PagedResult,
   SingleResponse,
 } from '../common/interfaces/response.interface';
+import { PlayerSearchDto } from '../search/dto/search-query.dto';
+import { SearchService } from '../search/search.service';
 import { TeamTransferLineDto } from '../transfers/dto/team-transfer-line.dto';
 import { PlayerFilterDto } from './dto/player-filter.dto';
 import { PlayerResponseDto } from './dto/player-response.dto';
@@ -15,7 +17,10 @@ import { PlayersService } from './players.service';
 @Controller('api/players')
 @Public()
 export class PlayersController {
-  constructor(private readonly players: PlayersService) {}
+  constructor(
+    private readonly players: PlayersService,
+    private readonly search: SearchService,
+  ) {}
 
   @Get()
   @ApiOperation({ summary: 'Oyuncuları listele (filtre + paged)' })
@@ -29,6 +34,15 @@ export class PlayersController {
   @ApiOperation({ summary: 'Serbest oyuncular' })
   async freeAgents(): Promise<ListResponse<PlayerResponseDto>> {
     return { items: await this.players.findFreeAgents() };
+  }
+
+  @Get('search')
+  @ApiOperation({ summary: 'Oyuncu fuzzy arama (paged) — bot kullanır' })
+  @ApiResponse({ status: 400, description: 'query boş' })
+  searchPlayers(
+    @Query() query: PlayerSearchDto,
+  ): Promise<PagedResult<PlayerResponseDto>> {
+    return this.search.searchPlayersPaged(query);
   }
 
   @Get('by-team/:teamId')
