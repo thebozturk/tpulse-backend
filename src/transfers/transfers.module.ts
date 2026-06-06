@@ -4,6 +4,8 @@ import { AdminTransfersController } from './admin-transfers.controller';
 import { AdminTransfersService } from './admin-transfers.service';
 import { PrismaTransferRepository } from './prisma-transfer.repository';
 import { RumourController } from './rumour.controller';
+import { RumourWriteController } from './rumour-write.controller';
+import { RumourWriteService } from './rumour-write.service';
 import { RumoursService } from './rumours.service';
 import { AdminPeriodsService } from './stats/admin-periods.service';
 import { AdminTransferPeriodsController } from './stats/admin-transfer-periods.controller';
@@ -20,12 +22,14 @@ import { TransfersService } from './transfers.service';
   controllers: [
     TransferQueryController,
     RumourController,
+    RumourWriteController,
     AdminTransfersController,
     AdminTransferPeriodsController,
   ],
   providers: [
     TransfersService,
     RumoursService,
+    RumourWriteService,
     StatsService,
     AdminTransfersService,
     AdminPeriodsService,

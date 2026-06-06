@@ -8,6 +8,8 @@ import { toSkipTake } from '../common/pagination';
 import {
   ITransferRepository,
   Paged,
+  RumourUpdateInput,
+  RumourWriteInput,
   TransferFilter,
   TransferPatchInput,
   TransferWithRel,
@@ -339,6 +341,59 @@ export class PrismaTransferRepository implements ITransferRepository {
     // EXTENDED_PRISMA delete → update isDeleted:true
     try {
       await this.prisma.transfer.delete({ where: { id } });
+      return true;
+    } catch (e) {
+      if (isNotFound(e)) {
+        return false;
+      }
+      throw e;
+    }
+  }
+
+  async createRumour(data: RumourWriteInput): Promise<{ id: string }> {
+    try {
+      const t = await this.prisma.transfer.create({
+        data: { ...data, isRumour: true, transferDate: new Date() },
+      });
+      return { id: t.id };
+    } catch (e) {
+      mapWriteError(e);
+    }
+  }
+
+  getRumourMeta(
+    id: string,
+  ): Promise<{ createdByUserId: string | null; isRumour: boolean } | null> {
+    return this.prisma.transfer.findFirst({
+      where: { id, isRumour: true },
+      select: { createdByUserId: true, isRumour: true },
+    });
+  }
+
+  async updateRumour(id: string, data: RumourUpdateInput): Promise<boolean> {
+    try {
+      await this.prisma.transfer.update({ where: { id }, data });
+      return true;
+    } catch (e) {
+      if (isNotFound(e)) {
+        return false;
+      }
+      mapWriteError(e);
+    }
+  }
+
+  async confirmRumour(id: string, data: TransferPatchInput): Promise<boolean> {
+    try {
+      await this.prisma.transfer.update({
+        where: { id },
+        data: {
+          isRumour: false,
+          feeAmount: data.feeAmount,
+          feeCurrency: data.feeCurrency,
+          transferDate: data.transferDate,
+          updatedAt: new Date(),
+        },
+      });
       return true;
     } catch (e) {
       if (isNotFound(e)) {
