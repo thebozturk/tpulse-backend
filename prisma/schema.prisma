@@ -434,3 +434,42 @@ model TransferPeriod {
   @@index([startDate, endDate])
   @@map("transfer_periods")
 }
+
+enum ReportTargetType {
+  Post
+  Comment
+  TransferComment
+  User
+}
+
+enum ReportReason {
+  Spam
+  Hate
+  Harassment
+  Other
+}
+
+enum ReportStatus {
+  Pending
+  Reviewed
+  Actioned
+  Dismissed
+}
+
+model Report {
+  id               String           @id @default(uuid()) @db.Uuid
+  reporterUserId   String           @db.Uuid
+  targetType       ReportTargetType
+  targetId         String           @db.Uuid
+  reason           ReportReason
+  note             String?          @db.VarChar(1000)
+  status           ReportStatus     @default(Pending)
+  reviewedByUserId String?          @db.Uuid
+  reviewedAt       DateTime?        @db.Timestamptz
+  createdAt        DateTime         @default(now()) @db.Timestamptz
+
+  @@unique([reporterUserId, targetType, targetId])
+  @@index([status, createdAt])
+  @@index([targetType, targetId])
+  @@map("reports")
+}

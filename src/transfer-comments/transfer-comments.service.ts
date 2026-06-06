@@ -57,6 +57,15 @@ export class TransferCommentsService {
     await this.repo.delete(id);
   }
 
+  /** BO-3: admin owner kontrolü olmadan siler (cascade ile yanıt/beğeni temizlenir). */
+  async adminRemove(id: string): Promise<void> {
+    const owner = await this.repo.getOwner(id);
+    if (owner === null) {
+      throw new NotFoundException('Yorum bulunamadı');
+    }
+    await this.repo.delete(id);
+  }
+
   async react(
     commentId: string,
     userId: string,

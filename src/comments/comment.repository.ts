@@ -10,6 +10,13 @@ export type CommentWithOwner = Prisma.CommentGetPayload<{
   include: typeof commentInclude;
 }>;
 
+export interface CommentAdminFilter {
+  ownerId?: string;
+  q?: string;
+  page: number;
+  pageSize: number;
+}
+
 export interface ICommentRepository {
   getByPostId(postId: string): Promise<CommentWithOwner[]>;
   getOwner(id: string): Promise<string | null>;
@@ -18,4 +25,7 @@ export interface ICommentRepository {
   exists(id: string): Promise<boolean>;
   postExists(postId: string): Promise<boolean>;
   getLikedCommentIds(userId: string, ids: string[]): Promise<Set<string>>;
+  adminList(
+    filter: CommentAdminFilter,
+  ): Promise<{ items: CommentWithOwner[]; total: number }>;
 }

@@ -157,6 +157,32 @@ export class PostsService {
     await this.repo.delete(id);
   }
 
+  /** BO-3: admin owner kontrolü olmadan siler (cascade ile beğeni/oy/yorum temizlenir). */
+  async adminRemove(id: string): Promise<void> {
+    const meta = await this.repo.getOwnerAndType(id);
+    if (!meta) {
+      throw new NotFoundException('Gönderi bulunamadı');
+    }
+    await this.repo.delete(id);
+  }
+
+  /** BO-3: moderasyon listesi (ownerId/q filtreli, sayfalı). feed altyapısını kullanır. */
+  async adminList(filter: {
+    ownerId?: string;
+    q?: string;
+    page: number;
+    pageSize: number;
+  }): Promise<PagedResult<PostResponseDto>> {
+    const { items, total } = await this.repo.feed({
+      ownerId: filter.ownerId,
+      search: filter.q,
+      page: filter.page,
+      pageSize: filter.pageSize,
+    });
+    const mapped = await this.hydrate(items);
+    return buildPaged(mapped, total, filter.page, filter.pageSize);
+  }
+
   async react(
     postId: string,
     userId: string,
