@@ -2,4 +2,5 @@
 export enum NotificationEventType {
   Rumour = 1,
   Transfer = 2,
+  Announcement = 3,
 }

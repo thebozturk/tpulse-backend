@@ -487,3 +487,17 @@ model AuditLog {
   @@index([action, createdAt])
   @@map("audit_logs")
 }
+
+model BroadcastMessage {
+  id        String   @id @default(uuid()) @db.Uuid
+  title     String   @db.VarChar(200)
+  body      String   @db.VarChar(500)
+  target    String   @default("all") @db.VarChar(40)
+  status    String   @default("Queued") @db.VarChar(20)
+  sentCount Int      @default(0)
+  createdBy String   @db.Uuid
+  createdAt DateTime @default(now()) @db.Timestamptz
+
+  @@index([createdAt])
+  @@map("broadcast_messages")
+}

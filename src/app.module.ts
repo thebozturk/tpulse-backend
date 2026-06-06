@@ -14,6 +14,8 @@ import { PostsModule } from './posts/posts.module';
 import { SyncModule } from './sync/sync.module';
 import { TransferCommentsModule } from './transfer-comments/transfer-comments.module';
 import { AuditLogsModule } from './admin/audit/audit-logs.module';
+import { BroadcastModule } from './admin/broadcast/broadcast.module';
+import { CurrencyRatesModule } from './admin/currency-rates/currency-rates.module';
 import { DashboardModule } from './admin/dashboard/dashboard.module';
 import { AuthModule } from './auth/auth.module';
 import { AuditModule } from './common/audit/audit.module';
@@ -86,6 +88,8 @@ import { UsersModule } from './users/users.module';
     ReportsModule,
     AuditModule,
     AuditLogsModule,
+    BroadcastModule,
+    CurrencyRatesModule,
   ],
   providers: [
     // Sıra: throttle önce (brute-force), sonra auth. JwtAuthGuard @Public bypass'lı.

@@ -53,6 +53,13 @@ const ALLOWED_EXTRA = new Set([
   'PATCH /api/admin/reports/:p',
   // faz-bo-4 — audit log
   'GET /api/admin/audit-logs',
+  // faz-bo-5 — sistem ops
+  'POST /api/admin/notifications/broadcast',
+  'GET /api/admin/notifications/broadcasts',
+  'GET /api/admin/currency-rates',
+  'POST /api/admin/currency-rates',
+  'PUT /api/admin/currency-rates/:p',
+  'DELETE /api/admin/currency-rates/:p',
 ]);
 
 // docs/02 "Sıralama Notları": kesinlikle korunması gereken bot uçları
