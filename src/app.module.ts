@@ -1,7 +1,11 @@
+import { BullModule } from '@nestjs/bullmq';
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
+import { ScheduleModule } from '@nestjs/schedule';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { MessagingModule } from './messaging/messaging.module';
+import { PostsModule } from './posts/posts.module';
 import { AuthModule } from './auth/auth.module';
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { PrismaModule } from './common/prisma/prisma.module';
@@ -29,9 +33,26 @@ import { UsersModule } from './users/users.module';
     // Global rate limit: 300/dk/IP (docs/04). Route'lar @Throttle ile sıkı
     // policy (auth 30/dk, write 120/dk) override eder.
     ThrottlerModule.forRoot([{ ttl: 60_000, limit: 300 }]),
+    ScheduleModule.forRoot(),
+    BullModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => {
+        const url = new URL(
+          config.getOrThrow<string>('redis.connectionString'),
+        );
+        return {
+          connection: {
+            host: url.hostname,
+            port: Number(url.port) || 6379,
+          },
+        };
+      },
+    }),
     PrismaModule,
     RedisModule,
     StorageModule,
+    MessagingModule,
+    PostsModule,
     EmailModule,
     AuthModule,
     UsersModule,
