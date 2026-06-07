@@ -179,6 +179,10 @@ model Post {
   agreeCount      Int      @default(0)
   disagreeCount   Int      @default(0)
   commentCount    Int      @default(0)
+  category        Int?     @db.SmallInt
+  sourceId        String?  @unique @db.VarChar(64)
+  sourceUrl       String?  @db.VarChar(500)
+  imageUrl        String?  @db.VarChar(500)
   createdAtUtc    DateTime @default(now()) @db.Timestamptz
 
   owner    User       @relation(fields: [ownerId], references: [id], onDelete: Cascade)

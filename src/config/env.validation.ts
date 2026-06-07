@@ -74,6 +74,9 @@ export const envSchema = z.object({
   SMTP_USERNAME: z.string().optional(),
   SMTP_PASSWORD: z.string().optional(),
   IDEMPOTENCY_TTL_SECONDS: z.coerce.number().int().positive().default(600),
+
+  // Bot ingestion — API key'in SHA-256 hex hash'i (düz key saklanmaz). Boşsa ingestion kapalı.
+  BOT_API_KEY_HASH: z.string().optional(),
 });
 
 export type Env = z.infer<typeof envSchema>;

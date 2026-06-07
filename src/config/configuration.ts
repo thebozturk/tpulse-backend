@@ -74,6 +74,9 @@ export const configuration = () => {
       password: env.SMTP_PASSWORD,
       from: env.SMTP_FROM,
     },
+    bot: {
+      apiKeyHash: env.BOT_API_KEY_HASH,
+    },
   };
 };
 

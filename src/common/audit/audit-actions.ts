@@ -8,6 +8,7 @@ export const AuditAction = {
   TransferCommentDelete: 'transferComment.delete',
   ReportReview: 'report.review',
   NotificationBroadcast: 'notification.broadcast',
+  BotIngest: 'bot.ingest',
 } as const;
 
 export type AuditActionType = (typeof AuditAction)[keyof typeof AuditAction];

@@ -32,4 +32,13 @@ export class PostResponseDto {
   @ApiPropertyOptional() userVote?: number;
   @ApiProperty() createdAtUtc: Date;
   @ApiProperty() commentCount: number;
+  @ApiPropertyOptional({
+    description:
+      'Bot içeriği kategorisi (1=duyum, 2=son dakika, 3=resmi); normal postta null',
+  })
+  category?: number;
+  @ApiPropertyOptional({ description: 'Bot içeriği görseli' })
+  imageUrl?: string;
+  @ApiPropertyOptional({ description: 'Kaynak (tweet) URL' })
+  sourceUrl?: string;
 }

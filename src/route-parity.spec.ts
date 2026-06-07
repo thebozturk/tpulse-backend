@@ -60,6 +60,8 @@ const ALLOWED_EXTRA = new Set([
   'POST /api/admin/currency-rates',
   'PUT /api/admin/currency-rates/:p',
   'DELETE /api/admin/currency-rates/:p',
+  // bot ingestion (API key ile)
+  'POST /api/ingest/posts',
 ]);
 
 // docs/02 "Sıralama Notları": kesinlikle korunması gereken bot uçları

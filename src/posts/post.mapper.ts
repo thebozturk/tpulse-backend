@@ -41,5 +41,8 @@ export function toPostResponse(
     userVote,
     createdAtUtc: p.createdAtUtc,
     commentCount: p.commentCount,
+    category: p.category ?? undefined,
+    imageUrl: p.imageUrl ?? undefined,
+    sourceUrl: p.sourceUrl ?? undefined,
   };
 }
