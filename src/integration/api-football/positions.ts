@@ -23,6 +23,7 @@ export function positionCode(pos?: string | null): string | null {
     case 'Midfielder':
       return 'MID';
     case 'Attacker':
+    case 'Forward':
       return 'ATT';
     default:
       return null;
