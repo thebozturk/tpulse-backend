@@ -25,9 +25,10 @@ interface RawTeam {
 interface RawPlayer {
   player: {
     id: number;
-    firstname: string;
-    lastname: string;
-    nationality: string;
+    name?: string | null;
+    firstname?: string | null;
+    lastname?: string | null;
+    nationality?: string | null;
     birth: { date?: string };
     height?: string;
     weight?: string;
@@ -39,7 +40,10 @@ interface RawTransferEntry {
   player: { id: number };
   transfers: {
     date: string;
-    teams: { in: { id: number }; out: { id: number } };
+    teams: {
+      in: { id?: number | null };
+      out: { id?: number | null };
+    };
   }[];
 }
 
@@ -47,6 +51,12 @@ function parseNum(v?: string): number | undefined {
   if (!v) return undefined;
   const n = parseInt(v, 10);
   return Number.isNaN(n) ? undefined : n;
+}
+
+/** Şema VarChar(32) sınırı + zorunlu alan fallback (canlı uçta null gelebilir). */
+function trunc(v: string | null | undefined, max: number, fallback: string): string {
+  const s = (v ?? '').trim();
+  return (s.length ? s : fallback).slice(0, max);
 }
 
 const TIMEOUT_MS = 30_000;
@@ -104,8 +114,8 @@ export class AxiosFootballDataClient implements IFootballDataClient {
     if (!r) return null;
     return {
       externalId: r.league.id,
-      name: r.league.name,
-      country: r.country.name,
+      name: trunc(r.league.name, 30, 'N/A'),
+      country: trunc(r.country.name, 30, 'Unknown'),
       countryLogo: r.country.flag,
       leagueLogo: r.league.logo,
     };
@@ -121,11 +131,11 @@ export class AxiosFootballDataClient implements IFootballDataClient {
     });
     return data.response.map((r) => ({
       externalId: r.team.id,
-      name: r.team.name,
+      name: trunc(r.team.name, 50, 'N/A'),
       logo: r.team.logo,
       founded: r.team.founded,
-      venueName: r.venue?.name,
-      venueCity: r.venue?.city,
+      venueName: r.venue?.name?.slice(0, 100),
+      venueCity: r.venue?.city?.slice(0, 100),
       venueCapacity: r.venue?.capacity,
     }));
   }
@@ -143,9 +153,17 @@ export class AxiosFootballDataClient implements IFootballDataClient {
     return {
       items: data.response.map((r) => ({
         externalId: r.player.id,
-        firstName: r.player.firstname,
-        lastName: r.player.lastname,
-        nationality: r.player.nationality,
+        firstName: trunc(
+          r.player.firstname ?? r.player.name,
+          32,
+          r.player.name?.slice(0, 32) ?? 'N/A',
+        ),
+        lastName: trunc(
+          r.player.lastname ?? r.player.name,
+          32,
+          r.player.name?.slice(0, 32) ?? 'N/A',
+        ),
+        nationality: trunc(r.player.nationality, 32, 'Unknown'),
         birthDate: r.player.birth?.date,
         height: parseNum(r.player.height),
         weight: parseNum(r.player.weight),
@@ -165,11 +183,17 @@ export class AxiosFootballDataClient implements IFootballDataClient {
     const out: ExternalTransfer[] = [];
     for (const entry of data.response) {
       for (const t of entry.transfers ?? []) {
+        const fromId = t.teams?.out?.id;
+        const toId = t.teams?.in?.id;
+        // Eksik kulüp (serbest/bilinmeyen) veya tarih → atla; findUnique null'a düşmesin.
+        if (!entry.player?.id || !fromId || !toId || !t.date) {
+          continue;
+        }
         out.push({
           playerExtId: entry.player.id,
           date: t.date,
-          fromTeamExtId: t.teams.out.id,
-          toTeamExtId: t.teams.in.id,
+          fromTeamExtId: fromId,
+          toTeamExtId: toId,
         });
       }
     }

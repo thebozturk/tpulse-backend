@@ -165,28 +165,49 @@ export class FootballDataSyncService {
 
     const teams = await this.client.getTeamsByLeague(leagueExtId, season);
     for (const t of teams) {
-      const teamId = await this.upsertTeam(t, leagueId, counts);
-      let page = 1;
-      let totalPages = 1;
-      do {
-        const { items, totalPages: tp } = await this.client.getPlayersByTeam(
-          t.externalId,
-          season,
-          page,
-        );
-        totalPages = tp;
-        for (const pl of items) {
-          seen.push(pl.externalId);
-          await this.upsertPlayer(pl, teamId, positions, counts);
-        }
-        page++;
-      } while (page <= totalPages);
-
-      if (this.config.get<boolean>('apiFootball.detectTransfers')) {
-        await this.syncTransfers(t.externalId, counts);
+      try {
+        await this.syncTeam(t, leagueId, season, counts, positions, seen);
+      } catch (e) {
+        counts.errorCount++;
+        counts.errors.push(`team ${t.externalId}: ${msg(e)}`);
       }
     }
     return leagueId;
+  }
+
+  private async syncTeam(
+    t: import('./football-data.client').ExternalTeam,
+    leagueId: string,
+    season: number,
+    counts: Counts,
+    positions: Map<string, string>,
+    seen: number[],
+  ): Promise<void> {
+    const teamId = await this.upsertTeam(t, leagueId, counts);
+    let page = 1;
+    let totalPages = 1;
+    do {
+      const { items, totalPages: tp } = await this.client.getPlayersByTeam(
+        t.externalId,
+        season,
+        page,
+      );
+      totalPages = tp;
+      for (const pl of items) {
+        seen.push(pl.externalId);
+        try {
+          await this.upsertPlayer(pl, teamId, positions, counts);
+        } catch (e) {
+          counts.errorCount++;
+          counts.errors.push(`player ${pl.externalId}: ${msg(e)}`);
+        }
+      }
+      page++;
+    } while (page <= totalPages);
+
+    if (this.config.get<boolean>('apiFootball.detectTransfers')) {
+      await this.syncTransfers(t.externalId, counts);
+    }
   }
 
   private async upsertLeague(
@@ -336,49 +357,61 @@ export class FootballDataSyncService {
   ): Promise<void> {
     const transfers = await this.client.getTransfersByTeam(teamExtId);
     for (const tr of transfers) {
-      const [player, from, to] = await Promise.all([
-        this.prisma.player.findUnique({
-          where: { externalId: tr.playerExtId },
-          select: { id: true },
-        }),
-        this.prisma.team.findUnique({
-          where: { externalId: tr.fromTeamExtId },
-          select: { id: true },
-        }),
-        this.prisma.team.findUnique({
-          where: { externalId: tr.toTeamExtId },
-          select: { id: true },
-        }),
-      ]);
-      if (!player || !from || !to) {
-        continue;
+      try {
+        await this.upsertTransfer(tr, counts);
+      } catch (e) {
+        counts.errorCount++;
+        counts.errors.push(`transfer p${tr.playerExtId}: ${msg(e)}`);
       }
-      const date = new Date(tr.date);
-      const dup = await this.prisma.transfer.findFirst({
-        where: {
-          playerId: player.id,
-          fromTeamId: from.id,
-          toTeamId: to.id,
-          transferDate: date,
-        },
-        select: { id: true },
-      });
-      if (dup) {
-        continue;
-      }
-      await this.prisma.transfer.create({
-        data: {
-          playerId: player.id,
-          fromTeamId: from.id,
-          toTeamId: to.id,
-          transferDate: date,
-          feeAmount: 0,
-          feeCurrency: 'EUR',
-          source: 'ApiSports',
-        },
-      });
-      counts.transfersCreated++;
     }
+  }
+
+  private async upsertTransfer(
+    tr: import('./football-data.client').ExternalTransfer,
+    counts: Counts,
+  ): Promise<void> {
+    const [player, from, to] = await Promise.all([
+      this.prisma.player.findUnique({
+        where: { externalId: tr.playerExtId },
+        select: { id: true },
+      }),
+      this.prisma.team.findUnique({
+        where: { externalId: tr.fromTeamExtId },
+        select: { id: true },
+      }),
+      this.prisma.team.findUnique({
+        where: { externalId: tr.toTeamExtId },
+        select: { id: true },
+      }),
+    ]);
+    if (!player || !from || !to) {
+      return;
+    }
+    const date = new Date(tr.date);
+    const dup = await this.prisma.transfer.findFirst({
+      where: {
+        playerId: player.id,
+        fromTeamId: from.id,
+        toTeamId: to.id,
+        transferDate: date,
+      },
+      select: { id: true },
+    });
+    if (dup) {
+      return;
+    }
+    await this.prisma.transfer.create({
+      data: {
+        playerId: player.id,
+        fromTeamId: from.id,
+        toTeamId: to.id,
+        transferDate: date,
+        feeAmount: 0,
+        feeCurrency: 'EUR',
+        source: 'ApiSports',
+      },
+    });
+    counts.transfersCreated++;
   }
 
   private async markFreeAgents(
