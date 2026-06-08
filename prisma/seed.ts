@@ -104,36 +104,65 @@ function toSeederShape(raw: RawLeague[]): unknown {
   };
 }
 
-// ─── Temizlik (FK-güvenli sıra) ─────────────────────────────────────────
-async function wipe(): Promise<void> {
+// Demo kullanıcı domaini — seed'in ürettiği hesaplar bu uzantıyı taşır.
+// Bu uzantıyı TAŞIMAYAN kullanıcılar "gerçek" sayılır ve korunur (additive seed).
+const DEMO_EMAIL_DOMAIN = '@transferpulse.dev';
+
+// ─── Temizlik (additive: gerçek hesapları + içeriklerini korur) ──────────
+// Yalnız demo verisini ve reference (football) tablolarını temizler.
+// Korunanlar: email'i DEMO_EMAIL_DOMAIN ile bitmeyen kullanıcılar ve onların
+// post / yorum / beğeni / oy / refresh token kayıtları.
+async function wipe(): Promise<string[]> {
+  const keepUsers = await prisma.user.findMany({
+    where: { NOT: { email: { endsWith: DEMO_EMAIL_DOMAIN } } },
+    select: { id: true },
+  });
+  const keepIds = keepUsers.map((u) => u.id);
+
+  // Transfer-yorum zinciri tamamen demo → tümünü sil
   await prisma.transferCommentLike.deleteMany();
   await prisma.transferComment.deleteMany();
-  await prisma.commentLike.deleteMany();
-  await prisma.postLike.deleteMany();
-  await prisma.postVote.deleteMany();
-  await prisma.comment.deleteMany();
-  await prisma.post.deleteMany();
+
+  // Post etkileşimleri: korunan kullanıcılara ait olmayanları sil
+  await prisma.commentLike.deleteMany({ where: { userId: { notIn: keepIds } } });
+  await prisma.postLike.deleteMany({ where: { userId: { notIn: keepIds } } });
+  await prisma.postVote.deleteMany({ where: { userId: { notIn: keepIds } } });
+
+  // Yorum/post: korunan kullanıcıların sahip olduklarını bırak
+  await prisma.comment.deleteMany({ where: { ownerId: { notIn: keepIds } } });
+  await prisma.post.deleteMany({ where: { ownerId: { notIn: keepIds } } });
+
+  // Demo'ya özgü tablolar (korunan kullanıcıların kaydı yok)
   await prisma.notification.deleteMany();
   await prisma.notificationPreference.deleteMany();
   await prisma.userFavourite.deleteMany();
+  await prisma.passwordResetToken.deleteMany();
+  await prisma.refreshToken.deleteMany({ where: { userId: { notIn: keepIds } } });
+
+  // Reference + demo içerik (korunan postlar football FK taşımaz → Restrict güvenli)
   await prisma.news.deleteMany();
   await prisma.transfer.deleteMany();
-  await prisma.refreshToken.deleteMany();
-  await prisma.passwordResetToken.deleteMany();
   await prisma.player.deleteMany();
   await prisma.team.deleteMany();
   await prisma.league.deleteMany();
   await prisma.position.deleteMany();
   await prisma.transferPeriod.deleteMany();
   await prisma.currencyRate.deleteMany();
-  await prisma.notification.deleteMany();
-  await prisma.user.deleteMany();
+
+  // Yalnız demo kullanıcılarını sil
+  await prisma.user.deleteMany({
+    where: { email: { endsWith: DEMO_EMAIL_DOMAIN } },
+  });
+
+  return keepIds;
 }
 
 async function main(): Promise<void> {
   console.log('🌱 Seed başlıyor...');
-  await wipe();
-  console.log('  ✓ domain tabloları temizlendi');
+  const keptUserIds = await wipe();
+  console.log(
+    `  ✓ demo + reference temizlendi (${keptUserIds.length} gerçek hesap korundu)`,
+  );
 
   // 1) Lig / takım / oyuncu — mevcut seeder'ı yeniden kullan
   const rawPath = resolve(process.cwd(), 'leagues_with_players.json');

@@ -10,6 +10,7 @@ export function toTransferResponse(t: TransferWithRel): TransferResponseDto {
     player: {
       id: t.player.id,
       name: `${t.player.firstName} ${t.player.lastName}`,
+      fullName: `${t.player.firstName} ${t.player.lastName}`,
       photo: t.player.photo ?? undefined,
       nationality: t.player.nationality,
       positionName: t.player.position?.nameEn ?? undefined,

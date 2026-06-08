@@ -3,6 +3,9 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 export class TransferPlayerDto {
   @ApiProperty() id: string;
   @ApiProperty() name: string;
+  // fullName: /api/players ile aynı konvansiyon. Mobil istemci nested player'da
+  // önce fullName okuyor (name korunur — panel t.player.name kullanır).
+  @ApiProperty() fullName: string;
   @ApiPropertyOptional() photo?: string;
   @ApiProperty() nationality: string;
   @ApiPropertyOptional() positionName?: string;
