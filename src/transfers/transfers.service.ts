@@ -99,6 +99,10 @@ export class TransfersService {
         name: g.league.name,
         logo: g.league.leagueLogo,
       },
+      // Flat alanlar mobil için (bkz. LeagueTransfersDto)
+      leagueId: g.league.id,
+      leagueName: g.league.name,
+      leagueLogo: g.league.leagueLogo,
       transfers: g.transfers.map(toTeamTransferLine),
     }));
   }

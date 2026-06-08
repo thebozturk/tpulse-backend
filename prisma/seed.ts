@@ -246,8 +246,21 @@ async function main(): Promise<void> {
   });
 
   // 4) Transfer dönemleri
+  // NOT: SEASON_DASHBOARD_PERIOD_ID, mobil app_config.dart'taki sabit
+  // seasonDashboardTransferPeriodId ile birebir aynı olmalı — Panorama sekmesi
+  // açılışta bu ID ile season-dashboard çağırıyor. ID DB'de yoksa uç 400 döner
+  // ve Panorama patlar. Date aralığı da seed'lenen transferleri (daysAgo(rand(300)))
+  // kapsayacak şekilde güncel tutuluyor, aksi halde dashboard boş döner.
+  const SEASON_DASHBOARD_PERIOD_ID = '1f0bf7f8-3baf-4f17-b89e-a8a0c0e7f002';
   await prisma.transferPeriod.createMany({
     data: [
+      {
+        id: SEASON_DASHBOARD_PERIOD_ID,
+        name: 'Güncel Sezon',
+        periodType: 'Summer',
+        startDate: daysAgo(400),
+        endDate: new Date(Date.now() + 60 * 86_400_000),
+      },
       {
         name: '2024 Yaz Dönemi',
         periodType: 'Summer',
