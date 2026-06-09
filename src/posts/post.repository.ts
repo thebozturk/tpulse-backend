@@ -11,7 +11,9 @@ export const postInclude = {
       role: true,
     },
   },
-  player: { select: { firstName: true, lastName: true, photo: true } },
+  player: {
+    select: { firstName: true, lastName: true, nationality: true, photo: true },
+  },
   team: { select: { name: true, logo: true } },
   fromTeam: { select: { name: true, logo: true } },
   toTeam: { select: { name: true, logo: true } },

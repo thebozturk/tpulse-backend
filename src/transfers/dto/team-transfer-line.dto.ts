@@ -5,6 +5,8 @@ export class TeamTransferLineDto {
   @ApiProperty() transferId: string;
   @ApiProperty() playerId: string;
   @ApiProperty() playerName: string;
+  /** Oyuncu uyruğu — /api/transfers/latest ile birebir aynı kaynak (player.nationality). */
+  @ApiProperty() playerNationality: string;
   @ApiPropertyOptional() playerPhoto?: string;
   @ApiProperty() fromTeamId: string;
   @ApiPropertyOptional() fromTeamName?: string;

@@ -11,6 +11,8 @@ export class PostResponseDto {
   @ApiProperty() postType: number;
   @ApiPropertyOptional() playerId?: string;
   @ApiPropertyOptional() playerName?: string;
+  /** Oyuncu uyruğu — /api/transfers/latest ile birebir aynı kaynak (player.nationality). */
+  @ApiPropertyOptional() playerNationality?: string;
   @ApiPropertyOptional() playerPhoto?: string;
   @ApiPropertyOptional() teamId?: string;
   @ApiPropertyOptional() teamName?: string;
