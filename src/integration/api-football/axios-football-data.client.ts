@@ -85,7 +85,11 @@ function parseNum(v?: string): number | undefined {
 }
 
 /** Şema VarChar(32) sınırı + zorunlu alan fallback (canlı uçta null gelebilir). */
-function trunc(v: string | null | undefined, max: number, fallback: string): string {
+function trunc(
+  v: string | null | undefined,
+  max: number,
+  fallback: string,
+): string {
   const s = (v ?? '').trim();
   return (s.length ? s : fallback).slice(0, max);
 }

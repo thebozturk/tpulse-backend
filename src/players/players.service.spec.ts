@@ -1,5 +1,7 @@
 import { NotFoundException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
+import { CacheService } from '../common/redis/cache.service';
+import { passthroughCache } from '../common/redis/cache.test-util';
 import { NewsService } from '../news/news.service';
 import { PostsService } from '../posts/posts.service';
 import { ImageUploadService } from '../storage/image-upload.service';
@@ -27,6 +29,7 @@ describe('PlayersService', () => {
         { provide: ImageUploadService, useValue: {} },
         { provide: NewsService, useValue: {} },
         { provide: PostsService, useValue: {} },
+        { provide: CacheService, useValue: passthroughCache() },
       ],
     }).compile();
     service = module.get(PlayersService);

@@ -1,5 +1,7 @@
 import { NotFoundException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
+import { CacheService } from '../common/redis/cache.service';
+import { passthroughCache } from '../common/redis/cache.test-util';
 import { ImageUploadService } from '../storage/image-upload.service';
 import { TRANSFER_REPOSITORY } from '../transfers/transfer.repository';
 import { LEAGUE_REPOSITORY } from './league.repository';
@@ -27,6 +29,7 @@ describe('LeaguesService', () => {
         { provide: LEAGUE_REPOSITORY, useValue: repo },
         { provide: TRANSFER_REPOSITORY, useValue: {} },
         { provide: ImageUploadService, useValue: {} },
+        { provide: CacheService, useValue: passthroughCache() },
       ],
     }).compile();
     service = module.get(LeaguesService);

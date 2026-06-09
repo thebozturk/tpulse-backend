@@ -1,4 +1,6 @@
 import { Test } from '@nestjs/testing';
+import { CacheService } from '../common/redis/cache.service';
+import { passthroughCache } from '../common/redis/cache.test-util';
 import { SEARCH_REPOSITORY } from './search.repository';
 import { SearchService } from './search.service';
 
@@ -31,6 +33,7 @@ describe('SearchService', () => {
       providers: [
         SearchService,
         { provide: SEARCH_REPOSITORY, useValue: repo },
+        { provide: CacheService, useValue: passthroughCache() },
       ],
     }).compile();
     service = module.get(SearchService);

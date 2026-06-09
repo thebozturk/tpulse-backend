@@ -1,5 +1,7 @@
 import { NotFoundException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
+import { CacheService } from '../common/redis/cache.service';
+import { passthroughCache } from '../common/redis/cache.test-util';
 import { TRANSFER_REPOSITORY } from './transfer.repository';
 import { TransfersService } from './transfers.service';
 
@@ -13,6 +15,7 @@ describe('TransfersService', () => {
       providers: [
         TransfersService,
         { provide: TRANSFER_REPOSITORY, useValue: repo },
+        { provide: CacheService, useValue: passthroughCache() },
       ],
     }).compile();
     service = module.get(TransfersService);

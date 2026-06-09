@@ -2,6 +2,8 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { SyncRunStatus } from '../../common/enums';
 import { PrismaService } from '../../common/prisma/prisma.service';
+import { CacheTag } from '../../common/redis/cache-tags';
+import { CacheService } from '../../common/redis/cache.service';
 import { ImageMirrorService } from '../../storage/image-mirror.service';
 import {
   ExternalLeague,
@@ -54,6 +56,7 @@ export class FootballDataSyncService {
     private readonly client: IFootballDataClient,
     private readonly config: ConfigService,
     private readonly mirror: ImageMirrorService,
+    private readonly cache: CacheService,
   ) {}
 
   getRuns(take: number) {
@@ -134,7 +137,33 @@ export class FootballDataSyncService {
     this.logger.log(
       `Sync ${run.id}: transfers created=${counts.transfersCreated} feeUpdated=${counts.transfersUpdated}`,
     );
+    await this.invalidateChangedCaches(counts);
     return run.id;
+  }
+
+  /** Sync sonunda yalnızca gerçekten değişen domain tag'lerini bir kez invalidate eder. */
+  private async invalidateChangedCaches(counts: Counts): Promise<void> {
+    const tags: string[] = [];
+    if (counts.leaguesInserted + counts.leaguesUpdated > 0) {
+      tags.push(CacheTag.Leagues);
+    }
+    if (counts.teamsInserted + counts.teamsUpdated > 0) {
+      tags.push(CacheTag.Teams);
+    }
+    if (
+      counts.playersInserted +
+        counts.playersUpdated +
+        counts.playersMarkedFree >
+      0
+    ) {
+      tags.push(CacheTag.Players);
+    }
+    if (counts.transfersCreated + counts.transfersUpdated > 0) {
+      tags.push(CacheTag.Transfers);
+    }
+    if (tags.length > 0) {
+      await this.cache.invalidateTags(...tags);
+    }
   }
 
   private async ensurePositions(counts: Counts): Promise<Map<string, string>> {

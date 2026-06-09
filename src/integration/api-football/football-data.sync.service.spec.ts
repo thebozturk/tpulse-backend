@@ -2,6 +2,8 @@ import { ConfigService } from '@nestjs/config';
 import { Test } from '@nestjs/testing';
 import { SyncRunStatus } from '../../common/enums';
 import { PrismaService } from '../../common/prisma/prisma.service';
+import { CacheService } from '../../common/redis/cache.service';
+import { passthroughCache } from '../../common/redis/cache.test-util';
 import { ImageMirrorService } from '../../storage/image-mirror.service';
 import { FOOTBALL_DATA_CLIENT } from './football-data.client';
 import { FootballDataSyncService } from './football-data.sync.service';
@@ -75,6 +77,7 @@ describe('FootballDataSyncService', () => {
         { provide: FOOTBALL_DATA_CLIENT, useValue: client },
         { provide: ConfigService, useValue: config },
         { provide: ImageMirrorService, useValue: { mirror: jest.fn() } },
+        { provide: CacheService, useValue: passthroughCache() },
       ],
     }).compile();
     service = module.get(FootballDataSyncService);

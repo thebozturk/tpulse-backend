@@ -1,6 +1,8 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { PagedResult } from '../common/interfaces/response.interface';
 import { buildPaged } from '../common/pagination';
+import { CacheTag, CacheTtl } from '../common/redis/cache-tags';
+import { CacheService } from '../common/redis/cache.service';
 import { ImageUploadService } from '../storage/image-upload.service';
 import { TeamTransferLineDto } from '../transfers/dto/team-transfer-line.dto';
 import { LeagueTransferFilterDto } from '../transfers/dto/transfer-query.dto';
@@ -25,22 +27,27 @@ export class LeaguesService {
     @Inject(TRANSFER_REPOSITORY)
     private readonly transfers: ITransferRepository,
     private readonly imageUpload: ImageUploadService,
+    private readonly cache: CacheService,
   ) {}
 
-  create(dto: LeagueWriteDto): Promise<{ id: string }> {
-    return this.repo.create(dto);
+  async create(dto: LeagueWriteDto): Promise<{ id: string }> {
+    const created = await this.repo.create(dto);
+    await this.cache.invalidateTags(CacheTag.Leagues);
+    return created;
   }
 
   async update(id: string, dto: LeagueWriteDto): Promise<void> {
     if (!(await this.repo.update(id, dto))) {
       throw new NotFoundException('Lig bulunamadı');
     }
+    await this.cache.invalidateTags(CacheTag.Leagues);
   }
 
   async remove(id: string): Promise<void> {
     if (!(await this.repo.remove(id))) {
       throw new NotFoundException('Lig bulunamadı');
     }
+    await this.cache.invalidateTags(CacheTag.Leagues);
   }
 
   async setImageFromFile(
@@ -55,6 +62,7 @@ export class LeaguesService {
       IMAGE_QUALITY,
     );
     await this.repo.updateImage(id, url, true);
+    await this.cache.invalidateTags(CacheTag.Leagues);
     return url;
   }
 
@@ -67,6 +75,7 @@ export class LeaguesService {
       IMAGE_QUALITY,
     );
     await this.repo.updateImage(id, url, true);
+    await this.cache.invalidateTags(CacheTag.Leagues);
     return url;
   }
 
@@ -74,6 +83,7 @@ export class LeaguesService {
     if (!(await this.repo.updateImage(id, null, false))) {
       throw new NotFoundException('Lig bulunamadı');
     }
+    await this.cache.invalidateTags(CacheTag.Leagues);
   }
 
   private async ensureExists(id: string): Promise<void> {
@@ -86,41 +96,69 @@ export class LeaguesService {
     page: number,
     pageSize: number,
   ): Promise<PagedResult<LeagueResponseDto>> {
-    const { items, total } = await this.repo.getAll(page, pageSize);
-    return buildPaged(items.map(toLeagueResponse), total, page, pageSize);
+    return this.cache.getOrSet(
+      CacheService.buildKey('leagues:list', { page, pageSize }),
+      CacheTtl.List,
+      async () => {
+        const { items, total } = await this.repo.getAll(page, pageSize);
+        return buildPaged(items.map(toLeagueResponse), total, page, pageSize);
+      },
+      [CacheTag.Leagues],
+    );
   }
 
   async findById(id: string): Promise<LeagueResponseDto> {
-    const league = await this.repo.getById(id);
-    if (!league) {
-      throw new NotFoundException('Lig bulunamadı');
-    }
-    return toLeagueResponse(league);
+    return this.cache.getOrSet(
+      CacheService.buildKey('leagues:byId', { id }),
+      CacheTtl.List,
+      async () => {
+        const league = await this.repo.getById(id);
+        if (!league) {
+          throw new NotFoundException('Lig bulunamadı');
+        }
+        return toLeagueResponse(league);
+      },
+      [CacheTag.Leagues],
+    );
   }
 
   async findByCode(code: string): Promise<LeagueResponseDto> {
-    const league = await this.repo.getByCode(code);
-    if (!league) {
-      throw new NotFoundException('Lig bulunamadı');
-    }
-    return toLeagueResponse(league);
+    return this.cache.getOrSet(
+      CacheService.buildKey('leagues:byCode', { code }),
+      CacheTtl.List,
+      async () => {
+        const league = await this.repo.getByCode(code);
+        if (!league) {
+          throw new NotFoundException('Lig bulunamadı');
+        }
+        return toLeagueResponse(league);
+      },
+      [CacheTag.Leagues],
+    );
   }
 
   async transfers_(
     leagueId: string,
     query: LeagueTransfersQueryDto,
   ): Promise<PagedResult<TeamTransferLineDto>> {
-    const { items, total } = await this.transfers.getByLeagueId(
-      leagueId,
-      query.year,
-      query.page,
-      query.pageSize,
-    );
-    return buildPaged(
-      items.map(toTeamTransferLine),
-      total,
-      query.page,
-      query.pageSize,
+    return this.cache.getOrSet(
+      CacheService.buildKey('leagues:transfers', { leagueId, ...query }),
+      CacheTtl.List,
+      async () => {
+        const { items, total } = await this.transfers.getByLeagueId(
+          leagueId,
+          query.year,
+          query.page,
+          query.pageSize,
+        );
+        return buildPaged(
+          items.map(toTeamTransferLine),
+          total,
+          query.page,
+          query.pageSize,
+        );
+      },
+      [CacheTag.Leagues, CacheTag.Transfers],
     );
   }
 
@@ -129,12 +167,23 @@ export class LeaguesService {
     take: number,
     year?: number,
   ): Promise<TeamTransferLineDto[]> {
-    const items = await this.transfers.getLatestByLeagueId(
-      leagueId,
-      take,
-      year,
+    return this.cache.getOrSet(
+      CacheService.buildKey('leagues:latestTransfers', {
+        leagueId,
+        take,
+        year,
+      }),
+      CacheTtl.List,
+      async () => {
+        const items = await this.transfers.getLatestByLeagueId(
+          leagueId,
+          take,
+          year,
+        );
+        return items.map(toTeamTransferLine);
+      },
+      [CacheTag.Leagues, CacheTag.Transfers],
     );
-    return items.map(toTeamTransferLine);
   }
 
   async directionalTransfers(
@@ -142,16 +191,27 @@ export class LeaguesService {
     direction: 'incoming' | 'outgoing',
     filter: LeagueTransferFilterDto,
   ): Promise<PagedResult<TeamTransferLineDto>> {
-    const { items, total } = await this.transfers.getLeagueDirectional(
-      leagueId,
-      direction,
-      filter,
-    );
-    return buildPaged(
-      items.map(toTeamTransferLine),
-      total,
-      filter.page,
-      filter.pageSize,
+    return this.cache.getOrSet(
+      CacheService.buildKey('leagues:directionalTransfers', {
+        leagueId,
+        direction,
+        ...filter,
+      }),
+      CacheTtl.List,
+      async () => {
+        const { items, total } = await this.transfers.getLeagueDirectional(
+          leagueId,
+          direction,
+          filter,
+        );
+        return buildPaged(
+          items.map(toTeamTransferLine),
+          total,
+          filter.page,
+          filter.pageSize,
+        );
+      },
+      [CacheTag.Leagues, CacheTag.Transfers],
     );
   }
 }

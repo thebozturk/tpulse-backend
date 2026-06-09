@@ -1,6 +1,8 @@
 import { ForbiddenException, NotFoundException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { AuthUser } from '../common/decorators/current-user.decorator';
+import { CacheService } from '../common/redis/cache.service';
+import { passthroughCache } from '../common/redis/cache.test-util';
 import { OutboxService } from '../messaging/outbox.service';
 import { RumourWriteService } from './rumour-write.service';
 import { TRANSFER_REPOSITORY } from './transfer.repository';
@@ -30,6 +32,7 @@ describe('RumourWriteService', () => {
         RumourWriteService,
         { provide: TRANSFER_REPOSITORY, useValue: repo },
         { provide: OutboxService, useValue: outbox },
+        { provide: CacheService, useValue: passthroughCache() },
       ],
     }).compile();
     service = module.get(RumourWriteService);

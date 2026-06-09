@@ -1,6 +1,8 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { PagedResult } from '../common/interfaces/response.interface';
 import { buildPaged } from '../common/pagination';
+import { CacheTag, CacheTtl } from '../common/redis/cache-tags';
+import { CacheService } from '../common/redis/cache.service';
 import { NewsService } from '../news/news.service';
 import { PostsService } from '../posts/posts.service';
 import { ImageUploadService } from '../storage/image-upload.service';
@@ -32,40 +34,54 @@ export class PlayersService {
     private readonly imageUpload: ImageUploadService,
     private readonly news: NewsService,
     private readonly posts: PostsService,
+    private readonly cache: CacheService,
   ) {}
 
   async getProfile(id: string): Promise<PlayerProfileDto> {
-    const player = await this.repo.getById(id);
-    if (!player) {
-      throw new NotFoundException('Oyuncu bulunamadı');
-    }
-    const [transfers, newsPaged, posts] = await Promise.all([
-      this.transfers.getByPlayerId(id),
-      this.news.findByPlayer(id, 1, PROFILE_NEWS),
-      this.posts.byPlayer(id),
-    ]);
-    return {
-      player: toPlayerResponse(player),
-      transfers: transfers.slice(0, PROFILE_TRANSFERS).map(toTeamTransferLine),
-      news: newsPaged.items,
-      posts: posts.slice(0, PROFILE_POSTS),
-    };
+    return this.cache.getOrSet(
+      CacheService.buildKey('players:profile', { id }),
+      CacheTtl.List,
+      async () => {
+        const player = await this.repo.getById(id);
+        if (!player) {
+          throw new NotFoundException('Oyuncu bulunamadı');
+        }
+        const [transfers, newsPaged, posts] = await Promise.all([
+          this.transfers.getByPlayerId(id),
+          this.news.findByPlayer(id, 1, PROFILE_NEWS),
+          this.posts.byPlayer(id),
+        ]);
+        return {
+          player: toPlayerResponse(player),
+          transfers: transfers
+            .slice(0, PROFILE_TRANSFERS)
+            .map(toTeamTransferLine),
+          news: newsPaged.items,
+          posts: posts.slice(0, PROFILE_POSTS),
+        };
+      },
+      [CacheTag.Players, CacheTag.Transfers],
+    );
   }
 
-  create(dto: PlayerWriteDto): Promise<{ id: string }> {
-    return this.repo.create(dto);
+  async create(dto: PlayerWriteDto): Promise<{ id: string }> {
+    const created = await this.repo.create(dto);
+    await this.cache.invalidateTags(CacheTag.Players);
+    return created;
   }
 
   async updatePlayer(id: string, dto: PlayerWriteDto): Promise<void> {
     if (!(await this.repo.update(id, dto))) {
       throw new NotFoundException('Oyuncu bulunamadı');
     }
+    await this.cache.invalidateTags(CacheTag.Players);
   }
 
   async remove(id: string): Promise<void> {
     if (!(await this.repo.remove(id))) {
       throw new NotFoundException('Oyuncu bulunamadı');
     }
+    await this.cache.invalidateTags(CacheTag.Players);
   }
 
   async setImageFromFile(
@@ -82,6 +98,7 @@ export class PlayersService {
       IMAGE_QUALITY,
     );
     await this.repo.updateImage(id, url, true);
+    await this.cache.invalidateTags(CacheTag.Players);
     return url;
   }
 
@@ -96,6 +113,7 @@ export class PlayersService {
       IMAGE_QUALITY,
     );
     await this.repo.updateImage(id, url, true);
+    await this.cache.invalidateTags(CacheTag.Players);
     return url;
   }
 
@@ -103,53 +121,93 @@ export class PlayersService {
     if (!(await this.repo.updateImage(id, null, false))) {
       throw new NotFoundException('Oyuncu bulunamadı');
     }
+    await this.cache.invalidateTags(CacheTag.Players);
   }
 
   async findAll(
     filter: PlayerFilterDto,
   ): Promise<PagedResult<PlayerResponseDto>> {
-    const { items, total } = await this.repo.getAll(filter);
-    return buildPaged(
-      items.map(toPlayerResponse),
-      total,
-      filter.page,
-      filter.pageSize,
+    return this.cache.getOrSet(
+      CacheService.buildKey('players:list', { ...filter }),
+      CacheTtl.List,
+      async () => {
+        const { items, total } = await this.repo.getAll(filter);
+        return buildPaged(
+          items.map(toPlayerResponse),
+          total,
+          filter.page,
+          filter.pageSize,
+        );
+      },
+      [CacheTag.Players],
     );
   }
 
   async findById(id: string): Promise<PlayerResponseDto> {
-    const player = await this.repo.getById(id);
-    if (!player) {
-      throw new NotFoundException('Oyuncu bulunamadı');
-    }
-    return toPlayerResponse(player);
+    return this.cache.getOrSet(
+      CacheService.buildKey('players:byId', { id }),
+      CacheTtl.List,
+      async () => {
+        const player = await this.repo.getById(id);
+        if (!player) {
+          throw new NotFoundException('Oyuncu bulunamadı');
+        }
+        return toPlayerResponse(player);
+      },
+      [CacheTag.Players],
+    );
   }
 
   async findByTeam(teamId: string): Promise<PlayerResponseDto[]> {
-    return (await this.repo.getByTeamId(teamId)).map(toPlayerResponse);
+    return this.cache.getOrSet(
+      CacheService.buildKey('players:byTeam', { teamId }),
+      CacheTtl.List,
+      async () => (await this.repo.getByTeamId(teamId)).map(toPlayerResponse),
+      [CacheTag.Players],
+    );
   }
 
   async findByNationality(nationality: string): Promise<PlayerResponseDto[]> {
-    return (await this.repo.getByNationality(nationality)).map(
-      toPlayerResponse,
+    return this.cache.getOrSet(
+      CacheService.buildKey('players:byNationality', { nationality }),
+      CacheTtl.List,
+      async () =>
+        (await this.repo.getByNationality(nationality)).map(toPlayerResponse),
+      [CacheTag.Players],
     );
   }
 
   async findFreeAgents(): Promise<PlayerResponseDto[]> {
-    return (await this.repo.getFreeAgents()).map(toPlayerResponse);
+    return this.cache.getOrSet(
+      CacheService.buildKey('players:freeAgents'),
+      CacheTtl.List,
+      async () => (await this.repo.getFreeAgents()).map(toPlayerResponse),
+      [CacheTag.Players],
+    );
   }
 
   async transfersOf(playerId: string): Promise<TeamTransferLineDto[]> {
-    return (await this.transfers.getByPlayerId(playerId)).map(
-      toTeamTransferLine,
+    return this.cache.getOrSet(
+      CacheService.buildKey('players:transfers', { playerId }),
+      CacheTtl.List,
+      async () =>
+        (await this.transfers.getByPlayerId(playerId)).map(toTeamTransferLine),
+      [CacheTag.Players, CacheTag.Transfers],
     );
   }
 
   async lastTransfer(playerId: string): Promise<TeamTransferLineDto> {
-    const last = await this.transfers.getLastByPlayerId(playerId);
-    if (!last) {
-      throw new NotFoundException('Transfer bulunamadı');
-    }
-    return toTeamTransferLine(last);
+    return this.cache.getOrSet(
+      CacheService.buildKey('players:lastTransfer', { playerId }),
+      CacheTtl.List,
+      async () => {
+        const last = await this.transfers.getLastByPlayerId(playerId);
+        if (!last) {
+          throw new NotFoundException('Transfer bulunamadı');
+        }
+        return toTeamTransferLine(last);
+      },
+      [CacheTag.Players, CacheTag.Transfers],
+    );
   }
 }

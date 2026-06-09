@@ -1,5 +1,7 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
+import { CacheTag, CacheTtl } from '../../common/redis/cache-tags';
+import { CacheService } from '../../common/redis/cache.service';
 import { TeamTransferLineDto } from '../dto/team-transfer-line.dto';
 import { toTeamTransferLine } from '../transfer.mapper';
 import { TransferWithRel } from '../transfer.repository';
@@ -23,9 +25,21 @@ export class StatsService {
   constructor(
     @Inject(STATS_REPOSITORY) private readonly repo: IStatsRepository,
     private readonly currency: CurrencyConverter,
+    private readonly cache: CacheService,
   ) {}
 
   async getStats(filter: StatsFilterDto): Promise<TransferStatsDto> {
+    return this.cache.getOrSet(
+      CacheService.buildKey('transfers:stats', { ...filter }),
+      CacheTtl.List,
+      () => this.computeStats(filter),
+      [CacheTag.Transfers],
+    );
+  }
+
+  private async computeStats(
+    filter: StatsFilterDto,
+  ): Promise<TransferStatsDto> {
     const where = await this.buildWhere(filter);
     const [agg, mostExpensive, latest, earliest, buyer, seller, player] =
       await Promise.all([
@@ -69,17 +83,35 @@ export class StatsService {
         throw new BadRequestException('Geçersiz yıl');
       }
     }
-    const periods = await this.repo.getPeriods(query.year);
-    return periods.map((p) => ({
-      id: p.id,
-      name: p.name,
-      periodType: p.periodType ?? undefined,
-      startDate: p.startDate,
-      endDate: p.endDate,
-    }));
+    return this.cache.getOrSet(
+      CacheService.buildKey('transfers:periods', { year: query.year }),
+      CacheTtl.List,
+      async () => {
+        const periods = await this.repo.getPeriods(query.year);
+        return periods.map((p) => ({
+          id: p.id,
+          name: p.name,
+          periodType: p.periodType ?? undefined,
+          startDate: p.startDate,
+          endDate: p.endDate,
+        }));
+      },
+      [CacheTag.Transfers],
+    );
   }
 
   async getPeriodSummary(
+    query: PeriodSummaryQueryDto,
+  ): Promise<TransferPeriodSummaryDto> {
+    return this.cache.getOrSet(
+      CacheService.buildKey('transfers:periodSummary', { ...query }),
+      CacheTtl.List,
+      () => this.computePeriodSummary(query),
+      [CacheTag.Transfers],
+    );
+  }
+
+  private async computePeriodSummary(
     query: PeriodSummaryQueryDto,
   ): Promise<TransferPeriodSummaryDto> {
     const { range, periodName } = await this.resolveRange(
@@ -107,6 +139,17 @@ export class StatsService {
   }
 
   async getSeasonDashboard(
+    query: SeasonDashboardQueryDto,
+  ): Promise<TransferSeasonDashboardDto> {
+    return this.cache.getOrSet(
+      CacheService.buildKey('transfers:seasonDashboard', { ...query }),
+      CacheTtl.List,
+      () => this.computeSeasonDashboard(query),
+      [CacheTag.Transfers],
+    );
+  }
+
+  private async computeSeasonDashboard(
     query: SeasonDashboardQueryDto,
   ): Promise<TransferSeasonDashboardDto> {
     const { range, periodName } = await this.resolveRange(

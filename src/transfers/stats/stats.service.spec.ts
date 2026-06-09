@@ -1,5 +1,7 @@
 import { BadRequestException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
+import { CacheService } from '../../common/redis/cache.service';
+import { passthroughCache } from '../../common/redis/cache.test-util';
 import { CurrencyConverter } from './currency-converter';
 import { STATS_REPOSITORY } from './stats.repository';
 import { StatsService } from './stats.service';
@@ -27,6 +29,7 @@ describe('StatsService', () => {
           provide: CurrencyConverter,
           useValue: { rateMap: jest.fn(), convertWith: jest.fn() },
         },
+        { provide: CacheService, useValue: passthroughCache() },
       ],
     }).compile();
     service = module.get(StatsService);

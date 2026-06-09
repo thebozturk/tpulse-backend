@@ -5,6 +5,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { AuthUser } from '../common/decorators/current-user.decorator';
+import { CacheTag } from '../common/redis/cache-tags';
+import { CacheService } from '../common/redis/cache.service';
 import { OutboxEventType } from '../messaging/events';
 import { OutboxService } from '../messaging/outbox.service';
 import { ConfirmRumourDto, CreateRumourDto } from './dto/rumour-write.dto';
@@ -20,6 +22,7 @@ export class RumourWriteService {
   constructor(
     @Inject(TRANSFER_REPOSITORY) private readonly repo: ITransferRepository,
     private readonly outbox: OutboxService,
+    private readonly cache: CacheService,
   ) {}
 
   async create(dto: CreateRumourDto, userId: string): Promise<{ id: string }> {
@@ -32,6 +35,7 @@ export class RumourWriteService {
       createdByUserId: userId,
     });
     await this.notify(created.id);
+    await this.cache.invalidateTags(CacheTag.Transfers);
     return created;
   }
 
@@ -48,11 +52,13 @@ export class RumourWriteService {
       feeAmount: dto.feeAmount ?? 0,
       feeCurrency: dto.feeCurrency ?? DEFAULT_CURRENCY,
     });
+    await this.cache.invalidateTags(CacheTag.Transfers);
   }
 
   async remove(id: string, user: AuthUser): Promise<void> {
     await this.assertAuthorOrAdmin(id, user);
     await this.repo.softDelete(id);
+    await this.cache.invalidateTags(CacheTag.Transfers);
   }
 
   async confirm(
@@ -65,6 +71,7 @@ export class RumourWriteService {
     }
     await this.repo.confirmRumour(id, dto);
     await this.notify(id); // artık isRumour:false → Transfer bildirimi
+    await this.cache.invalidateTags(CacheTag.Transfers);
     return { transferId: id };
   }
 

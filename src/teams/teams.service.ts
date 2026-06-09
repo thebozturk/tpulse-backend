@@ -1,6 +1,8 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { PagedResult } from '../common/interfaces/response.interface';
 import { buildPaged } from '../common/pagination';
+import { CacheTag, CacheTtl } from '../common/redis/cache-tags';
+import { CacheService } from '../common/redis/cache.service';
 import { ImageUploadService } from '../storage/image-upload.service';
 import { TeamTransferLineDto } from '../transfers/dto/team-transfer-line.dto';
 import { toTeamTransferLine } from '../transfers/transfer.mapper';
@@ -25,22 +27,27 @@ export class TeamsService {
     @Inject(TRANSFER_REPOSITORY)
     private readonly transfers: ITransferRepository,
     private readonly imageUpload: ImageUploadService,
+    private readonly cache: CacheService,
   ) {}
 
-  create(dto: TeamWriteDto): Promise<{ id: string }> {
-    return this.repo.create(dto);
+  async create(dto: TeamWriteDto): Promise<{ id: string }> {
+    const created = await this.repo.create(dto);
+    await this.cache.invalidateTags(CacheTag.Teams);
+    return created;
   }
 
   async update(id: string, dto: TeamWriteDto): Promise<void> {
     if (!(await this.repo.update(id, dto))) {
       throw new NotFoundException('Takım bulunamadı');
     }
+    await this.cache.invalidateTags(CacheTag.Teams);
   }
 
   async remove(id: string): Promise<void> {
     if (!(await this.repo.remove(id))) {
       throw new NotFoundException('Takım bulunamadı');
     }
+    await this.cache.invalidateTags(CacheTag.Teams);
   }
 
   async setImageFromFile(
@@ -57,6 +64,7 @@ export class TeamsService {
       IMAGE_QUALITY,
     );
     await this.repo.updateImage(id, url, true);
+    await this.cache.invalidateTags(CacheTag.Teams);
     return url;
   }
 
@@ -71,6 +79,7 @@ export class TeamsService {
       IMAGE_QUALITY,
     );
     await this.repo.updateImage(id, url, true);
+    await this.cache.invalidateTags(CacheTag.Teams);
     return url;
   }
 
@@ -78,30 +87,61 @@ export class TeamsService {
     if (!(await this.repo.updateImage(id, null, false))) {
       throw new NotFoundException('Takım bulunamadı');
     }
+    await this.cache.invalidateTags(CacheTag.Teams);
   }
 
   async findAll(
     page: number,
     pageSize: number,
   ): Promise<PagedResult<TeamResponseDto>> {
-    const { items, total } = await this.repo.getAll(page, pageSize);
-    return buildPaged(items.map(toTeamResponse), total, page, pageSize);
+    return this.cache.getOrSet(
+      CacheService.buildKey('teams:list', { page, pageSize }),
+      CacheTtl.List,
+      async () => {
+        const { items, total } = await this.repo.getAll(page, pageSize);
+        return buildPaged(items.map(toTeamResponse), total, page, pageSize);
+      },
+      [CacheTag.Teams],
+    );
   }
 
   async findById(id: string): Promise<TeamResponseDto> {
-    const team = await this.repo.getById(id);
-    if (!team) {
-      throw new NotFoundException('Takım bulunamadı');
-    }
-    return toTeamResponse(team);
+    return this.cache.getOrSet(
+      CacheService.buildKey('teams:byId', { id }),
+      CacheTtl.List,
+      async () => {
+        const team = await this.repo.getById(id);
+        if (!team) {
+          throw new NotFoundException('Takım bulunamadı');
+        }
+        return toTeamResponse(team);
+      },
+      [CacheTag.Teams],
+    );
   }
 
   async findByLeague(leagueId: string): Promise<TeamResponseDto[]> {
-    const teams = await this.repo.getByLeagueId(leagueId);
-    return teams.map(toTeamResponse);
+    return this.cache.getOrSet(
+      CacheService.buildKey('teams:byLeague', { leagueId }),
+      CacheTtl.List,
+      async () => {
+        const teams = await this.repo.getByLeagueId(leagueId);
+        return teams.map(toTeamResponse);
+      },
+      [CacheTag.Teams],
+    );
   }
 
   async getDetail(id: string): Promise<TeamDetailDto> {
+    return this.cache.getOrSet(
+      CacheService.buildKey('teams:detail', { id }),
+      CacheTtl.List,
+      () => this.computeDetail(id),
+      [CacheTag.Teams, CacheTag.Transfers],
+    );
+  }
+
+  private async computeDetail(id: string): Promise<TeamDetailDto> {
     const team = await this.repo.getDetailById(id);
     if (!team) {
       throw new NotFoundException('Takım bulunamadı');
@@ -132,7 +172,17 @@ export class TeamsService {
     teamId: string,
     direction: 'incoming' | 'outgoing' | 'all',
   ): Promise<TeamTransferLineDto[]> {
-    const items = await this.transfers.getByTeamDirectional(teamId, direction);
-    return items.map(toTeamTransferLine);
+    return this.cache.getOrSet(
+      CacheService.buildKey('teams:transfers', { teamId, direction }),
+      CacheTtl.List,
+      async () => {
+        const items = await this.transfers.getByTeamDirectional(
+          teamId,
+          direction,
+        );
+        return items.map(toTeamTransferLine);
+      },
+      [CacheTag.Teams, CacheTag.Transfers],
+    );
   }
 }
