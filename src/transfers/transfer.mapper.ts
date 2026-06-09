@@ -49,6 +49,7 @@ export function toTeamTransferLine(t: TransferWithRel): TeamTransferLineDto {
     transferId: t.id,
     playerId: t.playerId,
     playerName: `${t.player.firstName} ${t.player.lastName}`,
+    playerNationality: t.player.nationality,
     playerPhoto: t.player.photo ?? undefined,
     fromTeamId: t.fromTeamId,
     fromTeamName: t.fromTeam.name,

@@ -20,6 +20,7 @@ export function toPostResponse(
     playerName: p.player
       ? `${p.player.firstName} ${p.player.lastName}`
       : undefined,
+    playerNationality: p.player?.nationality ?? undefined,
     playerPhoto: p.player?.photo ?? undefined,
     teamId: p.teamId ?? undefined,
     teamName: p.team?.name,

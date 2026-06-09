@@ -90,6 +90,14 @@ function trunc(v: string | null | undefined, max: number, fallback: string): str
   return (s.length ? s : fallback).slice(0, max);
 }
 
+/**
+ * Uyruk kanonikleştirme — API-Football aynı ülke için tutarsız değer verebiliyor
+ * ("Turkey" / "Türkiye"). Mobil "Türkiye" değerine bakıyor → tek forma sabitle.
+ */
+function canonicalNationality(n: string): string {
+  return n === 'Turkey' ? 'Türkiye' : n;
+}
+
 const TIMEOUT_MS = 30_000;
 
 @Injectable()
@@ -194,7 +202,9 @@ export class AxiosFootballDataClient implements IFootballDataClient {
           32,
           r.player.name?.slice(0, 32) ?? 'N/A',
         ),
-        nationality: trunc(r.player.nationality, 32, 'Unknown'),
+        nationality: canonicalNationality(
+          trunc(r.player.nationality, 32, 'Unknown'),
+        ),
         birthDate: r.player.birth?.date,
         height: parseNum(r.player.height),
         weight: parseNum(r.player.weight),
