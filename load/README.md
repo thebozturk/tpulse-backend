@@ -10,7 +10,10 @@ Yük testi bunlara takılmasın diye `LOAD_TEST_MODE=true` ile **rate limit bypa
 edilir (`LoadAwareThrottlerGuard`). Bu flag **sadece non-prod**'da geçerli —
 `NODE_ENV=production` + `LOAD_TEST_MODE=true` boot'ta fail eder.
 
-`docker-compose.loadtest.yml` overlay'i bunu otomatik açar.
+`docker-compose.loadtest.yml` overlay'i bunu otomatik açar. Overlay ayrıca api
+host portunu **8090**'a taşır (`LOADTEST_API_PORT` ile değişir) — `tpulse-deploy`
+gibi 8080'i tutan başka bir stack'le çakışmasın diye. Dockerized k6 internal
+network'ten `api:8080`'e gider, host portundan etkilenmez.
 
 ## Hızlı başlangıç (Docker — k6 kurmaya gerek yok)
 

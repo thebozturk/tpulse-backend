@@ -12,6 +12,13 @@ services:
       # Base prod değerini override: bypass guard'ı sadece non-prod'da açılır.
       NODE_ENV: development
       LOAD_TEST_MODE: 'true'
+    # Host port'u çakışmayan değere taşı — tpulse-deploy stack'i (caddy) 8080'i
+    # tutabilir. !override: base'deki ports listesini BİRLEŞTİRMEZ, sıfırlayıp
+    # değiştirir (yoksa base 8080:8080 kalır → çakışma). Dockerized k6 zaten
+    # internal network'ten api:8080'e gider; host portu yalnızca host'tan
+    # `pnpm load:*` koşarken gerekir (BASE_URL=http://localhost:8090 ver).
+    ports: !override
+      - '${LOADTEST_API_PORT:-8090}:8080'
 
   k6:
     image: grafana/k6:latest
