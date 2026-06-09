@@ -1,6 +1,7 @@
 import { ForbiddenException, NotFoundException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { AuthUser } from '../common/decorators/current-user.decorator';
+import { PrismaService } from '../common/prisma/prisma.service';
 import { CacheService } from '../common/redis/cache.service';
 import { passthroughCache } from '../common/redis/cache.test-util';
 import { OutboxService } from '../messaging/outbox.service';
@@ -11,6 +12,12 @@ const dto = {
   playerId: 'p',
   fromTeamId: 'f',
   toTeamId: 't',
+};
+
+// $transaction çağrısını aynen çalıştıran, sabit bir tx sentinel'i geçen mock.
+const tx = { __tx: true };
+const prismaMock = {
+  $transaction: jest.fn(<T>(fn: (client: typeof tx) => Promise<T>) => fn(tx)),
 };
 
 describe('RumourWriteService', () => {
@@ -33,19 +40,24 @@ describe('RumourWriteService', () => {
         { provide: TRANSFER_REPOSITORY, useValue: repo },
         { provide: OutboxService, useValue: outbox },
         { provide: CacheService, useValue: passthroughCache() },
+        { provide: PrismaService, useValue: prismaMock },
       ],
     }).compile();
     service = module.get(RumourWriteService);
   });
 
-  it('create makes rumour and enqueues notification', async () => {
+  it('create makes rumour and enqueues notification atomically', async () => {
     expect(await service.create(dto, 'u1')).toEqual({ id: 'r1' });
+    expect(prismaMock.$transaction).toHaveBeenCalled();
     expect(repo.createRumour).toHaveBeenCalledWith(
       expect.objectContaining({ createdByUserId: 'u1', feeCurrency: 'EUR' }),
+      tx,
     );
-    expect(outbox.enqueue).toHaveBeenCalledWith('notification.generate', {
-      transferId: 'r1',
-    });
+    expect(outbox.enqueue).toHaveBeenCalledWith(
+      'notification.generate',
+      { transferId: 'r1' },
+      tx,
+    );
   });
 
   it('update throws 404 when not a (live) rumour', async () => {
@@ -85,9 +97,15 @@ describe('RumourWriteService', () => {
       transferDate: new Date(0),
     });
     expect(res).toEqual({ transferId: 'r1' });
-    expect(repo.confirmRumour).toHaveBeenCalled();
-    expect(outbox.enqueue).toHaveBeenCalledWith('notification.generate', {
-      transferId: 'r1',
-    });
+    expect(repo.confirmRumour).toHaveBeenCalledWith(
+      'r1',
+      expect.anything(),
+      tx,
+    );
+    expect(outbox.enqueue).toHaveBeenCalledWith(
+      'notification.generate',
+      { transferId: 'r1' },
+      tx,
+    );
   });
 });

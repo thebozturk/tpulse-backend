@@ -115,18 +115,28 @@ export interface ITransferRepository {
     toTeamId: string,
     transferDate: Date,
   ): Promise<boolean>;
-  createTransfer(data: TransferWriteInput): Promise<{ id: string }>;
+  createTransfer(
+    data: TransferWriteInput,
+    tx?: Prisma.TransactionClient,
+  ): Promise<{ id: string }>;
   updateTransfer(id: string, data: TransferWriteInput): Promise<boolean>;
   patchTransfer(id: string, data: TransferPatchInput): Promise<boolean>;
   softDelete(id: string): Promise<boolean>;
 
   // Rumour write (Faz 6b)
-  createRumour(data: RumourWriteInput): Promise<{ id: string }>;
+  createRumour(
+    data: RumourWriteInput,
+    tx?: Prisma.TransactionClient,
+  ): Promise<{ id: string }>;
   getRumourMeta(
     id: string,
   ): Promise<{ createdByUserId: string | null; isRumour: boolean } | null>;
   updateRumour(id: string, data: RumourUpdateInput): Promise<boolean>;
-  confirmRumour(id: string, data: TransferPatchInput): Promise<boolean>;
+  confirmRumour(
+    id: string,
+    data: TransferPatchInput,
+    tx?: Prisma.TransactionClient,
+  ): Promise<boolean>;
 }
 
 export interface RumourWriteInput {

@@ -35,6 +35,18 @@ export class OutboxDispatcher implements OnModuleInit {
   }
 
   async dispatch(): Promise<void> {
+    // Poison-message görünürlüğü: MAX_RETRY'ı aşmış mesajlar bir daha dispatch
+    // edilmez. Sessizce kaybolmaları yerine her tick'te operatöre uyar.
+    const dead = await this.prisma.outboxMessage.count({
+      where: { processedAtUtc: null, retryCount: { gte: MAX_RETRY } },
+    });
+    if (dead > 0) {
+      this.logger.error(
+        `Outbox poison-message: ${dead} mesaj MAX_RETRY(${MAX_RETRY}) aştı, ` +
+          'dispatch edilmiyor — manuel müdahale/DLQ gerekli',
+      );
+    }
+
     const pending = await this.prisma.outboxMessage.findMany({
       where: { processedAtUtc: null, retryCount: { lt: MAX_RETRY } },
       orderBy: { createdAtUtc: 'asc' },

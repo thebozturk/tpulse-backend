@@ -304,9 +304,14 @@ export class PrismaTransferRepository implements ITransferRepository {
     return dup !== null;
   }
 
-  async createTransfer(data: TransferWriteInput): Promise<{ id: string }> {
+  async createTransfer(
+    data: TransferWriteInput,
+    tx?: Prisma.TransactionClient,
+  ): Promise<{ id: string }> {
     try {
-      const t = await this.prisma.transfer.create({ data });
+      const t = tx
+        ? await tx.transfer.create({ data })
+        : await this.prisma.transfer.create({ data });
       return { id: t.id };
     } catch (e) {
       mapWriteError(e);
@@ -350,11 +355,15 @@ export class PrismaTransferRepository implements ITransferRepository {
     }
   }
 
-  async createRumour(data: RumourWriteInput): Promise<{ id: string }> {
+  async createRumour(
+    data: RumourWriteInput,
+    tx?: Prisma.TransactionClient,
+  ): Promise<{ id: string }> {
     try {
-      const t = await this.prisma.transfer.create({
-        data: { ...data, isRumour: true, transferDate: new Date() },
-      });
+      const createData = { ...data, isRumour: true, transferDate: new Date() };
+      const t = tx
+        ? await tx.transfer.create({ data: createData })
+        : await this.prisma.transfer.create({ data: createData });
       return { id: t.id };
     } catch (e) {
       mapWriteError(e);
@@ -382,9 +391,14 @@ export class PrismaTransferRepository implements ITransferRepository {
     }
   }
 
-  async confirmRumour(id: string, data: TransferPatchInput): Promise<boolean> {
+  async confirmRumour(
+    id: string,
+    data: TransferPatchInput,
+    tx?: Prisma.TransactionClient,
+  ): Promise<boolean> {
+    const client = tx ?? this.prisma;
     try {
-      await this.prisma.transfer.update({
+      await client.transfer.update({
         where: { id },
         data: {
           isRumour: false,

@@ -96,6 +96,7 @@ model Team {
   postsFrom         Post[]     @relation("PostFromTeam")
   postsTo           Post[]     @relation("PostToTeam")
 
+  @@index([leagueId])
   @@map("team")
 }
 
@@ -135,6 +136,9 @@ model Player {
   news      News[]
   posts     Post[]     @relation("PostPlayer")
 
+  @@index([teamId])
+  @@index([nationality])
+  @@index([isFree])
   @@map("player")
 }
 
@@ -162,6 +166,12 @@ model Transfer {
   @@index([playerId, fromTeamId, toTeamId, transferDate])
   @@index([transferDate])
   @@index([feeAmount])
+  // Public okuma yolları daima isRumour(+isDeleted) ile filtreler; composite'ler bunu hedefler.
+  @@index([isRumour, isDeleted, createdAt(sort: Desc)])
+  @@index([isRumour, isDeleted, playerId])
+  @@index([isRumour, isDeleted, toTeamId])
+  @@index([isRumour, isDeleted, fromTeamId])
+  @@index([createdByUserId])
   @@map("transfers")
 }
 
@@ -195,6 +205,9 @@ model Post {
   votes    PostVote[]
 
   @@index([createdAtUtc, id])
+  @@index([ownerId])
+  @@index([playerId])
+  @@index([teamId])
   @@map("post")
 }
 
@@ -240,6 +253,8 @@ model Comment {
   replies Comment[]     @relation("CommentReplies")
   likes   CommentLike[]
 
+  @@index([postId])
+  @@index([parentId])
   @@map("comment")
 }
 
@@ -271,6 +286,8 @@ model TransferComment {
   replies  TransferComment[]     @relation("TCReplies")
   likes    TransferCommentLike[]
 
+  @@index([transferId])
+  @@index([parentId])
   @@map("transfer_comment")
 }
 

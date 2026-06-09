@@ -4,7 +4,9 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { AuthUser } from '../common/decorators/current-user.decorator';
+import { PrismaService } from '../common/prisma/prisma.service';
 import { CacheTag } from '../common/redis/cache-tags';
 import { CacheService } from '../common/redis/cache.service';
 import { OutboxEventType } from '../messaging/events';
@@ -23,18 +25,26 @@ export class RumourWriteService {
     @Inject(TRANSFER_REPOSITORY) private readonly repo: ITransferRepository,
     private readonly outbox: OutboxService,
     private readonly cache: CacheService,
+    private readonly prisma: PrismaService,
   ) {}
 
   async create(dto: CreateRumourDto, userId: string): Promise<{ id: string }> {
-    const created = await this.repo.createRumour({
-      playerId: dto.playerId,
-      fromTeamId: dto.fromTeamId,
-      toTeamId: dto.toTeamId,
-      feeAmount: dto.feeAmount ?? 0,
-      feeCurrency: dto.feeCurrency ?? DEFAULT_CURRENCY,
-      createdByUserId: userId,
+    // Söylenti kaydı + bildirim event'i atomik (transfer create ile aynı garanti).
+    const created = await this.prisma.$transaction(async (tx) => {
+      const c = await this.repo.createRumour(
+        {
+          playerId: dto.playerId,
+          fromTeamId: dto.fromTeamId,
+          toTeamId: dto.toTeamId,
+          feeAmount: dto.feeAmount ?? 0,
+          feeCurrency: dto.feeCurrency ?? DEFAULT_CURRENCY,
+          createdByUserId: userId,
+        },
+        tx,
+      );
+      await this.notify(c.id, tx);
+      return c;
     });
-    await this.notify(created.id);
     await this.cache.invalidateTags(CacheTag.Transfers);
     return created;
   }
@@ -69,8 +79,11 @@ export class RumourWriteService {
     if (!meta) {
       throw new NotFoundException('Söylenti bulunamadı');
     }
-    await this.repo.confirmRumour(id, dto);
-    await this.notify(id); // artık isRumour:false → Transfer bildirimi
+    // Confirm (isRumour:false) + bildirim event'i atomik.
+    await this.prisma.$transaction(async (tx) => {
+      await this.repo.confirmRumour(id, dto, tx);
+      await this.notify(id, tx); // artık isRumour:false → Transfer bildirimi
+    });
     await this.cache.invalidateTags(CacheTag.Transfers);
     return { transferId: id };
   }
@@ -85,9 +98,14 @@ export class RumourWriteService {
     }
   }
 
-  private notify(transferId: string): Promise<void> {
-    return this.outbox.enqueue(OutboxEventType.NotificationGenerate, {
-      transferId,
-    });
+  private notify(
+    transferId: string,
+    tx?: Prisma.TransactionClient,
+  ): Promise<void> {
+    return this.outbox.enqueue(
+      OutboxEventType.NotificationGenerate,
+      { transferId },
+      tx,
+    );
   }
 }

@@ -4,6 +4,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { PrismaService } from '../common/prisma/prisma.service';
 import { CacheTag } from '../common/redis/cache-tags';
 import { CacheService } from '../common/redis/cache.service';
 import { OutboxEventType } from '../messaging/events';
@@ -21,6 +22,7 @@ export class AdminTransfersService {
     @Inject(TRANSFER_REPOSITORY) private readonly repo: ITransferRepository,
     private readonly outbox: OutboxService,
     private readonly cache: CacheService,
+    private readonly prisma: PrismaService,
   ) {}
 
   async create(
@@ -36,9 +38,15 @@ export class AdminTransfersService {
     if (dup) {
       throw new ConflictException('Aynı transfer zaten mevcut');
     }
-    const created = await this.repo.createTransfer({ ...dto, createdByUserId });
-    await this.outbox.enqueue(OutboxEventType.NotificationGenerate, {
-      transferId: created.id,
+    // Transfer kaydı + outbox event'i tek transaction → biri yazılırsa ikisi de.
+    const created = await this.prisma.$transaction(async (tx) => {
+      const t = await this.repo.createTransfer({ ...dto, createdByUserId }, tx);
+      await this.outbox.enqueue(
+        OutboxEventType.NotificationGenerate,
+        { transferId: t.id },
+        tx,
+      );
+      return t;
     });
     await this.cache.invalidateTags(CacheTag.Transfers);
     return created;
