@@ -15,7 +15,10 @@ const playerInclude = {
 
 /**
  * pg_trgm fuzzy search. Parameterized $queryRaw (injection yok — $queryRawUnsafe DEĞİL).
- * Eşleşme: substring (ILIKE) VEYA trigram (%), similarity DESC sıralama.
+ * Tüm karşılaştırmalar f_unaccent(lower(...)) üzerinden — aksan/Türkçe karakter ve
+ * büyük-küçük harf duyarsız (Özil↔Ozil, Şahin↔Sahin, İ/I/ı/i tek forma iner).
+ * Sorgu tarafı da aynı normalizeden geçer; trgm GIN index'leri bu ifade üzerinde tanımlı.
+ * Eşleşme: substring (LIKE) VEYA trigram (%), similarity DESC sıralama.
  */
 @Injectable()
 export class PrismaSearchRepository implements ISearchRepository {
@@ -25,13 +28,14 @@ export class PrismaSearchRepository implements ISearchRepository {
     return this.prisma.$queryRaw<PlayerHit[]>`
       SELECT id, "firstName", "lastName", photo, nationality
       FROM "player"
-      WHERE ("firstName" || ' ' || "lastName") ILIKE '%' || ${q} || '%'
-         OR "firstName" % ${q}
-         OR "lastName" % ${q}
+      WHERE f_unaccent(lower("firstName" || ' ' || "lastName")) LIKE '%' || f_unaccent(lower(${q})) || '%'
+         OR f_unaccent(lower("firstName")) % f_unaccent(lower(${q}))
+         OR f_unaccent(lower("lastName")) % f_unaccent(lower(${q}))
+         OR f_unaccent(lower("firstName" || ' ' || "lastName")) % f_unaccent(lower(${q}))
       ORDER BY GREATEST(
-        similarity("firstName" || ' ' || "lastName", ${q}),
-        similarity("firstName", ${q}),
-        similarity("lastName", ${q})
+        similarity(f_unaccent(lower("firstName" || ' ' || "lastName")), f_unaccent(lower(${q}))),
+        similarity(f_unaccent(lower("firstName")), f_unaccent(lower(${q}))),
+        similarity(f_unaccent(lower("lastName")), f_unaccent(lower(${q})))
       ) DESC, "lastName" ASC
       LIMIT ${limit}
     `;
@@ -41,8 +45,9 @@ export class PrismaSearchRepository implements ISearchRepository {
     return this.prisma.$queryRaw<TeamHit[]>`
       SELECT id, name, logo
       FROM "team"
-      WHERE name ILIKE '%' || ${q} || '%' OR name % ${q}
-      ORDER BY similarity(name, ${q}) DESC, name ASC
+      WHERE f_unaccent(lower(name)) LIKE '%' || f_unaccent(lower(${q})) || '%'
+         OR f_unaccent(lower(name)) % f_unaccent(lower(${q}))
+      ORDER BY similarity(f_unaccent(lower(name)), f_unaccent(lower(${q}))) DESC, name ASC
       LIMIT ${limit}
     `;
   }
@@ -51,8 +56,9 @@ export class PrismaSearchRepository implements ISearchRepository {
     return this.prisma.$queryRaw<LeagueHit[]>`
       SELECT id, name, "leagueLogo", country
       FROM "league"
-      WHERE name ILIKE '%' || ${q} || '%' OR name % ${q}
-      ORDER BY similarity(name, ${q}) DESC, name ASC
+      WHERE f_unaccent(lower(name)) LIKE '%' || f_unaccent(lower(${q})) || '%'
+         OR f_unaccent(lower(name)) % f_unaccent(lower(${q}))
+      ORDER BY similarity(f_unaccent(lower(name)), f_unaccent(lower(${q}))) DESC, name ASC
       LIMIT ${limit}
     `;
   }
@@ -66,22 +72,24 @@ export class PrismaSearchRepository implements ISearchRepository {
     const idRows = await this.prisma.$queryRaw<{ id: string }[]>`
       SELECT id
       FROM "player"
-      WHERE ("firstName" || ' ' || "lastName") ILIKE '%' || ${q} || '%'
-         OR "firstName" % ${q}
-         OR "lastName" % ${q}
+      WHERE f_unaccent(lower("firstName" || ' ' || "lastName")) LIKE '%' || f_unaccent(lower(${q})) || '%'
+         OR f_unaccent(lower("firstName")) % f_unaccent(lower(${q}))
+         OR f_unaccent(lower("lastName")) % f_unaccent(lower(${q}))
+         OR f_unaccent(lower("firstName" || ' ' || "lastName")) % f_unaccent(lower(${q}))
       ORDER BY GREATEST(
-        similarity("firstName" || ' ' || "lastName", ${q}),
-        similarity("firstName", ${q}),
-        similarity("lastName", ${q})
+        similarity(f_unaccent(lower("firstName" || ' ' || "lastName")), f_unaccent(lower(${q}))),
+        similarity(f_unaccent(lower("firstName")), f_unaccent(lower(${q}))),
+        similarity(f_unaccent(lower("lastName")), f_unaccent(lower(${q})))
       ) DESC, "lastName" ASC
       LIMIT ${pageSize} OFFSET ${skip}
     `;
     const countRows = await this.prisma.$queryRaw<{ count: number }[]>`
       SELECT COUNT(*)::int AS count
       FROM "player"
-      WHERE ("firstName" || ' ' || "lastName") ILIKE '%' || ${q} || '%'
-         OR "firstName" % ${q}
-         OR "lastName" % ${q}
+      WHERE f_unaccent(lower("firstName" || ' ' || "lastName")) LIKE '%' || f_unaccent(lower(${q})) || '%'
+         OR f_unaccent(lower("firstName")) % f_unaccent(lower(${q}))
+         OR f_unaccent(lower("lastName")) % f_unaccent(lower(${q}))
+         OR f_unaccent(lower("firstName" || ' ' || "lastName")) % f_unaccent(lower(${q}))
     `;
 
     const ids = idRows.map((r) => r.id);
