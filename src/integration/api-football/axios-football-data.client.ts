@@ -40,11 +40,42 @@ interface RawTransferEntry {
   player: { id: number };
   transfers: {
     date: string;
+    type?: string | null;
     teams: {
       in: { id?: number | null };
       out: { id?: number | null };
     };
   }[];
+}
+
+const CURRENCY_SYMBOLS: Record<string, string> = {
+  '€': 'EUR',
+  $: 'USD',
+  '£': 'GBP',
+};
+
+/**
+ * API-Football `type` alanı bedeli serbest metin verir:
+ *   "€ 2.5M" → 2_500_000 EUR | "€ 550K" → 550_000 | "Free"/"Loan"/"N/A" → 0.
+ * Sayısal bedel yoksa 0/EUR döner (Free/Loan/N-A meşru olarak bedelsiz).
+ */
+function parseFee(type?: string | null): {
+  feeAmount: number;
+  feeCurrency: string;
+} {
+  const raw = (type ?? '').trim();
+  const m = raw.match(/([€$£])\s*([\d.,]+)\s*([MmKk])?/);
+  if (!m) {
+    return { feeAmount: 0, feeCurrency: 'EUR' };
+  }
+  const feeCurrency = CURRENCY_SYMBOLS[m[1]] ?? 'EUR';
+  const num = parseFloat(m[2].replace(/,/g, ''));
+  if (Number.isNaN(num)) {
+    return { feeAmount: 0, feeCurrency };
+  }
+  const unit = (m[3] ?? '').toUpperCase();
+  const factor = unit === 'M' ? 1_000_000 : unit === 'K' ? 1_000 : 1;
+  return { feeAmount: Math.round(num * factor), feeCurrency };
 }
 
 function parseNum(v?: string): number | undefined {
@@ -189,11 +220,14 @@ export class AxiosFootballDataClient implements IFootballDataClient {
         if (!entry.player?.id || !fromId || !toId || !t.date) {
           continue;
         }
+        const { feeAmount, feeCurrency } = parseFee(t.type);
         out.push({
           playerExtId: entry.player.id,
           date: t.date,
           fromTeamExtId: fromId,
           toTeamExtId: toId,
+          feeAmount,
+          feeCurrency,
         });
       }
     }

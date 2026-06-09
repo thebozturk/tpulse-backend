@@ -35,6 +35,9 @@ export interface ExternalTransfer {
   date: string;
   fromTeamExtId: number;
   toTeamExtId: number;
+  /** API `type` parse edilir: "€ 2.5M" → 2_500_000. Free/Loan/N-A → 0. */
+  feeAmount: number;
+  feeCurrency: string;
 }
 
 export interface IFootballDataClient {
