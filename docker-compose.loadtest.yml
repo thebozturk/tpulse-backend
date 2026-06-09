@@ -1,0 +1,30 @@
+# Yük testi overlay — base docker-compose.yml'e DOKUNMADAN üstüne biner.
+# Çalıştır:
+#   docker compose -f docker-compose.yml -f docker-compose.loadtest.yml --profile loadtest up
+#
+# api servisini non-prod + LOAD_TEST_MODE=true ile override eder (rate limit
+# bypass; production'da bu kombinasyon env validation tarafından engellenir).
+# k6 servisi 'loadtest' profile'ında — normal `up`'ta gelmez.
+
+services:
+  api:
+    environment:
+      # Base prod değerini override: bypass guard'ı sadece non-prod'da açılır.
+      NODE_ENV: development
+      LOAD_TEST_MODE: 'true'
+
+  k6:
+    image: grafana/k6:latest
+    profiles: ['loadtest']
+    environment:
+      BASE_URL: http://api:8080
+      STAGE: ${STAGE:-baseline}
+    volumes:
+      - ./load:/load
+      - ./load-results:/results
+    # Varsayılan: smoke. Başka senaryo için override:
+    #   docker compose ... run --rm k6 run /load/scenarios/public-read.js
+    command: ['run', '--summary-export=/results/summary.json', '/load/scenarios/smoke.js']
+    depends_on:
+      api:
+        condition: service_healthy

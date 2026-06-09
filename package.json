@@ -25,7 +25,13 @@
     "prisma:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:deploy": "prisma migrate deploy",
-    "db:seed": "ts-node -r tsconfig-paths/register prisma/seed.ts"
+    "db:seed": "ts-node -r tsconfig-paths/register prisma/seed.ts",
+    "load:smoke": "k6 run --summary-export=load-results/smoke.json load/scenarios/smoke.js",
+    "load:baseline": "STAGE=baseline k6 run --summary-export=load-results/baseline.json load/scenarios/public-read.js",
+    "load:stress": "STAGE=stress k6 run --summary-export=load-results/stress.json load/scenarios/public-read.js",
+    "load:write": "k6 run --summary-export=load-results/write.json load/scenarios/auth-write.js",
+    "load:spike": "k6 run --summary-export=load-results/spike.json load/scenarios/spike.js",
+    "load:soak": "k6 run --summary-export=load-results/soak.json load/scenarios/soak.js"
   },
   "prisma": {
     "seed": "ts-node -r tsconfig-paths/register prisma/seed.ts"

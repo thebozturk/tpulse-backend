@@ -1,0 +1,67 @@
+name: load-smoke
+# PR'larda hafif k6 smoke load testi. Threshold ihlali → k6 exit≠0 → job fail.
+# Tam stack docker-compose ile ayağa kalkar (LOAD_TEST_MODE=true overlay'i).
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: load-smoke-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  DATABASE_URL: postgresql://tpulse:tpulse_dev@localhost:5432/transferpulse
+  COMPOSE: docker compose -f docker-compose.yml -f docker-compose.loadtest.yml
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v3
+      - uses: actions/setup-node@v4
+        with: { node-version: '20', cache: 'pnpm' }
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm prisma:generate
+
+      # 1) DB + Redis ayağa kalksın (healthcheck'li)
+      - name: Start postgres & redis
+        run: $COMPOSE up -d --wait postgres redis
+
+      # 2) Migration + seed → discovery'nin gerçek id bulması için veri lazım
+      - name: Migrate & seed
+        run: |
+          pnpm db:deploy
+          pnpm db:seed
+
+      # 3) API'yi LOAD_TEST_MODE=true (overlay) ile başlat
+      - name: Start API
+        run: $COMPOSE up -d --build --wait api
+
+      # 4) k6 smoke — compose k6 servisi (BASE_URL=http://api:8080)
+      - name: k6 smoke
+        run: |
+          mkdir -p load-results
+          $COMPOSE --profile loadtest run --rm k6
+
+      - name: API logs (on failure)
+        if: failure()
+        run: $COMPOSE logs api | tail -100
+
+      - name: Upload k6 summary
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: k6-smoke-summary
+          path: load-results/
+          if-no-files-found: ignore
+
+      - name: Teardown
+        if: always()
+        run: $COMPOSE down -v

@@ -3,8 +3,9 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { ScheduleModule } from '@nestjs/schedule';
-import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { ThrottlerModule } from '@nestjs/throttler';
 import { IdempotencyInterceptor } from './common/interceptors/idempotency.interceptor';
+import { LoadAwareThrottlerGuard } from './common/throttle/load-aware-throttler.guard';
 import { GLOBAL_THROTTLE } from './common/throttle/throttle-policies';
 import { CommentsModule } from './comments/comments.module';
 import { FavouritesModule } from './favourites/favourites.module';
@@ -97,7 +98,7 @@ import { UsersModule } from './users/users.module';
   ],
   providers: [
     // Sıra: throttle önce (brute-force), sonra auth. JwtAuthGuard @Public bypass'lı.
-    { provide: APP_GUARD, useClass: ThrottlerGuard },
+    { provide: APP_GUARD, useClass: LoadAwareThrottlerGuard },
     { provide: APP_GUARD, useClass: JwtAuthGuard },
     // Idempotency: mutating uçlarda Idempotency-Key header'ı ile tekrar koruması.
     { provide: APP_INTERCEPTOR, useClass: IdempotencyInterceptor },

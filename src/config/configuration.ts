@@ -50,6 +50,10 @@ export const configuration = () => {
     swagger: {
       enabled: env.ENABLE_SWAGGER,
     },
+    // Yük testi — true ise rate limit bypass (LoadAwareThrottlerGuard). Sadece non-prod.
+    loadTest: {
+      enabled: env.LOAD_TEST_MODE,
+    },
     // Storage — AWS S3 (lokal MinIO)
     s3: {
       endpoint: env.S3_ENDPOINT,

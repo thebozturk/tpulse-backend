@@ -104,3 +104,6 @@ temp/
 # Runtime
 pids/
 *.pid
+
+# Yük testi çıktıları (k6 --summary-export)
+load-results/
