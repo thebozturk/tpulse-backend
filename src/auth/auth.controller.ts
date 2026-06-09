@@ -16,7 +16,9 @@ import { GoogleAuthDto } from './dto/google-auth.dto';
 import { LoginDto } from './dto/login.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { RegisterDto } from './dto/register.dto';
+import { ResendVerificationDto } from './dto/resend-verification.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
+import { VerifyEmailDto } from './dto/verify-email.dto';
 
 // docs/04 §7.5: auth policy 30/dk/IP (default throttler override).
 @ApiTags('auth')
@@ -74,6 +76,39 @@ export class AuthController {
   ): Promise<{ success: boolean; message: string }> {
     await this.auth.resetPassword(dto.email, dto.token, dto.newPassword);
     return { success: true, message: 'Parola güncellendi' };
+  }
+
+  @Post('verify-email')
+  @Public()
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'E-postayı doğrula' })
+  @ApiResponse({
+    status: 400,
+    description: 'Geçersiz/expired doğrulama tokenı',
+  })
+  @ApiActionResponse()
+  async verifyEmail(
+    @Body() dto: VerifyEmailDto,
+  ): Promise<{ success: boolean; message: string }> {
+    await this.auth.verifyEmail(dto.email, dto.token);
+    return { success: true, message: 'E-posta doğrulandı' };
+  }
+
+  @Post('resend-verification')
+  @Public()
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Doğrulama e-postasını yeniden gönder (her zaman 200)',
+  })
+  @ApiActionResponse()
+  async resendVerification(
+    @Body() dto: ResendVerificationDto,
+  ): Promise<{ success: boolean; message: string }> {
+    await this.auth.resendVerification(dto.email);
+    return {
+      success: true,
+      message: 'E-posta kayıtlı ve doğrulanmamışsa bağlantı gönderildi',
+    };
   }
 
   @Post('refresh')

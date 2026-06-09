@@ -10,6 +10,7 @@ import { PasswordService } from '../auth/password.service';
 import { TokenService } from '../auth/token.service';
 import { UserStatusCache } from '../common/auth/user-status.cache';
 import { PrismaService } from '../common/prisma/prisma.service';
+import { EmailService } from '../email/email.service';
 import { PagedResult } from '../common/interfaces/response.interface';
 import { buildPaged, toSkipTake } from '../common/pagination';
 import { AdminUpdateReputationDto } from './dto/admin-update-reputation.dto';
@@ -38,6 +39,7 @@ export class UsersService {
     private readonly passwords: PasswordService,
     private readonly tokens: TokenService,
     private readonly statusCache: UserStatusCache,
+    private readonly email: EmailService,
   ) {}
 
   async create(dto: CreateUserDto): Promise<UserResponseDto> {
@@ -272,6 +274,29 @@ export class UsersService {
     await this.statusCache.setStatus(id, dto.status);
 
     this.logger.log(`Kullanıcı durumu güncellendi: ${id} → ${dto.status}`);
+
+    // Ban/askı bildirimi — best-effort, durum güncellemesini bloklamaz.
+    if (becomingInactive) {
+      const reason = dto.reason ?? 'Topluluk kurallarının ihlali.';
+      try {
+        if (isBanned) {
+          await this.email.sendAccountBanned(user.email, {
+            name: user.nickname,
+            reason,
+          });
+        } else if (dto.status === UserStatus.Suspended) {
+          await this.email.sendAccountSuspended(user.email, {
+            name: user.nickname,
+            reason,
+          });
+        }
+      } catch (err) {
+        this.logger.warn(
+          `Hesap durumu e-postası gönderilemedi (${id}): ${err}`,
+        );
+      }
+    }
+
     return toUserDetailResponse(user);
   }
 

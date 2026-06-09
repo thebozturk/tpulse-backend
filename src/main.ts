@@ -1,4 +1,5 @@
 import './tracing'; // MUTLAKA 1. import — diğer tüm modüllerden önce OTel patch'i
+import { join } from 'path';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
@@ -14,6 +15,14 @@ async function bootstrap(): Promise<void> {
 
   // Güvenlik baseline (CLAUDE.md): helmet + global ValidationPipe + CORS whitelist.
   app.use(helmet());
+
+  // Statik public/ — e-posta logoları vb. (EMAIL_ASSET_BASE_URL bu prefix'e işaret eder).
+  // CORP: cross-origin — e-posta istemci proxy'leri (Gmail vb.) görseli çekebilsin diye.
+  app.useStaticAssets(join(process.cwd(), 'public'), {
+    prefix: '/public/',
+    setHeaders: (res) =>
+      res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin'),
+  });
 
   // NOT: global prefix EKLENMEZ — controller route'ları zaten 'api/...' ile başlar.
   app.useGlobalPipes(

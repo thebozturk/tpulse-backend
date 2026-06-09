@@ -27,6 +27,15 @@ export const configuration = () => {
       tokenMinutes: env.PASSWORD_RESET_TOKEN_MINUTES,
       urlBase: env.PASSWORD_RESET_URL_BASE,
     },
+    emailVerify: {
+      tokenMinutes: env.EMAIL_VERIFY_TOKEN_MINUTES,
+      urlBase: env.EMAIL_VERIFY_URL_BASE,
+    },
+    digests: {
+      enabled: env.DIGEST_ENABLED,
+      weeklyCron: env.DIGEST_WEEKLY_CRON,
+      transferAlertCron: env.DIGEST_TRANSFER_ALERT_CRON,
+    },
     redis: {
       connectionString: env.REDIS_CONNECTION_STRING,
     },
@@ -66,13 +75,15 @@ export const configuration = () => {
       detectTransfers: env.DETECT_TRANSFERS,
       mirrorImages: env.MIRROR_IMAGES,
     },
-    smtp: {
-      host: env.SMTP_HOST,
-      port: env.SMTP_PORT,
-      secure: env.SMTP_SECURE,
-      username: env.SMTP_USERNAME,
-      password: env.SMTP_PASSWORD,
-      from: env.SMTP_FROM,
+    resend: {
+      apiKey: env.RESEND_API_KEY,
+      from: env.EMAIL_FROM,
+    },
+    email: {
+      // Template'lerdeki logo/görsel URL'lerinin base'i (bkz. main.ts useStaticAssets).
+      assetBaseUrl: env.EMAIL_ASSET_BASE_URL,
+      // Frontend kök URL'i — CTA ve abonelikten çıkma linkleri.
+      webUrl: env.APP_WEB_URL,
     },
     bot: {
       apiKeyHash: env.BOT_API_KEY_HASH,

@@ -47,7 +47,7 @@ export class PasswordService {
         expiresAt: new Date(Date.now() + minutes * 60 * 1000),
       },
     });
-    await this.email.sendPasswordReset(email, raw);
+    await this.email.sendPasswordReset(email, raw, user.nickname);
   }
 
   /** Token doğrula → parola güncelle → kullanıldı işaretle → tüm refresh revoke. */
@@ -85,6 +85,23 @@ export class PasswordService {
       }),
     ]);
     await this.tokens.revokeAllForUser(user.id);
+
+    // Güvenlik bildirimi — best-effort, sıfırlama akışını bloklamaz.
+    try {
+      const changedAt = new Date().toLocaleString('tr-TR', {
+        timeZone: 'Europe/Istanbul',
+        dateStyle: 'long',
+        timeStyle: 'short',
+      });
+      await this.email.sendPasswordChanged(user.email, {
+        name: user.nickname,
+        changedAt: `${changedAt} (GMT+3)`,
+      });
+    } catch (err) {
+      this.logger.warn(
+        `Şifre değişti e-postası gönderilemedi (${user.id}): ${err}`,
+      );
+    }
   }
 
   private hashToken(raw: string): string {

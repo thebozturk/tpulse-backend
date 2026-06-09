@@ -17,6 +17,7 @@ import { AuditService } from '../common/audit/audit.service';
 import { PagedResult } from '../common/interfaces/response.interface';
 import { buildPaged, toSkipTake } from '../common/pagination';
 import { PrismaService } from '../common/prisma/prisma.service';
+import { EmailService } from '../email/email.service';
 import { PostsService } from '../posts/posts.service';
 import { TransferCommentsService } from '../transfer-comments/transfer-comments.service';
 import { UsersService } from '../users/users.service';
@@ -24,6 +25,14 @@ import { CreateReportDto } from './dto/create-report.dto';
 import { ReportListQueryDto } from './dto/report-list.query.dto';
 import { ReportResponseDto } from './dto/report.response.dto';
 import { ReviewReportDto } from './dto/review-report.dto';
+
+/** Şikayet sonucu e-postasındaki "içerik türü" etiketi (Türkçe). */
+const REPORT_TARGET_LABEL: Record<ReportTargetType, string> = {
+  [ReportTargetType.Post]: 'gönderi',
+  [ReportTargetType.Comment]: 'yorum',
+  [ReportTargetType.TransferComment]: 'transfer yorumu',
+  [ReportTargetType.User]: 'profil',
+};
 
 @Injectable()
 export class ReportsService {
@@ -36,6 +45,7 @@ export class ReportsService {
     private readonly comments: CommentsService,
     private readonly transferComments: TransferCommentsService,
     private readonly audit: AuditService,
+    private readonly email: EmailService,
   ) {}
 
   /** Kullanıcı rapor oluşturur. Aynı hedefe tekrar rapor engellenir (unique). */
@@ -144,7 +154,52 @@ export class ReportsService {
     });
 
     this.logger.log(`Rapor incelendi: ${id} → ${dto.status}`);
+
+    // Raporu açan kullanıcıya sonuç bildirimi — yalnızca terminal durumlarda,
+    // best-effort (inceleme akışını bloklamaz).
+    if (
+      dto.status === ReportStatus.Actioned ||
+      dto.status === ReportStatus.Dismissed
+    ) {
+      await this.notifyReporter(report, dto);
+    }
+
     return toReportResponse(updated);
+  }
+
+  /** Şikayet sonucunu raporu açan kullanıcıya e-posta ile bildirir. */
+  private async notifyReporter(
+    report: Report,
+    dto: ReviewReportDto,
+  ): Promise<void> {
+    try {
+      const reporter = await this.prisma.user.findUnique({
+        where: { id: report.reporterUserId },
+      });
+      if (!reporter) return;
+
+      const upheld = dto.status === ReportStatus.Actioned;
+      await this.email.sendReportReviewed(reporter.email, {
+        name: reporter.nickname,
+        outcome: upheld ? 'upheld' : 'dismissed',
+        contentType: REPORT_TARGET_LABEL[report.targetType] ?? 'içerik',
+        actionTaken: upheld ? this.describeAction(dto) : undefined,
+      });
+    } catch (err) {
+      this.logger.warn(
+        `Şikayet sonucu e-postası gönderilemedi (rapor ${report.id}): ${err}`,
+      );
+    }
+  }
+
+  /** Actioned raporda uygulanan aksiyonun Türkçe açıklaması. */
+  private describeAction(dto: ReviewReportDto): string {
+    if (dto.deleteContent && dto.banUser) {
+      return 'İçerik kaldırıldı ve ilgili kullanıcı askıya alındı.';
+    }
+    if (dto.deleteContent) return 'İçerik kaldırıldı.';
+    if (dto.banUser) return 'İlgili kullanıcı askıya alındı.';
+    return 'Gerekli moderasyon aksiyonu alındı.';
   }
 
   private async assertTargetExists(

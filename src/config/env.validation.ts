@@ -34,13 +34,24 @@ export const envSchema = z.object({
     .string()
     .default('http://localhost:3000/reset-password'),
 
-  // SMTP (boşsa email log'a yazılır)
-  SMTP_PORT: z.coerce.number().int().positive().default(587),
-  SMTP_SECURE: z
+  // E-posta doğrulama
+  EMAIL_VERIFY_TOKEN_MINUTES: z.coerce.number().int().positive().default(1440), // 24 saat
+  EMAIL_VERIFY_URL_BASE: z
+    .string()
+    .default('http://localhost:3000/verify-email'),
+
+  // E-posta digest job'ları (cron — 6 alan, saniye dahil). Güvenlik için
+  // varsayılan KAPALI; prod'da DIGEST_ENABLED=true ile açılır.
+  DIGEST_ENABLED: z
     .enum(['true', 'false'])
     .default('false')
     .transform((v) => v === 'true'),
-  SMTP_FROM: z.string().default('no-reply@transferpulse.app'),
+  DIGEST_WEEKLY_CRON: z.string().default('0 0 9 * * 1'), // Pzt 09:00
+  DIGEST_TRANSFER_ALERT_CRON: z.string().default('0 0 18 * * *'), // her gün 18:00
+
+  // Resend — e-posta gönderimi. RESEND_API_KEY boşsa gönderim yapılmaz, log'a yazılır.
+  RESEND_API_KEY: z.string().optional(),
+  EMAIL_FROM: z.string().default('TransferPulse <no-reply@transferpulse.app>'),
 
   // Storage — AWS S3 (lokal MinIO). Boşsa görsel upload pasif.
   S3_ENDPOINT: z.string().optional(),
@@ -70,9 +81,12 @@ export const envSchema = z.object({
     .enum(['true', 'false'])
     .default('false')
     .transform((v) => v === 'true'),
-  SMTP_HOST: z.string().optional(),
-  SMTP_USERNAME: z.string().optional(),
-  SMTP_PASSWORD: z.string().optional(),
+
+  // E-posta görselleri (logo vb.) absolute URL base'i. Şimdilik API public/'ten
+  // serve edilir; S3 entegre olunca S3_PUBLIC_BASE_URL'e geçirilir.
+  EMAIL_ASSET_BASE_URL: z.string().default('http://localhost:8080/public'),
+  // Frontend kök URL'i — e-postalardaki CTA ve abonelikten çıkma linkleri için.
+  APP_WEB_URL: z.string().default('http://localhost:3000'),
   IDEMPOTENCY_TTL_SECONDS: z.coerce.number().int().positive().default(600),
 
   // Bot ingestion — API key'in SHA-256 hex hash'i (düz key saklanmaz). Boşsa ingestion kapalı.

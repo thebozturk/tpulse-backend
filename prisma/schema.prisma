@@ -34,6 +34,7 @@ model User {
   nickname        String     @db.VarChar(50)
   profilePic      String?    @db.VarChar(500)
   isMailConfirm   Boolean    @default(false)
+  emailOptOut     Boolean    @default(false)
   status          UserStatus @default(Active)
   favouriteTeam   String?    @db.VarChar(100)
   reputationScore Int        @default(0)
@@ -378,6 +379,19 @@ model PasswordResetToken {
   @@index([tokenHash])
   @@index([userId])
   @@map("password_reset_token")
+}
+
+model EmailVerificationToken {
+  id        String    @id @default(uuid()) @db.Uuid
+  userId    String    @db.Uuid
+  tokenHash String    @db.VarChar(128)
+  expiresAt DateTime  @db.Timestamptz
+  usedAt    DateTime? @db.Timestamptz
+  createdAt DateTime  @default(now()) @db.Timestamptz
+
+  @@index([tokenHash])
+  @@index([userId])
+  @@map("email_verification_token")
 }
 
 model RefreshToken {

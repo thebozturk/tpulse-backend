@@ -10,6 +10,7 @@ import { User } from '@prisma/client';
 import * as crypto from 'crypto';
 import { OAuth2Client } from 'google-auth-library';
 import { PrismaService } from '../common/prisma/prisma.service';
+import { EmailVerificationService } from './email-verification.service';
 import { UserResponseDto } from '../users/dto/user-response.dto';
 import { AuthResponseDto } from './dto/auth-response.dto';
 import { LoginDto } from './dto/login.dto';
@@ -28,6 +29,7 @@ export class AuthService {
     private readonly passwords: PasswordService,
     private readonly tokens: TokenService,
     private readonly config: ConfigService,
+    private readonly verification: EmailVerificationService,
   ) {
     this.googleClientId = this.config.get<string>('google.authClientId');
     if (this.googleClientId) {
@@ -55,7 +57,28 @@ export class AuthService {
       },
     });
     this.logger.log(`Kullanıcı kaydı: ${user.id}`);
+
+    // E-posta doğrulama linki — best-effort, kayıt akışını bloklamaz.
+    // (Hoş geldin e-postası doğrulama tamamlanınca gönderilir.)
+    try {
+      await this.verification.send(user);
+    } catch (err) {
+      this.logger.warn(
+        `Doğrulama e-postası gönderilemedi (${user.id}): ${err}`,
+      );
+    }
+
     return this.buildAuthResponse(user);
+  }
+
+  /** E-posta doğrulama (verify-email ucu). */
+  async verifyEmail(email: string, token: string): Promise<void> {
+    await this.verification.verify(email, token);
+  }
+
+  /** Doğrulama e-postasını yeniden gönder (enumeration-safe, her zaman 200). */
+  async resendVerification(email: string): Promise<void> {
+    await this.verification.resend(email);
   }
 
   async login(dto: LoginDto): Promise<AuthResponseDto> {
