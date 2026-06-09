@@ -20,6 +20,7 @@ interface Counts {
   playersUpdated: number;
   positionsCreated: number;
   transfersCreated: number;
+  transfersUpdated: number;
   playersMarkedFree: number;
   errorCount: number;
   errors: string[];
@@ -36,6 +37,7 @@ function emptyCounts(): Counts {
     playersUpdated: 0,
     positionsCreated: 0,
     transfersCreated: 0,
+    transfersUpdated: 0,
     playersMarkedFree: 0,
     errorCount: 0,
     errors: [],
@@ -129,6 +131,9 @@ export class FootballDataSyncService {
         fatalError,
       },
     });
+    this.logger.log(
+      `Sync ${run.id}: transfers created=${counts.transfersCreated} feeUpdated=${counts.transfersUpdated}`,
+    );
     return run.id;
   }
 
@@ -395,9 +400,20 @@ export class FootballDataSyncService {
         toTeamId: to.id,
         transferDate: date,
       },
-      select: { id: true },
+      select: { id: true, feeAmount: true, feeCurrency: true },
     });
     if (dup) {
+      // Mevcut kayıt (örn. eski sync'ten 0 bedelli) → bedeli geri doldur/güncelle.
+      if (
+        Number(dup.feeAmount) !== tr.feeAmount ||
+        dup.feeCurrency !== tr.feeCurrency
+      ) {
+        await this.prisma.transfer.update({
+          where: { id: dup.id },
+          data: { feeAmount: tr.feeAmount, feeCurrency: tr.feeCurrency },
+        });
+        counts.transfersUpdated++;
+      }
       return;
     }
     await this.prisma.transfer.create({
@@ -406,8 +422,8 @@ export class FootballDataSyncService {
         fromTeamId: from.id,
         toTeamId: to.id,
         transferDate: date,
-        feeAmount: 0,
-        feeCurrency: 'EUR',
+        feeAmount: tr.feeAmount,
+        feeCurrency: tr.feeCurrency,
         source: 'ApiSports',
       },
     });
