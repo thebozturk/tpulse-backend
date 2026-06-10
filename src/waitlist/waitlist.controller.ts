@@ -15,7 +15,7 @@ export class WaitlistController {
   @Post()
   @Public()
   @HttpCode(HttpStatus.OK)
-  @Throttle(ThrottlePolicies.write)
+  @Throttle(ThrottlePolicies.waitlist)
   @ApiOperation({ summary: 'Landing page e-posta kaydı (idempotent)' })
   @ApiResponse({ status: 400, description: 'Geçersiz e-posta' })
   @ApiActionResponse()

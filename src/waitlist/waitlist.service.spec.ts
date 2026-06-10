@@ -68,6 +68,11 @@ describe('WaitlistService', () => {
       expect(arg.update).toEqual({});
       expect(arg.create.source).toBeNull();
     });
+
+    it('honeypot dolu ise sessizce yok sayar (upsert çağrılmaz)', async () => {
+      await service.subscribe({ email: 'bot@b.com', website: 'http://spam' });
+      expect(prisma.waitlistSubscriber.upsert).not.toHaveBeenCalled();
+    });
   });
 
   describe('enqueueLaunch', () => {

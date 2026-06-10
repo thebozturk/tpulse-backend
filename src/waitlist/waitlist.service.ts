@@ -25,6 +25,13 @@ export class WaitlistService {
    * tekrar gönderilirse yeni kayıt yaratılmaz, sayaç şişmez.
    */
   async subscribe(dto: CreateWaitlistDto): Promise<void> {
+    // Honeypot dolu → bot. Hata dönme (ipucu verme), sessizce yok say.
+    if (dto.website && dto.website.trim().length > 0) {
+      this.logger.warn(
+        `Waitlist honeypot tetiklendi, yok sayıldı: ${dto.email}`,
+      );
+      return;
+    }
     await this.prisma.waitlistSubscriber.upsert({
       where: { email: dto.email },
       create: { email: dto.email, source: dto.source ?? null },

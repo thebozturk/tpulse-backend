@@ -21,7 +21,8 @@
 | **Uç** | `POST /api/waitlist` |
 | **Auth** | **Yok** (public) |
 | **Content-Type** | `application/json` |
-| **Rate limit** | write policy: 120 istek/dk/IP (+ global 300/dk/IP) |
+| **Rate limit** | **5 istek/dk/IP** (bu uca özel sıkı policy, + global 300/dk/IP) |
+| **Bot savunması** | **Honeypot** alanı aktif (bkz. §4) |
 
 ---
 
@@ -117,18 +118,46 @@ Mantıklı bir içgüdü ama tek başına **güvenlik sağlamaz** — sebebi şu
 | **Saf client-side landing** (statik, doğrudan tarayıcıdan POST) | API key **ekleme** (faydasız). Bunun yerine: **rate-limit** (mevcut) + **CORS origin allowlist** (sadece landing domaini) + opsiyonel **honeypot alanı** ve/veya **CAPTCHA** (proje env'inde `CAPTCHA_*` var). |
 | **Server-side / edge'li landing** (SSR proxy) | Sunucuda gizli `X-Api-Key` tut, isteği oradan at. Backend'e küçük bir **API-key guard** ekleriz. Bu gerçek bir kapıdır. |
 
-**Bizim önerimiz:** Landing büyük ihtimalle client-side olduğundan, **public + rate-limit
-+ CORS allowlist** ile başla; bot trafiği sorun olursa **CAPTCHA** ekle. Bu, gömülü
-API key'den hem daha güvenli hem daha az kırılgan.
+**Uygulanan kurulum:** Landing client-side kabul edildi → **public + sıkı rate-limit
+(5/dk/IP) + honeypot**. Gömülü API key'den hem daha güvenli hem daha az kırılgan.
 
-> **Yapılabilecek (opsiyonel) sertleştirmeler — şu an kodda YOK, isten eklenir:**
-> 1. `X-Api-Key` guard'ı (yalnızca server-side caller anlamlı).
-> 2. Gizli **honeypot** alanı (bot doldurursa sessizce reddet).
-> 3. CAPTCHA token doğrulaması (`CAPTCHA_SECRET`).
-> 4. Landing domaini için sıkı **CORS** whitelist.
->
-> Hangisini istersen söyle, ucu ona göre genişletelim. (Mevcut hâl: public + write
-> rate-limit yeterli koruma sağlıyor.)
+### 4.1 Honeypot — frontend'in YAPMASI gereken (önemli)
+
+Backend, istek gövdesinde **`website`** adında gizli bir alan bekler:
+
+- **Gerçek kullanıcı bu alanı görmez ve boş bırakır.**
+- **Bot** sayfadaki tüm input'ları doldurma eğilimindedir → `website` dolu gelir →
+  backend kaydı **sessizce yok sayar** (yine `200 { success: true }` döner; bota
+  başarısız olduğunu belli etmez).
+
+Frontend tarafında alanı **kullanıcıdan gizle** (CSS ile; `type="hidden"` bazı botları
+kandırmaz, görünmez ama erişilebilir input daha iyi):
+
+```html
+<!-- Ekranda görünmez ama DOM'da var; gerçek kullanıcı dokunmaz -->
+<div style="position:absolute; left:-9999px" aria-hidden="true">
+  <label>Web sitesi
+    <input type="text" name="website" tabindex="-1" autocomplete="off" />
+  </label>
+</div>
+```
+
+```jsonc
+// Gerçek kullanıcı isteği (website boş/yok) → kaydedilir
+{ "email": "ali@x.com", "source": "landing" }
+
+// Bot isteği (website dolu) → 200 döner ama KAYDEDİLMEZ
+{ "email": "spam@x.com", "source": "landing", "website": "http://spam.ru" }
+```
+
+> `website` alanı bilerek **OpenAPI/Swagger'da görünmez** (botlara ipucu vermemek
+> için). Sözleşmede yoktur; sadece bu rehberde belgelenir.
+
+### 4.2 Sonraki adım (gerekirse)
+
+Bot trafiği honeypot + rate-limit'e rağmen sorun olursa eklenebilir (şu an YOK):
+**CAPTCHA** (`CAPTCHA_SECRET` env'de hazır), landing domaini için sıkı **CORS**
+whitelist, ya da landing'in **server/edge** tarafı varsa `X-Api-Key` guard'ı.
 
 ---
 

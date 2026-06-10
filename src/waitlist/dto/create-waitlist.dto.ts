@@ -1,4 +1,8 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import {
+  ApiHideProperty,
+  ApiProperty,
+  ApiPropertyOptional,
+} from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import { IsEmail, IsOptional, IsString, MaxLength } from 'class-validator';
 
@@ -21,4 +25,14 @@ export class CreateWaitlistDto {
   @MaxLength(60)
   @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
   source?: string;
+
+  /**
+   * Honeypot — gerçek kullanıcı bu alanı görmez ve boş bırakır. Bot doldurursa
+   * kayıt sessizce yok sayılır. Swagger'da gizli (botlara ipucu vermemek için).
+   */
+  @ApiHideProperty()
+  @IsOptional()
+  @IsString()
+  @MaxLength(200)
+  website?: string;
 }
