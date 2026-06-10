@@ -42,6 +42,7 @@ import { StorageModule } from './storage/storage.module';
 import { TeamsModule } from './teams/teams.module';
 import { TransfersModule } from './transfers/transfers.module';
 import { UsersModule } from './users/users.module';
+import { WaitlistModule } from './waitlist/waitlist.module';
 
 @Module({
   imports: [
@@ -101,6 +102,7 @@ import { UsersModule } from './users/users.module';
     FollowsModule,
     BlocksModule,
     FeedModule,
+    WaitlistModule,
   ],
   providers: [
     // Sıra: throttle önce (brute-force), sonra auth. JwtAuthGuard @Public bypass'lı.

@@ -120,6 +120,12 @@ export class EmailService {
       where: { email, emailOptOut: false },
       data: { emailOptOut: true, updatedAt: new Date() },
     });
+    // Landing waitlist abonesi de olabilir (kayıtlı kullanıcı olmadan) — onu da
+    // işaretle ki lansman/pazarlama maili gitmesin.
+    await this.prisma.waitlistSubscriber.updateMany({
+      where: { email, status: 'subscribed' },
+      data: { status: 'unsubscribed' },
+    });
     this.logger.log(`E-posta aboneliğinden çıkıldı: ${email}`);
   }
 

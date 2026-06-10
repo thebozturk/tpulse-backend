@@ -9,6 +9,7 @@ export const AuditAction = {
   TransferCommentDelete: 'transferComment.delete',
   ReportReview: 'report.review',
   NotificationBroadcast: 'notification.broadcast',
+  WaitlistLaunch: 'waitlist.launch',
   BotIngest: 'bot.ingest',
 } as const;
 
