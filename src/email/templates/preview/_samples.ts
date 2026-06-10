@@ -14,9 +14,16 @@ import type { TransferAlertEmailProps } from '../TransferAlertEmail';
 import type { EngagementDigestEmailProps } from '../EngagementDigestEmail';
 import type { WeeklyDigestEmailProps } from '../WeeklyDigestEmail';
 import type { BroadcastEmailProps } from '../BroadcastEmail';
+import type { LaunchEmailProps } from '../LaunchEmail';
 
 const assetBaseUrl = 'https://cdn.transferpulse.app/email';
 const unsubscribeUrl = 'https://transferpulse.app/abonelik/cik?t=demo';
+
+export const launchProps: LaunchEmailProps = {
+  ctaUrl: 'https://transferpulse.app/kesfet',
+  assetBaseUrl,
+  unsubscribeUrl,
+};
 
 export const welcomeProps: WelcomeEmailProps = {
   name: 'Mert',

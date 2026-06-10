@@ -77,10 +77,7 @@ describe('WaitlistService', () => {
 
   describe('enqueueLaunch', () => {
     it('kampanya kaydı oluşturur ve kuyruğa ekler', async () => {
-      const res = await service.enqueueLaunch('admin1', {
-        subject: 'S',
-        body: 'B',
-      });
+      const res = await service.enqueueLaunch('admin1');
       expect(prisma.waitlistSubscriber.count).toHaveBeenCalledWith({
         where: { status: 'subscribed', launchEmailSentAt: null },
       });
@@ -109,13 +106,15 @@ describe('WaitlistService', () => {
         .mockResolvedValueOnce(10) // total
         .mockResolvedValueOnce(8) // subscribed
         .mockResolvedValueOnce(2) // unsubscribed
-        .mockResolvedValueOnce(5); // launchSent
+        .mockResolvedValueOnce(5) // launchSent
+        .mockResolvedValueOnce(3); // readyToLaunch
       const res = await service.stats();
       expect(res).toEqual({
         total: 10,
         subscribed: 8,
         unsubscribed: 2,
         launchSent: 5,
+        readyToLaunch: 3,
       });
     });
   });

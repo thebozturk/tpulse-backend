@@ -9639,18 +9639,9 @@
     },
     "/api/admin/waitlist/launch": {
       "post": {
+        "description": "Gövde almaz. İçerik backend'de sabittir (launch.content.ts); buton yalnızca sıralı gönderimi tetikler.",
         "operationId": "WaitlistAdminController_launch",
         "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LaunchCampaignDto"
-              }
-            }
-          }
-        },
         "responses": {
           "202": {
             "description": "",
@@ -9676,7 +9667,7 @@
             "bearer": []
           }
         ],
-        "summary": "Lansman duyurusunu kuyruğa al (sıralı gönderim)",
+        "summary": "Lansmanı başlat — sabit backend template'ini kuyruğa al",
         "tags": [
           "admin-waitlist"
         ]
@@ -9797,7 +9788,7 @@
   "info": {
     "title": "TransferPulse API",
     "description": "TransferPulse backend (.NET → NestJS migration)",
-    "version": "1.4.0",
+    "version": "1.5.0",
     "contact": {}
   },
   "tags": [],
@@ -13190,35 +13181,6 @@
           "createdAt"
         ]
       },
-      "LaunchCampaignDto": {
-        "type": "object",
-        "properties": {
-          "subject": {
-            "type": "string",
-            "maxLength": 200,
-            "example": "TransferPulse yayında! 🚀"
-          },
-          "body": {
-            "type": "string",
-            "maxLength": 2000,
-            "example": "Beklediğin an geldi — TransferPulse artık canlıda."
-          },
-          "ctaLabel": {
-            "type": "string",
-            "maxLength": 80,
-            "example": "Hemen keşfet"
-          },
-          "ctaUrl": {
-            "type": "string",
-            "maxLength": 500,
-            "example": "https://transferpulse.app/kesfet"
-          }
-        },
-        "required": [
-          "subject",
-          "body"
-        ]
-      },
       "WaitlistStatsResponseDto": {
         "type": "object",
         "properties": {
@@ -13241,13 +13203,19 @@
             "type": "number",
             "example": 900,
             "description": "Lansman maili gönderilmiş abone"
+          },
+          "readyToLaunch": {
+            "type": "number",
+            "example": 280,
+            "description": "Lansmana hazır: aktif abone & henüz mail gönderilmemiş"
           }
         },
         "required": [
           "total",
           "subscribed",
           "unsubscribed",
-          "launchSent"
+          "launchSent",
+          "readyToLaunch"
         ]
       }
     }

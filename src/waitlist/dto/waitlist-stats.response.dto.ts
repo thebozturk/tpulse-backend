@@ -9,4 +9,9 @@ export class WaitlistStatsResponseDto {
   unsubscribed: number;
   @ApiProperty({ example: 900, description: 'Lansman maili gönderilmiş abone' })
   launchSent: number;
+  @ApiProperty({
+    example: 280,
+    description: 'Lansmana hazır: aktif abone & henüz mail gönderilmemiş',
+  })
+  readyToLaunch: number;
 }

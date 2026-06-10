@@ -56,6 +56,10 @@ import BroadcastEmail, {
   subject as broadcastSubject,
   BroadcastEmailProps,
 } from './BroadcastEmail';
+import LaunchEmail, {
+  subject as launchSubject,
+  LaunchEmailProps,
+} from './LaunchEmail';
 
 export interface RenderedEmail {
   subject: string;
@@ -171,6 +175,12 @@ export async function renderBroadcastEmail(
   );
 }
 
+export async function renderLaunchEmail(
+  props: LaunchEmailProps,
+): Promise<RenderedEmail> {
+  return renderEmail(createElement(LaunchEmail, props), launchSubject);
+}
+
 // Template'leri ve prop tiplerini tek noktadan dışa aktar.
 export { default as WelcomeEmail } from './WelcomeEmail';
 export { default as VerifyEmail } from './VerifyEmail';
@@ -184,6 +194,7 @@ export { default as TransferAlertEmail } from './TransferAlertEmail';
 export { default as EngagementDigestEmail } from './EngagementDigestEmail';
 export { default as WeeklyDigestEmail } from './WeeklyDigestEmail';
 export { default as BroadcastEmail } from './BroadcastEmail';
+export { default as LaunchEmail } from './LaunchEmail';
 
 export type {
   WelcomeEmailProps,
@@ -198,6 +209,7 @@ export type {
   EngagementDigestEmailProps,
   WeeklyDigestEmailProps,
   BroadcastEmailProps,
+  LaunchEmailProps,
 };
 export type { TransferAlertItem, TransferStatus } from './TransferAlertEmail';
 export type {

@@ -9,11 +9,13 @@ import * as crypto from 'crypto';
 import { Resend } from 'resend';
 
 import { PrismaService } from '../common/prisma/prisma.service';
+import { LAUNCH_EMAIL_CONTENT } from './launch.content';
 import { RESEND_CLIENT } from './resend.provider';
 import {
   renderAccountBannedEmail,
   renderAccountSuspendedEmail,
   renderBroadcastEmail,
+  renderLaunchEmail,
   renderEmailChangeConfirmEmail,
   renderEngagementDigestEmail,
   renderPasswordChangedEmail,
@@ -379,6 +381,23 @@ export class EmailService {
       to,
       await renderBroadcastEmail({
         ...props,
+        assetBaseUrl: this.assetBaseUrl,
+        unsubscribeUrl: this.unsubscribeUrl(to),
+      }),
+    );
+  }
+
+  /**
+   * Waitlist lansman duyurusu — içeriği backend'de sabittir (launch.content.ts).
+   * Çağıran sadece alıcıyı verir; konu/gövde/CTA buradan kurulur. Opt-out'a
+   * saygılıdır (pazarlama tipi).
+   */
+  async sendLaunch(to: string): Promise<void> {
+    if (await this.skipOptedOut(to)) return;
+    await this.dispatch(
+      to,
+      await renderLaunchEmail({
+        ctaUrl: `${this.webUrl}${LAUNCH_EMAIL_CONTENT.ctaPath}`,
         assetBaseUrl: this.assetBaseUrl,
         unsubscribeUrl: this.unsubscribeUrl(to),
       }),

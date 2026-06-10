@@ -1,5 +1,4 @@
 import {
-  Body,
   Controller,
   Get,
   HttpCode,
@@ -25,7 +24,6 @@ import {
   ApiSingleResponse,
 } from '../common/swagger/api-envelope.decorators';
 import { ThrottlePolicies } from '../common/throttle/throttle-policies';
-import { LaunchCampaignDto } from './dto/launch-campaign.dto';
 import { LaunchCampaignResponseDto } from './dto/launch-campaign.response.dto';
 import { WaitlistStatsResponseDto } from './dto/waitlist-stats.response.dto';
 import { WaitlistService } from './waitlist.service';
@@ -42,13 +40,17 @@ export class WaitlistAdminController {
   @HttpCode(HttpStatus.ACCEPTED)
   @Throttle(ThrottlePolicies.adminBulk)
   @Audit(AuditAction.WaitlistLaunch)
-  @ApiOperation({ summary: 'Lansman duyurusunu kuyruğa al (sıralı gönderim)' })
+  @ApiOperation({
+    summary: "Lansmanı başlat — sabit backend template'ini kuyruğa al",
+    description:
+      "Gövde almaz. İçerik backend'de sabittir (launch.content.ts); buton " +
+      'yalnızca sıralı gönderimi tetikler.',
+  })
   @ApiSingleResponse(LaunchCampaignResponseDto, 202)
   async launch(
     @CurrentUser('userId') userId: string,
-    @Body() dto: LaunchCampaignDto,
   ): Promise<SingleResponse<LaunchCampaignResponseDto>> {
-    return { data: await this.waitlist.enqueueLaunch(userId, dto) };
+    return { data: await this.waitlist.enqueueLaunch(userId) };
   }
 
   @Get('launches')

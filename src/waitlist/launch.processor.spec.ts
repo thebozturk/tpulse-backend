@@ -15,7 +15,7 @@ describe('LaunchProcessor', () => {
     launchCampaign: Record<string, jest.Mock>;
     waitlistSubscriber: Record<string, jest.Mock>;
   };
-  let email: { sendBroadcast: jest.Mock };
+  let email: { sendLaunch: jest.Mock };
 
   const campaign = {
     id: 'c1',
@@ -45,7 +45,7 @@ describe('LaunchProcessor', () => {
         update: jest.fn().mockResolvedValue(undefined),
       },
     };
-    email = { sendBroadcast: jest.fn().mockResolvedValue(undefined) };
+    email = { sendLaunch: jest.fn().mockResolvedValue(undefined) };
 
     processor = new LaunchProcessor(
       prisma as unknown as PrismaService,
@@ -65,11 +65,10 @@ describe('LaunchProcessor', () => {
 
     await processor.process(job);
 
-    expect(email.sendBroadcast).toHaveBeenCalledTimes(2);
-    expect(email.sendBroadcast).toHaveBeenCalledWith(
-      'a@b.com',
-      expect.objectContaining({ title: 'S', bodyText: 'B' }),
-    );
+    expect(email.sendLaunch).toHaveBeenCalledTimes(2);
+    // İçerik sabit (backend template) — yalnızca alıcı geçilir.
+    expect(email.sendLaunch).toHaveBeenCalledWith('a@b.com');
+    expect(email.sendLaunch).toHaveBeenCalledWith('c@d.com');
     // Her gönderim sonrası launchEmailSentAt işaretlenir (idempotency).
     expect(prisma.waitlistSubscriber.update).toHaveBeenCalledTimes(2);
     // Sending → Done geçişi.
@@ -89,7 +88,7 @@ describe('LaunchProcessor', () => {
 
     await processor.process(job);
 
-    expect(email.sendBroadcast).not.toHaveBeenCalled();
+    expect(email.sendLaunch).not.toHaveBeenCalled();
     expect(prisma.launchCampaign.update).not.toHaveBeenCalled();
   });
 
@@ -100,13 +99,13 @@ describe('LaunchProcessor', () => {
         { id: 's2', email: 'ok@d.com' },
       ])
       .mockResolvedValueOnce([]);
-    email.sendBroadcast
+    email.sendLaunch
       .mockRejectedValueOnce(new Error('resend down'))
       .mockResolvedValueOnce(undefined);
 
     await processor.process(job);
 
-    expect(email.sendBroadcast).toHaveBeenCalledTimes(2);
+    expect(email.sendLaunch).toHaveBeenCalledTimes(2);
     // Sadece başarılı olan işaretlenir.
     expect(prisma.waitlistSubscriber.update).toHaveBeenCalledTimes(1);
     expect(prisma.waitlistSubscriber.update).toHaveBeenCalledWith(

@@ -4,9 +4,12 @@ import { LaunchCampaign } from '@prisma/client';
 import { Queue } from 'bullmq';
 import { PagedResult } from '../common/interfaces/response.interface';
 import { buildPaged, toSkipTake } from '../common/pagination';
+import {
+  LAUNCH_EMAIL_CONTENT,
+  LAUNCH_HISTORY_BODY,
+} from '../email/launch.content';
 import { PrismaService } from '../common/prisma/prisma.service';
 import { CreateWaitlistDto } from './dto/create-waitlist.dto';
-import { LaunchCampaignDto } from './dto/launch-campaign.dto';
 import { LaunchCampaignResponseDto } from './dto/launch-campaign.response.dto';
 import { WaitlistStatsResponseDto } from './dto/waitlist-stats.response.dto';
 import { LAUNCH_QUEUE, LaunchJobData } from './waitlist.constants';
@@ -42,21 +45,21 @@ export class WaitlistService {
 
   /**
    * Lansman kampanyasını oluşturur ve işlenmek üzere kuyruğa atar
-   * (senkron gönderim yok). total = o anki aktif abone sayısı.
+   * (senkron gönderim yok). İçerik panelden gelmez — backend'deki sabit lansman
+   * template'i (launch.content.ts) gönderilir; kampanya kaydı yalnızca tetikleyici
+   * + geçmiş içindir. total = o anki gönderilmemiş aktif abone sayısı.
    */
-  async enqueueLaunch(
-    createdBy: string,
-    dto: LaunchCampaignDto,
-  ): Promise<LaunchCampaignResponseDto> {
+  async enqueueLaunch(createdBy: string): Promise<LaunchCampaignResponseDto> {
     const total = await this.prisma.waitlistSubscriber.count({
       where: { status: 'subscribed', launchEmailSentAt: null },
     });
     const campaign = await this.prisma.launchCampaign.create({
       data: {
-        subject: dto.subject,
-        body: dto.body,
-        ctaLabel: dto.ctaLabel ?? null,
-        ctaUrl: dto.ctaUrl ?? null,
+        // Geçmişte ne gönderildiği görünsün diye sabit içerikten kopyalanır.
+        subject: LAUNCH_EMAIL_CONTENT.subject,
+        body: LAUNCH_HISTORY_BODY,
+        ctaLabel: LAUNCH_EMAIL_CONTENT.ctaLabel,
+        ctaUrl: null,
         total,
         createdBy,
       },
@@ -91,17 +94,24 @@ export class WaitlistService {
 
   /** Waitlist özet sayıları (panel kartı için). */
   async stats(): Promise<WaitlistStatsResponseDto> {
-    const [total, subscribed, unsubscribed, launchSent] = await Promise.all([
-      this.prisma.waitlistSubscriber.count(),
-      this.prisma.waitlistSubscriber.count({ where: { status: 'subscribed' } }),
-      this.prisma.waitlistSubscriber.count({
-        where: { status: 'unsubscribed' },
-      }),
-      this.prisma.waitlistSubscriber.count({
-        where: { launchEmailSentAt: { not: null } },
-      }),
-    ]);
-    return { total, subscribed, unsubscribed, launchSent };
+    const [total, subscribed, unsubscribed, launchSent, readyToLaunch] =
+      await Promise.all([
+        this.prisma.waitlistSubscriber.count(),
+        this.prisma.waitlistSubscriber.count({
+          where: { status: 'subscribed' },
+        }),
+        this.prisma.waitlistSubscriber.count({
+          where: { status: 'unsubscribed' },
+        }),
+        this.prisma.waitlistSubscriber.count({
+          where: { launchEmailSentAt: { not: null } },
+        }),
+        // Bir sonraki lansmanda mail gidecek alıcı sayısı (enqueueLaunch total ile aynı).
+        this.prisma.waitlistSubscriber.count({
+          where: { status: 'subscribed', launchEmailSentAt: null },
+        }),
+      ]);
+    return { total, subscribed, unsubscribed, launchSent, readyToLaunch };
   }
 }
 

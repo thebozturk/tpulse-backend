@@ -59,12 +59,9 @@ export class LaunchProcessor extends WorkerHost {
 
         for (const sub of subscribers) {
           try {
-            await this.email.sendBroadcast(sub.email, {
-              title: campaign.subject,
-              bodyText: campaign.body,
-              ctaLabel: campaign.ctaLabel ?? undefined,
-              ctaUrl: campaign.ctaUrl ?? undefined,
-            });
+            // İçerik backend'de sabit (launch.content.ts) — kampanya yalnızca
+            // tetikleyici. Her aboneye aynı lansman template'i gider.
+            await this.email.sendLaunch(sub.email);
             await this.prisma.waitlistSubscriber.update({
               where: { id: sub.id },
               data: { launchEmailSentAt: new Date() },
