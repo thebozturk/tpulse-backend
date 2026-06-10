@@ -41,6 +41,7 @@ const ALLOWED_EXTRA = new Set([
   'GET /api/admin/users/:p/content',
   'PATCH /api/admin/users/:p/status',
   'PATCH /api/admin/users/:p/role',
+  'PATCH /api/admin/users/:p/verify',
   'PATCH /api/admin/users/:p/reputation',
   // faz-bo-3 — moderasyon + şikayet
   'DELETE /api/admin/posts/:p',

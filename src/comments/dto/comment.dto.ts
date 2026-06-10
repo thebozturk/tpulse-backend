@@ -1,4 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { VerificationType } from '@prisma/client';
 import { IsOptional, IsString, IsUUID, MaxLength } from 'class-validator';
 
 export class CommentDto {
@@ -6,6 +7,12 @@ export class CommentDto {
   @ApiProperty() ownerId: string;
   @ApiProperty() ownerName: string;
   @ApiPropertyOptional() ownerPhoto?: string;
+  @ApiPropertyOptional({
+    enum: VerificationType,
+    nullable: true,
+    description: 'Yazarın doğrulama rozeti (Blue/Gold tik); rozetsizse null',
+  })
+  verificationType: VerificationType | null;
   @ApiPropertyOptional() content?: string;
   @ApiProperty() postId: string;
   @ApiPropertyOptional() parentId?: string;

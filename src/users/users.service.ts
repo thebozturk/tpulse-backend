@@ -23,6 +23,7 @@ import {
 } from './dto/admin-user-content.query.dto';
 import { AdminUserDetailResponseDto } from './dto/admin-user-detail.response.dto';
 import { AdminUserListQueryDto } from './dto/admin-user-list.query.dto';
+import { AdminVerifyUserDto } from './dto/admin-verify-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserResponseDto } from './dto/user-response.dto';
@@ -321,6 +322,30 @@ export class UsersService {
       data: { role: dto.role, updatedAt: new Date() },
     });
     this.logger.log(`Kullanıcı rolü güncellendi: ${id} → ${dto.role}`);
+    return toUserDetailResponse(user);
+  }
+
+  /** Doğrulama rozeti (Blue/Gold tik) ata veya kaldır (null) — yalnızca Admin. */
+  async setVerified(
+    id: string,
+    dto: AdminVerifyUserDto,
+  ): Promise<AdminUserDetailResponseDto> {
+    const existing = await this.prisma.user.findUnique({ where: { id } });
+    if (!existing) {
+      throw new NotFoundException('Kullanıcı bulunamadı');
+    }
+
+    const user = await this.prisma.user.update({
+      where: { id },
+      data: {
+        verificationType: dto.verificationType,
+        verifiedAt: dto.verificationType ? new Date() : null,
+        updatedAt: new Date(),
+      },
+    });
+    this.logger.log(
+      `Kullanıcı doğrulama rozeti güncellendi: ${id} → ${dto.verificationType ?? 'none'}`,
+    );
     return toUserDetailResponse(user);
   }
 

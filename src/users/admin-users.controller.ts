@@ -28,6 +28,7 @@ import { AdminUserContentItemDto } from './dto/admin-user-content-item.dto';
 import { AdminUserContentQueryDto } from './dto/admin-user-content.query.dto';
 import { AdminUserDetailResponseDto } from './dto/admin-user-detail.response.dto';
 import { AdminUserListQueryDto } from './dto/admin-user-list.query.dto';
+import { AdminVerifyUserDto } from './dto/admin-verify-user.dto';
 import { UserResponseDto } from './dto/user-response.dto';
 import { UsersService } from './users.service';
 
@@ -93,6 +94,20 @@ export class AdminUsersController {
     @Body() dto: AdminUpdateRoleDto,
   ): Promise<SingleResponse<AdminUserDetailResponseDto>> {
     return { data: await this.users.updateRole(id, dto) };
+  }
+
+  @Patch(':id/verify')
+  @Throttle(ThrottlePolicies.write)
+  @Audit(AuditAction.UserVerify, 'User')
+  @ApiOperation({
+    summary: 'Doğrulama rozeti ata/kaldır (Blue=onaylı kullanıcı, Gold=marka)',
+  })
+  @ApiSingleResponse(AdminUserDetailResponseDto)
+  async setVerified(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: AdminVerifyUserDto,
+  ): Promise<SingleResponse<AdminUserDetailResponseDto>> {
+    return { data: await this.users.setVerified(id, dto) };
   }
 
   @Patch(':id/reputation')

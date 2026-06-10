@@ -9,6 +9,7 @@ export const postInclude = {
       profilePic: true,
       isMailConfirm: true,
       role: true,
+      verificationType: true,
     },
   },
   player: {

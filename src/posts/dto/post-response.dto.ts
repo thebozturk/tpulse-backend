@@ -1,4 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { VerificationType } from '@prisma/client';
 
 export class PostResponseDto {
   @ApiProperty() id: string;
@@ -7,6 +8,12 @@ export class PostResponseDto {
   @ApiPropertyOptional() ownerPhoto?: string;
   @ApiProperty() isMailConfirm: boolean;
   @ApiProperty() userRole: string;
+  @ApiPropertyOptional({
+    enum: VerificationType,
+    nullable: true,
+    description: 'Yazarın doğrulama rozeti (Blue/Gold tik); rozetsizse null',
+  })
+  verificationType: VerificationType | null;
   @ApiProperty() content: string;
   @ApiProperty() postType: number;
   @ApiPropertyOptional() playerId?: string;

@@ -3,7 +3,9 @@ import { Prisma } from '@prisma/client';
 export const COMMENT_REPOSITORY = Symbol('COMMENT_REPOSITORY');
 
 export const commentInclude = {
-  owner: { select: { username: true, profilePic: true } },
+  owner: {
+    select: { username: true, profilePic: true, verificationType: true },
+  },
 } satisfies Prisma.CommentInclude;
 
 export type CommentWithOwner = Prisma.CommentGetPayload<{

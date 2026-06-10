@@ -25,25 +25,34 @@ enum TransferSource {
   ApiSports
 }
 
+// Doğrulama rozeti: Blue = onaylı kullanıcı (muhabir vb.),
+// Gold = onaylı marka / resmi hesap. null = rozetsiz.
+enum VerificationType {
+  Blue
+  Gold
+}
+
 // ─── Modeller ─────────────────────────────────────────────────────────
 model User {
-  id              String     @id @default(uuid()) @db.Uuid
-  username        String     @unique @db.VarChar(50)
-  email           String     @unique @db.VarChar(256)
-  passwordHash    String
-  nickname        String     @db.VarChar(50)
-  profilePic      String?    @db.VarChar(500)
-  isMailConfirm   Boolean    @default(false)
-  emailOptOut     Boolean    @default(false)
-  status          UserStatus @default(Active)
-  favouriteTeam   String?    @db.VarChar(100)
-  reputationScore Int        @default(0)
-  role            String     @default("User") @db.VarChar(20)
-  googleId        String?    @db.VarChar(256)
-  bannedAt        DateTime?  @db.Timestamptz
-  banReason       String?    @db.VarChar(500)
-  createdAt       DateTime   @default(now()) @db.Timestamptz
-  updatedAt       DateTime?  @db.Timestamptz
+  id               String            @id @default(uuid()) @db.Uuid
+  username         String            @unique @db.VarChar(50)
+  email            String            @unique @db.VarChar(256)
+  passwordHash     String
+  nickname         String            @db.VarChar(50)
+  profilePic       String?           @db.VarChar(500)
+  isMailConfirm    Boolean           @default(false)
+  emailOptOut      Boolean           @default(false)
+  status           UserStatus        @default(Active)
+  favouriteTeam    String?           @db.VarChar(100)
+  reputationScore  Int               @default(0)
+  role             String            @default("User") @db.VarChar(20)
+  verificationType VerificationType?
+  verifiedAt       DateTime?         @db.Timestamptz
+  googleId         String?           @db.VarChar(256)
+  bannedAt         DateTime?         @db.Timestamptz
+  banReason        String?           @db.VarChar(500)
+  createdAt        DateTime          @default(now()) @db.Timestamptz
+  updatedAt        DateTime?         @db.Timestamptz
 
   refreshTokens        RefreshToken[]
   transfers            Transfer[]

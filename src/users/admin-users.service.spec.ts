@@ -1,10 +1,15 @@
-import { BadRequestException, ConflictException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  NotFoundException,
+} from '@nestjs/common';
 import { Test } from '@nestjs/testing';
-import { UserStatus } from '@prisma/client';
+import { UserStatus, VerificationType } from '@prisma/client';
 import { PasswordService } from '../auth/password.service';
 import { TokenService } from '../auth/token.service';
 import { UserStatusCache } from '../common/auth/user-status.cache';
 import { PrismaService } from '../common/prisma/prisma.service';
+import { EmailService } from '../email/email.service';
 import { UsersService } from './users.service';
 
 describe('UsersService (BO-2 admin)', () => {
@@ -12,6 +17,10 @@ describe('UsersService (BO-2 admin)', () => {
   let prisma: { user: Record<string, jest.Mock> };
   let tokens: { revokeAllForUser: jest.Mock };
   let statusCache: { setStatus: jest.Mock };
+  let email: {
+    sendAccountBanned: jest.Mock;
+    sendAccountSuspended: jest.Mock;
+  };
 
   const adminActive = {
     id: 'admin1',
@@ -32,6 +41,10 @@ describe('UsersService (BO-2 admin)', () => {
     };
     tokens = { revokeAllForUser: jest.fn().mockResolvedValue(undefined) };
     statusCache = { setStatus: jest.fn().mockResolvedValue(undefined) };
+    email = {
+      sendAccountBanned: jest.fn().mockResolvedValue(undefined),
+      sendAccountSuspended: jest.fn().mockResolvedValue(undefined),
+    };
     const module = await Test.createTestingModule({
       providers: [
         UsersService,
@@ -39,6 +52,7 @@ describe('UsersService (BO-2 admin)', () => {
         { provide: PasswordService, useValue: {} },
         { provide: TokenService, useValue: tokens },
         { provide: UserStatusCache, useValue: statusCache },
+        { provide: EmailService, useValue: email },
       ],
     }).compile();
     service = module.get(UsersService);
@@ -123,6 +137,62 @@ describe('UsersService (BO-2 admin)', () => {
 
       const res = await service.updateRole('admin1', { role: 'User' });
       expect(res.role).toBe('User');
+    });
+  });
+
+  describe('setVerified', () => {
+    it('Blue tik atar + verifiedAt yazar', async () => {
+      prisma.user.findUnique.mockResolvedValue({ ...adminActive, role: 'User' });
+
+      const res = await service.setVerified('u1', {
+        verificationType: VerificationType.Blue,
+      });
+
+      expect(prisma.user.update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            verificationType: VerificationType.Blue,
+            verifiedAt: expect.any(Date),
+          }),
+        }),
+      );
+      expect(res.verificationType).toBe(VerificationType.Blue);
+    });
+
+    it('Gold tik atar (onaylı marka)', async () => {
+      prisma.user.findUnique.mockResolvedValue({ ...adminActive, role: 'User' });
+
+      const res = await service.setVerified('u1', {
+        verificationType: VerificationType.Gold,
+      });
+
+      expect(res.verificationType).toBe(VerificationType.Gold);
+    });
+
+    it('null: tiki kaldırır + verifiedAt null', async () => {
+      prisma.user.findUnique.mockResolvedValue({
+        ...adminActive,
+        role: 'User',
+        verificationType: VerificationType.Blue,
+      });
+
+      await service.setVerified('u1', { verificationType: null });
+
+      expect(prisma.user.update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            verificationType: null,
+            verifiedAt: null,
+          }),
+        }),
+      );
+    });
+
+    it('kullanıcı yoksa 404', async () => {
+      prisma.user.findUnique.mockResolvedValue(null);
+      await expect(
+        service.setVerified('yok', { verificationType: VerificationType.Blue }),
+      ).rejects.toThrow(NotFoundException);
     });
   });
 

@@ -7,6 +7,7 @@ function toDto(c: CommentWithOwner, isLiked: boolean): CommentDto {
     ownerId: c.ownerId,
     ownerName: c.owner.username,
     ownerPhoto: c.owner.profilePic ?? undefined,
+    verificationType: c.owner.verificationType,
     content: c.content ?? undefined,
     postId: c.postId,
     parentId: c.parentId ?? undefined,

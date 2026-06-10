@@ -217,6 +217,7 @@ export class AuthService {
       favouriteTeam: user.favouriteTeam ?? undefined,
       reputationScore: user.reputationScore,
       role: user.role,
+      verificationType: user.verificationType,
       createdAt: user.createdAt,
     };
   }

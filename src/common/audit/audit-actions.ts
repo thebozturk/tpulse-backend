@@ -3,6 +3,7 @@ export const AuditAction = {
   UserStatus: 'user.status',
   UserRole: 'user.role',
   UserReputation: 'user.reputation',
+  UserVerify: 'user.verify',
   PostDelete: 'post.delete',
   CommentDelete: 'comment.delete',
   TransferCommentDelete: 'transferComment.delete',

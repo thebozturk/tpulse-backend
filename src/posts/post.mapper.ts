@@ -14,6 +14,7 @@ export function toPostResponse(
     ownerPhoto: p.owner.profilePic ?? undefined,
     isMailConfirm: p.owner.isMailConfirm,
     userRole: p.owner.role,
+    verificationType: p.owner.verificationType,
     content: p.content,
     postType: p.postType,
     playerId: p.playerId ?? undefined,

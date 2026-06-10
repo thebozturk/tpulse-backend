@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { UserStatus } from '@prisma/client';
+import { UserStatus, VerificationType } from '@prisma/client';
 
 /** docs/03 UserDto. Hassas alan (passwordHash) YOK. Auth + Users ortak kullanır. */
 export class UserResponseDto {
@@ -13,5 +13,11 @@ export class UserResponseDto {
   @ApiPropertyOptional() favouriteTeam?: string;
   @ApiProperty() reputationScore: number;
   @ApiProperty() role: string;
+  @ApiPropertyOptional({
+    enum: VerificationType,
+    nullable: true,
+    description: 'Doğrulama rozeti: Blue=onaylı kullanıcı, Gold=onaylı marka',
+  })
+  verificationType: VerificationType | null;
   @ApiProperty() createdAt: Date;
 }

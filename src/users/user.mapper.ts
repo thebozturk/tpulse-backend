@@ -15,6 +15,7 @@ export function toUserResponse(user: User): UserResponseDto {
     favouriteTeam: user.favouriteTeam ?? undefined,
     reputationScore: user.reputationScore,
     role: user.role,
+    verificationType: user.verificationType,
     createdAt: user.createdAt,
   };
 }
@@ -26,5 +27,6 @@ export function toUserDetailResponse(user: User): AdminUserDetailResponseDto {
     bannedAt: user.bannedAt ?? undefined,
     banReason: user.banReason ?? undefined,
     updatedAt: user.updatedAt ?? undefined,
+    verifiedAt: user.verifiedAt ?? undefined,
   };
 }
