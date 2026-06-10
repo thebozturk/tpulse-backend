@@ -3,6 +3,7 @@ import { Logger } from '@nestjs/common';
 import { Job } from 'bullmq';
 import { PrismaService } from '../common/prisma/prisma.service';
 import { RedisService } from '../common/redis/redis.service';
+import { HotScoreService } from '../common/scoring/hot-score.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import {
   CommentCreateEvent,
@@ -27,6 +28,7 @@ export class ReactionProcessor extends WorkerHost {
     private readonly prisma: PrismaService,
     private readonly redis: RedisService,
     private readonly notifications: NotificationsService,
+    private readonly hotScore: HotScoreService,
   ) {
     super();
   }
@@ -133,6 +135,7 @@ export class ReactionProcessor extends WorkerHost {
         });
       }
     }
+    await this.hotScore.recompute(e.postId);
   }
 
   private async handleCommentCreate(e: CommentCreateEvent): Promise<void> {
@@ -158,6 +161,7 @@ export class ReactionProcessor extends WorkerHost {
         data: { commentCount: { increment: 1 } },
       }),
     ]);
+    await this.hotScore.recompute(e.postId);
   }
 
   private async handleCommentReaction(e: CommentReactionEvent): Promise<void> {

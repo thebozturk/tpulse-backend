@@ -9,6 +9,7 @@ import {
 import { AuthUser } from '../common/decorators/current-user.decorator';
 import { PagedResult } from '../common/interfaces/response.interface';
 import { buildPaged } from '../common/pagination';
+import { HotScoreService } from '../common/scoring/hot-score.service';
 import { FavouritesService } from '../favourites/favourites.service';
 import { OutboxEventType } from '../messaging/events';
 import { OutboxService } from '../messaging/outbox.service';
@@ -32,6 +33,7 @@ export class PostsService {
     @Inject(POST_REPOSITORY) private readonly repo: IPostRepository,
     private readonly outbox: OutboxService,
     private readonly favourites: FavouritesService,
+    private readonly hotScore: HotScoreService,
   ) {}
 
   async feed(
@@ -117,6 +119,9 @@ export class PostsService {
     if (outcome.status === 'Disabled') {
       throw new BadRequestException('Bu gönderide oylama kapalı');
     }
+    if (outcome.status === 'Applied') {
+      await this.hotScore.recompute(postId);
+    }
     return {
       result: outcome.status === 'Applied' ? 'Applied' : 'Unchanged',
       agreeCount: outcome.agreeCount,
@@ -201,6 +206,17 @@ export class PostsService {
       isLike,
     });
     return 'queued';
+  }
+
+  /**
+   * Feed modülü için: ham post'ları kullanıcı like/vote state'iyle birlikte
+   * response DTO'ya çevirir (hydrate'in public sarmalayıcısı — DRY).
+   */
+  mapWithUserState(
+    posts: PostWithRel[],
+    user?: AuthUser,
+  ): Promise<PostResponseDto[]> {
+    return this.hydrate(posts, user);
   }
 
   private async hydrate(

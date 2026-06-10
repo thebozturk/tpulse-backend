@@ -112,6 +112,19 @@ export const envSchema = z
       .enum(['true', 'false'])
       .default('false')
       .transform((v) => v === 'true'),
+
+    // Feed ("Senin İçin") skor parametreleri — hepsi default'lu (opsiyonel).
+    // hotScore ağırlıkları + zaman sönümü (gravity).
+    FEED_W_LIKE: z.coerce.number().default(1),
+    FEED_W_VOTE: z.coerce.number().default(0.5),
+    FEED_W_COMMENT: z.coerce.number().default(2),
+    FEED_GRAVITY: z.coerce.number().positive().default(1.5),
+    // In-network yakınlık çarpanları (follow > favourite).
+    FEED_AFFINITY_FAVOURITE: z.coerce.number().positive().default(1.3),
+    FEED_AFFINITY_FOLLOW: z.coerce.number().positive().default(1.5),
+    // Kaynak başına aday limiti + sıralı havuz kapağı.
+    FEED_SOURCE_LIMIT: z.coerce.number().int().positive().default(200),
+    FEED_MAX_RESULTS: z.coerce.number().int().positive().default(200),
   })
   .superRefine((env, ctx) => {
     if (env.NODE_ENV === 'production' && env.LOAD_TEST_MODE) {

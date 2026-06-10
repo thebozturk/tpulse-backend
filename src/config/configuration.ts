@@ -92,6 +92,21 @@ export const configuration = () => {
     bot: {
       apiKeyHash: env.BOT_API_KEY_HASH,
     },
+    // Feed ("Senin İçin") skorlama — FeedConfig + HotScoreService tüketir.
+    feed: {
+      weights: {
+        like: env.FEED_W_LIKE,
+        vote: env.FEED_W_VOTE,
+        comment: env.FEED_W_COMMENT,
+        gravity: env.FEED_GRAVITY,
+      },
+      affinity: {
+        favourite: env.FEED_AFFINITY_FAVOURITE,
+        follow: env.FEED_AFFINITY_FOLLOW,
+      },
+      sourceLimit: env.FEED_SOURCE_LIMIT,
+      maxResults: env.FEED_MAX_RESULTS,
+    },
   };
 };
 

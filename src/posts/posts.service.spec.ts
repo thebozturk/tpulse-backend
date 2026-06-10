@@ -7,6 +7,7 @@ import { Test } from '@nestjs/testing';
 import { PostType, PostVoteChoice } from '../common/enums';
 import { FavouritesService } from '../favourites/favourites.service';
 import { OutboxService } from '../messaging/outbox.service';
+import { HotScoreService } from '../common/scoring/hot-score.service';
 import { POST_REPOSITORY } from './post.repository';
 import { PostsService } from './posts.service';
 
@@ -30,6 +31,7 @@ describe('PostsService', () => {
         { provide: POST_REPOSITORY, useValue: repo },
         { provide: OutboxService, useValue: outbox },
         { provide: FavouritesService, useValue: { getTargets: jest.fn() } },
+        { provide: HotScoreService, useValue: { recompute: jest.fn() } },
       ],
     }).compile();
     service = module.get(PostsService);

@@ -9,6 +9,8 @@ import { LoadAwareThrottlerGuard } from './common/throttle/load-aware-throttler.
 import { GLOBAL_THROTTLE } from './common/throttle/throttle-policies';
 import { CommentsModule } from './comments/comments.module';
 import { FavouritesModule } from './favourites/favourites.module';
+import { FeedModule } from './feed/feed.module';
+import { FollowsModule } from './follows/follows.module';
 import { MessagingModule } from './messaging/messaging.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { PostsModule } from './posts/posts.module';
@@ -95,6 +97,8 @@ import { UsersModule } from './users/users.module';
     CurrencyRatesModule,
     IngestionModule,
     DigestsModule,
+    FollowsModule,
+    FeedModule,
   ],
   providers: [
     // Sıra: throttle önce (brute-force), sonra auth. JwtAuthGuard @Public bypass'lı.

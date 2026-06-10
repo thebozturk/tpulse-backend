@@ -54,8 +54,25 @@ model User {
   commentLikes         CommentLike[]
   transferComments     TransferComment[]
   transferCommentLikes TransferCommentLike[]
+  following            Follow[]              @relation("UserFollowing")
+  followers            Follow[]              @relation("UserFollowers")
 
   @@map("users")
+}
+
+model Follow {
+  id          String   @id @default(uuid()) @db.Uuid
+  followerId  String   @db.Uuid
+  followingId String   @db.Uuid
+  createdAt   DateTime @default(now()) @db.Timestamptz
+
+  follower  User @relation("UserFollowing", fields: [followerId], references: [id], onDelete: Cascade)
+  following User @relation("UserFollowers", fields: [followingId], references: [id], onDelete: Cascade)
+
+  @@unique([followerId, followingId])
+  @@index([followerId])
+  @@index([followingId])
+  @@map("follow")
 }
 
 model League {
@@ -194,6 +211,8 @@ model Post {
   sourceId        String?  @unique @db.VarChar(64)
   sourceUrl       String?  @db.VarChar(500)
   imageUrl        String?  @db.VarChar(500)
+  hotScore        Float    @default(0)
+  scoreUpdatedAt  DateTime @default(now()) @db.Timestamptz
   createdAtUtc    DateTime @default(now()) @db.Timestamptz
 
   owner    User       @relation(fields: [ownerId], references: [id], onDelete: Cascade)
@@ -209,6 +228,7 @@ model Post {
   @@index([ownerId])
   @@index([playerId])
   @@index([teamId])
+  @@index([hotScore(sort: Desc)])
   @@map("post")
 }
 
