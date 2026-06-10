@@ -98,6 +98,7 @@ export const configuration = () => {
         like: env.FEED_W_LIKE,
         vote: env.FEED_W_VOTE,
         comment: env.FEED_W_COMMENT,
+        report: env.FEED_W_REPORT,
         gravity: env.FEED_GRAVITY,
       },
       affinity: {
@@ -112,6 +113,7 @@ export const configuration = () => {
         floor: env.FEED_DIVERSITY_FLOOR,
       },
       servedTtlSeconds: env.FEED_SERVED_TTL_SECONDS,
+      discoveryCacheSeconds: env.FEED_DISCOVERY_CACHE_SECONDS,
     },
   };
 };

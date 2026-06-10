@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { ReportTargetType } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import {
   computeHotScore,
@@ -27,20 +28,25 @@ export class HotScoreService {
 
   async recompute(postId: string): Promise<void> {
     try {
-      const post = await this.prisma.post.findUnique({
-        where: { id: postId },
-        select: {
-          likeCount: true,
-          agreeCount: true,
-          disagreeCount: true,
-          commentCount: true,
-          createdAtUtc: true,
-        },
-      });
+      const [post, reportCount] = await Promise.all([
+        this.prisma.post.findUnique({
+          where: { id: postId },
+          select: {
+            likeCount: true,
+            agreeCount: true,
+            disagreeCount: true,
+            commentCount: true,
+            createdAtUtc: true,
+          },
+        }),
+        this.prisma.report.count({
+          where: { targetType: ReportTargetType.Post, targetId: postId },
+        }),
+      ]);
       if (!post) {
         return;
       }
-      const hotScore = computeHotScore(post, this.weights);
+      const hotScore = computeHotScore({ ...post, reportCount }, this.weights);
       await this.prisma.post.update({
         where: { id: postId },
         data: { hotScore, scoreUpdatedAt: new Date() },

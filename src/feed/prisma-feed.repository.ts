@@ -49,9 +49,8 @@ export class PrismaFeedRepository implements IFeedRepository {
     });
   }
 
-  discovery(viewerId: string, limit: number): Promise<PostWithRel[]> {
+  discovery(limit: number): Promise<PostWithRel[]> {
     return this.prisma.post.findMany({
-      where: { ownerId: { not: viewerId } },
       orderBy: [{ hotScore: 'desc' }, { createdAtUtc: 'desc' }],
       take: limit,
       include: postInclude,

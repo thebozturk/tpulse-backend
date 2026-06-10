@@ -14,6 +14,7 @@ export interface FeedRawConfig {
   oonAttenuation: number;
   diversity: { decay: number; floor: number };
   servedTtlSeconds: number;
+  discoveryCacheSeconds: number;
 }
 
 export const DEFAULT_FEED_CONFIG: FeedRawConfig = {
@@ -24,6 +25,7 @@ export const DEFAULT_FEED_CONFIG: FeedRawConfig = {
   oonAttenuation: 0.8,
   diversity: { decay: 0.5, floor: 0.1 },
   servedTtlSeconds: 86400,
+  discoveryCacheSeconds: 60,
 };
 
 /**
@@ -40,6 +42,7 @@ export class FeedConfig {
   readonly diversityDecay: number;
   readonly diversityFloor: number;
   readonly servedTtlSeconds: number;
+  readonly discoveryCacheSeconds: number;
 
   constructor(config: ConfigService) {
     const f = config.get<FeedRawConfig>('feed') ?? DEFAULT_FEED_CONFIG;
@@ -57,5 +60,7 @@ export class FeedConfig {
       f.diversity?.floor ?? DEFAULT_FEED_CONFIG.diversity.floor;
     this.servedTtlSeconds =
       f.servedTtlSeconds ?? DEFAULT_FEED_CONFIG.servedTtlSeconds;
+    this.discoveryCacheSeconds =
+      f.discoveryCacheSeconds ?? DEFAULT_FEED_CONFIG.discoveryCacheSeconds;
   }
 }

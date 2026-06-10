@@ -12,6 +12,7 @@ describe('computeHotScore', () => {
     agreeCount: 0,
     disagreeCount: 0,
     commentCount: 0,
+    reportCount: 0,
     createdAtUtc: now,
     ...overrides,
   });
@@ -42,6 +43,22 @@ describe('computeHotScore', () => {
     );
     // weighted = 0.5 * (4 + 6) = 5 ; age = 0 -> /(0+2)^1.5
     expect(score).toBeCloseTo(5 / Math.pow(2, 1.5), 6);
+  });
+
+  it('reduces score with reports and can push it negative', () => {
+    const clean = computeHotScore(
+      base({ likeCount: 4 }),
+      DEFAULT_HOT_SCORE_WEIGHTS,
+      now,
+    );
+    const reported = computeHotScore(
+      base({ likeCount: 4, reportCount: 3 }),
+      DEFAULT_HOT_SCORE_WEIGHTS,
+      now,
+    );
+    expect(reported).toBeLessThan(clean);
+    // weighted = 1*4 - 5*3 = -11 -> negatif skor
+    expect(reported).toBeLessThan(0);
   });
 
   it('decays score as the post ages (same engagement)', () => {

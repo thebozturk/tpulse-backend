@@ -2,13 +2,17 @@ import { Injectable } from '@nestjs/common';
 import { AuthUser } from '../common/decorators/current-user.decorator';
 import { PagedResult } from '../common/interfaces/response.interface';
 import { buildPaged, toSkipTake } from '../common/pagination';
+import { BlocksService } from '../blocks/blocks.service';
 import { FavouritesService } from '../favourites/favourites.service';
 import { FollowsService } from '../follows/follows.service';
 import { PostResponseDto } from '../posts/dto/post-response.dto';
 import { PostsService } from '../posts/posts.service';
 import { FeedQueryDto } from './dto/feed-query.dto';
 import { FeedServedStore } from './feed-served.store';
+import { BlockedAuthorFilter } from './filters/blocked-author.filter';
+import { MutedKeywordFilter } from './filters/muted-keyword.filter';
 import { SeenServedFilter } from './filters/seen-served.filter';
+import { SelfPostFilter } from './filters/self-post.filter';
 import { PipelineRunner } from './pipeline/pipeline.runner';
 import { FeedQuery } from './pipeline/types';
 import { AffinityScorer } from './scorers/affinity.scorer';
@@ -41,11 +45,15 @@ export class FeedService {
     private readonly affinityScorer: AffinityScorer,
     private readonly oonScorer: OonScorer,
     private readonly authorDiversityScorer: AuthorDiversityScorer,
+    private readonly selfPostFilter: SelfPostFilter,
+    private readonly blockedAuthorFilter: BlockedAuthorFilter,
+    private readonly mutedKeywordFilter: MutedKeywordFilter,
     private readonly seenServedFilter: SeenServedFilter,
     private readonly topKSelector: TopKSelector,
     private readonly served: FeedServedStore,
     private readonly favourites: FavouritesService,
     private readonly follows: FollowsService,
+    private readonly blocks: BlocksService,
     private readonly posts: PostsService,
   ) {}
 
@@ -55,11 +63,14 @@ export class FeedService {
   ): Promise<PagedResult<PostResponseDto>> {
     const { page, pageSize } = dto;
 
-    const [favourite, followingIds, servedIds] = await Promise.all([
-      this.favourites.getTargets(userId),
-      this.follows.getFollowingIds(userId),
-      this.served.getServed(userId),
-    ]);
+    const [favourite, followingIds, servedIds, suppressedIds, mutedKeywords] =
+      await Promise.all([
+        this.favourites.getTargets(userId),
+        this.follows.getFollowingIds(userId),
+        this.served.getServed(userId),
+        this.blocks.getSuppressedAuthorIds(userId),
+        this.blocks.getMutedKeywords(userId),
+      ]);
 
     const seenIds = new Set<string>(servedIds);
     for (const id of dto.seenIds ?? []) {
@@ -73,11 +84,18 @@ export class FeedService {
       favourite,
       followingIds,
       seenIds,
+      suppressedAuthorIds: new Set(suppressedIds),
+      mutedKeywords,
     };
 
     const ranked = await this.runner.run(query, {
       sources: [this.favouriteSource, this.followSource, this.discoverySource],
-      filters: [this.seenServedFilter],
+      filters: [
+        this.selfPostFilter,
+        this.blockedAuthorFilter,
+        this.mutedKeywordFilter,
+        this.seenServedFilter,
+      ],
       scorers: [
         this.weightedScorer,
         this.affinityScorer,

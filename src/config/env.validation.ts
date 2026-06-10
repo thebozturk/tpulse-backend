@@ -118,6 +118,7 @@ export const envSchema = z
     FEED_W_LIKE: z.coerce.number().default(1),
     FEED_W_VOTE: z.coerce.number().default(0.5),
     FEED_W_COMMENT: z.coerce.number().default(2),
+    FEED_W_REPORT: z.coerce.number().min(0).default(5),
     FEED_GRAVITY: z.coerce.number().positive().default(1.5),
     // In-network yakınlık çarpanları (follow > favourite).
     FEED_AFFINITY_FAVOURITE: z.coerce.number().positive().default(1.3),
@@ -133,6 +134,8 @@ export const envSchema = z
     FEED_DIVERSITY_FLOOR: z.coerce.number().min(0).max(1).default(0.1),
     // Sunulan post'ların tekrar gösterilmeme penceresi (sn).
     FEED_SERVED_TTL_SECONDS: z.coerce.number().int().positive().default(86400),
+    // Keşif (global trend) in-memory cache TTL'i (sn). Tek process.
+    FEED_DISCOVERY_CACHE_SECONDS: z.coerce.number().int().min(0).default(60),
   })
   .superRefine((env, ctx) => {
     if (env.NODE_ENV === 'production' && env.LOAD_TEST_MODE) {

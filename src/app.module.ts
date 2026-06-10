@@ -7,6 +7,7 @@ import { ThrottlerModule } from '@nestjs/throttler';
 import { IdempotencyInterceptor } from './common/interceptors/idempotency.interceptor';
 import { LoadAwareThrottlerGuard } from './common/throttle/load-aware-throttler.guard';
 import { GLOBAL_THROTTLE } from './common/throttle/throttle-policies';
+import { BlocksModule } from './blocks/blocks.module';
 import { CommentsModule } from './comments/comments.module';
 import { FavouritesModule } from './favourites/favourites.module';
 import { FeedModule } from './feed/feed.module';
@@ -98,6 +99,7 @@ import { UsersModule } from './users/users.module';
     IngestionModule,
     DigestsModule,
     FollowsModule,
+    BlocksModule,
     FeedModule,
   ],
   providers: [

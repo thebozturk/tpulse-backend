@@ -20,6 +20,10 @@ export interface FeedQuery {
   followingIds: string[];
   /** Daha önce sunulan (Redis served) + client-sent görülen post id'leri. */
   seenIds: Set<string>;
+  /** Engellenen ∪ susturulan yazar id'leri (negatif sinyal — elenir). */
+  suppressedAuthorIds: Set<string>;
+  /** Susturulan kelimeler (lowercase) — içeren postlar elenir. */
+  mutedKeywords: string[];
 }
 
 /** Pipeline boyunca taşınan aday: post + ara skor + köken(ler). */

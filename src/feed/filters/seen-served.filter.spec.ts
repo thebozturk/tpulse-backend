@@ -18,6 +18,8 @@ function query(seen: string[]): FeedQuery {
     favourite: { playerIds: [], teamIds: [], reporterUserIds: [] },
     followingIds: [],
     seenIds: new Set(seen),
+    suppressedAuthorIds: new Set(),
+    mutedKeywords: [],
   };
 }
 

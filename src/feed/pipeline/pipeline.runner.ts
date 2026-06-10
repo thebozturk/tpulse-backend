@@ -12,27 +12,38 @@ export class PipelineRunner {
   private readonly logger = new Logger(PipelineRunner.name);
 
   async run(query: FeedQuery, stages: PipelineStages): Promise<Candidate[]> {
+    const startedAt = Date.now();
+    const metrics: string[] = [];
+
     // 1. Kaynaklar paralel — biri çökerse diğerleri devam eder.
     const results = await Promise.allSettled(
       stages.sources.map((s) => s.fetch(query)),
     );
     const all: Candidate[] = [];
     results.forEach((r, i) => {
+      const sourceName = stages.sources[i].name;
       if (r.status === 'fulfilled') {
         all.push(...r.value);
+        metrics.push(`src:${sourceName}=${r.value.length}`);
       } else {
+        metrics.push(`src:${sourceName}=ERR`);
         this.logger.warn(
-          `source '${stages.sources[i].name}' başarısız: ${String(r.reason)}`,
+          `source '${sourceName}' başarısız: ${String(r.reason)}`,
         );
       }
     });
 
     // 2. Aynı post birden çok kaynaktan gelebilir → birleştir, köken(leri) topla.
     let candidates = this.dedup(all);
+    metrics.push(`dedup=${candidates.length}`);
 
     // 3. Filtreler sıralı.
     for (const filter of stages.filters) {
-      candidates = filter.apply(candidates, query).kept;
+      const { kept, removed } = filter.apply(candidates, query);
+      candidates = kept;
+      if (removed.length > 0) {
+        metrics.push(`filter:${filter.name}=-${removed.length}`);
+      }
     }
 
     // 4. Skorlayıcılar sıralı (her biri bir öncekinin skorunu işler).
@@ -41,7 +52,13 @@ export class PipelineRunner {
     }
 
     // 5. Seçim (sırala + havuzu kırp).
-    return stages.selector.select(candidates, query);
+    const selected = stages.selector.select(candidates, query);
+    metrics.push(`selected=${selected.length}`);
+
+    this.logger.debug(
+      `feed pipeline [${Date.now() - startedAt}ms] ${metrics.join(' ')}`,
+    );
+    return selected;
   }
 
   private dedup(candidates: Candidate[]): Candidate[] {
