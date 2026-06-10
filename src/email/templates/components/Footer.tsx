@@ -60,18 +60,6 @@ export function Footer({ unsubscribeUrl, reason }: FooterProps) {
         {reason}
       </Text>
 
-      <Text
-        style={{
-          margin: '0 0 10px',
-          fontFamily: fontStacks.body,
-          fontSize: '12px',
-          lineHeight: '1.6',
-          color: colors.muted,
-        }}
-      >
-        {BRAND.address}
-      </Text>
-
       <Text style={{ margin: 0, fontFamily: fontStacks.body, fontSize: '12px', color: colors.muted }}>
         <Link href={unsubscribeUrl} style={linkStyle}>
           Abonelikten çık

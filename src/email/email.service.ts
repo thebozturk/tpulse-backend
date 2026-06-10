@@ -152,6 +152,13 @@ export class EmailService {
       to,
       subject: rendered.subject,
       html: rendered.html,
+      text: rendered.text,
+      // RFC 8058 tek-tık abonelikten çıkma — Gmail/Yahoo toplu gönderim
+      // gereksinimi; inbox teslimini ciddi iyileştirir, spam'i azaltır.
+      headers: {
+        'List-Unsubscribe': `<${this.unsubscribeUrl(to)}>`,
+        'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
+      },
     });
     if (error) {
       throw new Error(`Resend gönderim hatası: ${error.message}`);

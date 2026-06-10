@@ -42,6 +42,8 @@ USER node
 COPY --from=prod-deps --chown=node:node /app/node_modules ./node_modules
 COPY --from=builder --chown=node:node /app/dist ./dist
 COPY --from=builder --chown=node:node /app/prisma ./prisma
+# E-posta logoları / statik public asset'ler (EMAIL_ASSET_BASE_URL bunu işaret eder).
+COPY --from=builder --chown=node:node /app/public ./public
 COPY --from=builder --chown=node:node /app/package.json ./
 
 EXPOSE 8080

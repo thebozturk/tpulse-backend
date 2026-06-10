@@ -4,6 +4,7 @@ import { EmailLayout } from './components/EmailLayout';
 import { Button } from './components/Button';
 import { Title, Body as Paragraph } from './components/Typo';
 import { colors, fontStacks } from './components/theme';
+import { formatExpiry } from './components/format';
 
 export interface PasswordResetEmailProps {
   name: string;
@@ -43,7 +44,7 @@ export default function PasswordResetEmail({
 
       <Paragraph small muted>
         Güvenliğin için bu bağlantı yalnızca{' '}
-        <strong style={{ color: colors.text }}>{expiresInMinutes} dakika</strong> geçerlidir.
+        <strong style={{ color: colors.text }}>{formatExpiry(expiresInMinutes)}</strong> geçerlidir.
         Buton çalışmazsa şu adresi tarayıcına yapıştır:
       </Paragraph>
       <Text

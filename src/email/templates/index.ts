@@ -60,141 +60,115 @@ import BroadcastEmail, {
 export interface RenderedEmail {
   subject: string;
   html: string;
+  /** Çoklu-parça (multipart) gönderim için düz metin alternatifi — spam skorunu düşürür. */
+  text: string;
 }
 
-const RENDER_OPTIONS = { pretty: false } as const;
+/**
+ * Bir template'i tek seferde hem HTML hem düz metin olarak render eder.
+ * Aynı element iki kez render edilir (HTML + plainText); multipart e-posta
+ * deliverability'i (Gmail/Outlook spam filtreleri) belirgin iyileştirir.
+ */
+async function renderEmail(
+  element: ReturnType<typeof createElement>,
+  subject: string,
+): Promise<RenderedEmail> {
+  const [html, text] = await Promise.all([
+    render(element, { pretty: false }),
+    render(element, { pretty: false, plainText: true }),
+  ]);
+  return { subject, html, text };
+}
 
 export async function renderWelcomeEmail(
   props: WelcomeEmailProps,
 ): Promise<RenderedEmail> {
-  return {
-    subject: welcomeSubject,
-    html: await render(createElement(WelcomeEmail, props), RENDER_OPTIONS),
-  };
+  return renderEmail(createElement(WelcomeEmail, props), welcomeSubject);
 }
 
 export async function renderVerifyEmail(
   props: VerifyEmailProps,
 ): Promise<RenderedEmail> {
-  return {
-    subject: verifySubject,
-    html: await render(createElement(VerifyEmail, props), RENDER_OPTIONS),
-  };
+  return renderEmail(createElement(VerifyEmail, props), verifySubject);
 }
 
 export async function renderPasswordResetEmail(
   props: PasswordResetEmailProps,
 ): Promise<RenderedEmail> {
-  return {
-    subject: passwordResetSubject,
-    html: await render(
-      createElement(PasswordResetEmail, props),
-      RENDER_OPTIONS,
-    ),
-  };
+  return renderEmail(
+    createElement(PasswordResetEmail, props),
+    passwordResetSubject,
+  );
 }
 
 export async function renderPasswordChangedEmail(
   props: PasswordChangedEmailProps,
 ): Promise<RenderedEmail> {
-  return {
-    subject: passwordChangedSubject,
-    html: await render(
-      createElement(PasswordChangedEmail, props),
-      RENDER_OPTIONS,
-    ),
-  };
+  return renderEmail(
+    createElement(PasswordChangedEmail, props),
+    passwordChangedSubject,
+  );
 }
 
 export async function renderEmailChangeConfirmEmail(
   props: EmailChangeConfirmEmailProps,
 ): Promise<RenderedEmail> {
-  return {
-    subject: emailChangeSubject,
-    html: await render(
-      createElement(EmailChangeConfirmEmail, props),
-      RENDER_OPTIONS,
-    ),
-  };
+  return renderEmail(
+    createElement(EmailChangeConfirmEmail, props),
+    emailChangeSubject,
+  );
 }
 
 export async function renderAccountSuspendedEmail(
   props: AccountSuspendedEmailProps,
 ): Promise<RenderedEmail> {
-  return {
-    subject: suspendedSubject,
-    html: await render(
-      createElement(AccountSuspendedEmail, props),
-      RENDER_OPTIONS,
-    ),
-  };
+  return renderEmail(
+    createElement(AccountSuspendedEmail, props),
+    suspendedSubject,
+  );
 }
 
 export async function renderAccountBannedEmail(
   props: AccountBannedEmailProps,
 ): Promise<RenderedEmail> {
-  return {
-    subject: bannedSubject,
-    html: await render(
-      createElement(AccountBannedEmail, props),
-      RENDER_OPTIONS,
-    ),
-  };
+  return renderEmail(createElement(AccountBannedEmail, props), bannedSubject);
 }
 
 export async function renderReportReviewedEmail(
   props: ReportReviewedEmailProps,
 ): Promise<RenderedEmail> {
-  return {
-    subject: reportSubject,
-    html: await render(
-      createElement(ReportReviewedEmail, props),
-      RENDER_OPTIONS,
-    ),
-  };
+  return renderEmail(createElement(ReportReviewedEmail, props), reportSubject);
 }
 
 export async function renderTransferAlertEmail(
   props: TransferAlertEmailProps,
 ): Promise<RenderedEmail> {
-  return {
-    subject: transferSubject,
-    html: await render(
-      createElement(TransferAlertEmail, props),
-      RENDER_OPTIONS,
-    ),
-  };
+  return renderEmail(createElement(TransferAlertEmail, props), transferSubject);
 }
 
 export async function renderEngagementDigestEmail(
   props: EngagementDigestEmailProps,
 ): Promise<RenderedEmail> {
-  return {
-    subject: engagementSubject,
-    html: await render(
-      createElement(EngagementDigestEmail, props),
-      RENDER_OPTIONS,
-    ),
-  };
+  return renderEmail(
+    createElement(EngagementDigestEmail, props),
+    engagementSubject,
+  );
 }
 
 export async function renderWeeklyDigestEmail(
   props: WeeklyDigestEmailProps,
 ): Promise<RenderedEmail> {
-  return {
-    subject: weeklySubject,
-    html: await render(createElement(WeeklyDigestEmail, props), RENDER_OPTIONS),
-  };
+  return renderEmail(createElement(WeeklyDigestEmail, props), weeklySubject);
 }
 
 export async function renderBroadcastEmail(
   props: BroadcastEmailProps,
 ): Promise<RenderedEmail> {
   // Broadcast konusu admin tarafından title ile override edilebilir.
-  return {
-    subject: props.title || broadcastSubject,
-    html: await render(createElement(BroadcastEmail, props), RENDER_OPTIONS),
-  };
+  return renderEmail(
+    createElement(BroadcastEmail, props),
+    props.title || broadcastSubject,
+  );
 }
 
 // Template'leri ve prop tiplerini tek noktadan dışa aktar.

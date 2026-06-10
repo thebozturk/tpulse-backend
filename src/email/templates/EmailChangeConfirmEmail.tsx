@@ -5,6 +5,7 @@ import { Button } from './components/Button';
 import { Card } from './components/Card';
 import { Title, Body as Paragraph } from './components/Typo';
 import { colors, fontStacks } from './components/theme';
+import { formatExpiry } from './components/format';
 
 export interface EmailChangeConfirmEmailProps {
   name: string;
@@ -54,7 +55,7 @@ export default function EmailChangeConfirmEmail({
       </Section>
 
       <Paragraph small muted>
-        Bu bağlantı <strong style={{ color: colors.text }}>{expiresInMinutes} dakika</strong> geçerlidir.
+        Bu bağlantı <strong style={{ color: colors.text }}>{formatExpiry(expiresInMinutes)}</strong> geçerlidir.
         Bu değişikliği sen talep etmediysen lütfen bu e-postayı yok say; adresin değişmeyecek.
       </Paragraph>
     </EmailLayout>

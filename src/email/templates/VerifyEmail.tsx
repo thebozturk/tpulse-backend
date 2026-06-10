@@ -4,6 +4,7 @@ import { EmailLayout } from './components/EmailLayout';
 import { Button } from './components/Button';
 import { Title, Body as Paragraph } from './components/Typo';
 import { colors, fontStacks } from './components/theme';
+import { formatExpiry } from './components/format';
 
 export interface VerifyEmailProps {
   name: string;
@@ -42,7 +43,7 @@ export default function VerifyEmail({
       </Section>
 
       <Paragraph small muted>
-        Bu bağlantı <strong style={{ color: colors.text }}>{expiresInMinutes} dakika</strong> boyunca geçerlidir.
+        Bu bağlantı <strong style={{ color: colors.text }}>{formatExpiry(expiresInMinutes)}</strong> boyunca geçerlidir.
         Buton çalışmazsa şu adresi tarayıcına yapıştır:
       </Paragraph>
       <Text
