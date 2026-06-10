@@ -9589,12 +9589,215 @@
           "feed"
         ]
       }
+    },
+    "/api/waitlist": {
+      "post": {
+        "operationId": "WaitlistController_subscribe",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateWaitlistDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "message"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Geçersiz e-posta"
+          }
+        },
+        "summary": "Landing page e-posta kaydı (idempotent)",
+        "tags": [
+          "waitlist"
+        ]
+      }
+    },
+    "/api/admin/waitlist/launch": {
+      "post": {
+        "operationId": "WaitlistAdminController_launch",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LaunchCampaignDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/LaunchCampaignResponseDto"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Lansman duyurusunu kuyruğa al (sıralı gönderim)",
+        "tags": [
+          "admin-waitlist"
+        ]
+      }
+    },
+    "/api/admin/waitlist/launches": {
+      "get": {
+        "operationId": "WaitlistAdminController_history",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/LaunchCampaignResponseDto"
+                      }
+                    },
+                    "page": {
+                      "type": "number"
+                    },
+                    "pageSize": {
+                      "type": "number"
+                    },
+                    "totalCount": {
+                      "type": "number"
+                    },
+                    "totalPages": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "items",
+                    "page",
+                    "pageSize",
+                    "totalCount",
+                    "totalPages"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Lansman kampanyası geçmişi + durum (paged)",
+        "tags": [
+          "admin-waitlist"
+        ]
+      }
+    },
+    "/api/admin/waitlist/stats": {
+      "get": {
+        "operationId": "WaitlistAdminController_stats",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/WaitlistStatsResponseDto"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Waitlist özet sayıları",
+        "tags": [
+          "admin-waitlist"
+        ]
+      }
     }
   },
   "info": {
     "title": "TransferPulse API",
     "description": "TransferPulse backend (.NET → NestJS migration)",
-    "version": "1.3.0",
+    "version": "1.4.0",
     "contact": {}
   },
   "tags": [],
@@ -12907,6 +13110,144 @@
         },
         "required": [
           "keyword"
+        ]
+      },
+      "CreateWaitlistDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "meraklı@kullanici.com",
+            "maxLength": 255
+          },
+          "source": {
+            "type": "string",
+            "example": "landing",
+            "maxLength": 60,
+            "description": "Kaydın geldiği yer (ör. landing, footer)."
+          }
+        },
+        "required": [
+          "email"
+        ]
+      },
+      "LaunchCampaignResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "subject": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          },
+          "ctaLabel": {
+            "type": "string"
+          },
+          "ctaUrl": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "example": "Queued",
+            "enum": [
+              "Queued",
+              "Sending",
+              "Done",
+              "Failed"
+            ]
+          },
+          "total": {
+            "type": "number",
+            "example": 0,
+            "description": "Hedef abone sayısı"
+          },
+          "sentCount": {
+            "type": "number",
+            "example": 0,
+            "description": "Gönderilen e-posta sayısı"
+          },
+          "createdBy": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "subject",
+          "body",
+          "status",
+          "total",
+          "sentCount",
+          "createdBy",
+          "createdAt"
+        ]
+      },
+      "LaunchCampaignDto": {
+        "type": "object",
+        "properties": {
+          "subject": {
+            "type": "string",
+            "maxLength": 200,
+            "example": "TransferPulse yayında! 🚀"
+          },
+          "body": {
+            "type": "string",
+            "maxLength": 2000,
+            "example": "Beklediğin an geldi — TransferPulse artık canlıda."
+          },
+          "ctaLabel": {
+            "type": "string",
+            "maxLength": 80,
+            "example": "Hemen keşfet"
+          },
+          "ctaUrl": {
+            "type": "string",
+            "maxLength": 500,
+            "example": "https://transferpulse.app/kesfet"
+          }
+        },
+        "required": [
+          "subject",
+          "body"
+        ]
+      },
+      "WaitlistStatsResponseDto": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "number",
+            "example": 1250,
+            "description": "Toplam kayıt"
+          },
+          "subscribed": {
+            "type": "number",
+            "example": 1180,
+            "description": "Aktif abone (subscribed)"
+          },
+          "unsubscribed": {
+            "type": "number",
+            "example": 70,
+            "description": "Abonelikten çıkan"
+          },
+          "launchSent": {
+            "type": "number",
+            "example": 900,
+            "description": "Lansman maili gönderilmiş abone"
+          }
+        },
+        "required": [
+          "total",
+          "subscribed",
+          "unsubscribed",
+          "launchSent"
         ]
       }
     }
