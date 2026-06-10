@@ -59,7 +59,7 @@ export class WaitlistService {
         subject: LAUNCH_EMAIL_CONTENT.subject,
         body: LAUNCH_HISTORY_BODY,
         ctaLabel: LAUNCH_EMAIL_CONTENT.ctaLabel,
-        ctaUrl: null,
+        ctaUrl: LAUNCH_EMAIL_CONTENT.ctaUrl,
         total,
         createdBy,
       },

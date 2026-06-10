@@ -397,7 +397,7 @@ export class EmailService {
     await this.dispatch(
       to,
       await renderLaunchEmail({
-        ctaUrl: `${this.webUrl}${LAUNCH_EMAIL_CONTENT.ctaPath}`,
+        ctaUrl: LAUNCH_EMAIL_CONTENT.ctaUrl,
         assetBaseUrl: this.assetBaseUrl,
         unsubscribeUrl: this.unsubscribeUrl(to),
       }),

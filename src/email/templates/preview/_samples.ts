@@ -20,7 +20,7 @@ const assetBaseUrl = 'https://cdn.transferpulse.app/email';
 const unsubscribeUrl = 'https://transferpulse.app/abonelik/cik?t=demo';
 
 export const launchProps: LaunchEmailProps = {
-  ctaUrl: 'https://transferpulse.app/kesfet',
+  ctaUrl: 'https://transferpulse.app/indir',
   assetBaseUrl,
   unsubscribeUrl,
 };

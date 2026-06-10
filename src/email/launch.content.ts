@@ -19,10 +19,13 @@ export const LAUNCH_EMAIL_CONTENT = {
     'TransferPulse artık canlıda. Favori takımlarını ve oyuncularını takip et, transfer söylentilerini ilk sen öğren.',
     'Bizi beklediğin için teşekkürler — şimdi keşfetme zamanı.',
   ],
-  /** CTA buton metni. */
-  ctaLabel: 'Hemen keşfet',
-  /** CTA yolu; tam URL servis tarafından `webUrl + ctaPath` ile kurulur. */
-  ctaPath: '/kesfet',
+  /** CTA buton metni — uygulamaya indir/yönlendir. */
+  ctaLabel: 'Uygulamayı indir',
+  /**
+   * CTA'ya tıklayınca yönlendirilecek MUTLAK uygulama/indirme URL'i.
+   * ⚠️ Gerçek uygulama URL'inle değiştir (App Store / Play / indirme landing).
+   */
+  ctaUrl: 'https://transferpulse.app/indir',
 } as const;
 
 /** Kampanya geçmişi kaydı için düz metin gövde (DB'de saklanır). */
