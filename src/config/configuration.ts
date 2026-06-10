@@ -106,6 +106,12 @@ export const configuration = () => {
       },
       sourceLimit: env.FEED_SOURCE_LIMIT,
       maxResults: env.FEED_MAX_RESULTS,
+      oonAttenuation: env.FEED_OON_ATTENUATION,
+      diversity: {
+        decay: env.FEED_DIVERSITY_DECAY,
+        floor: env.FEED_DIVERSITY_FLOOR,
+      },
+      servedTtlSeconds: env.FEED_SERVED_TTL_SECONDS,
     },
   };
 };

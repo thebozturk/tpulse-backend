@@ -125,6 +125,14 @@ export const envSchema = z
     // Kaynak başına aday limiti + sıralı havuz kapağı.
     FEED_SOURCE_LIMIT: z.coerce.number().int().positive().default(200),
     FEED_MAX_RESULTS: z.coerce.number().int().positive().default(200),
+    // Faz 2 — keşif/çeşitlilik/dedup.
+    // Out-of-network (yalnız discovery) içerik çarpanı (≤1 → söndürme).
+    FEED_OON_ATTENUATION: z.coerce.number().positive().default(0.8),
+    // Aynı yazar tekrarı sönümü: multiplier = (1-floor)·decay^pozisyon + floor.
+    FEED_DIVERSITY_DECAY: z.coerce.number().min(0).max(1).default(0.5),
+    FEED_DIVERSITY_FLOOR: z.coerce.number().min(0).max(1).default(0.1),
+    // Sunulan post'ların tekrar gösterilmeme penceresi (sn).
+    FEED_SERVED_TTL_SECONDS: z.coerce.number().int().positive().default(86400),
   })
   .superRefine((env, ctx) => {
     if (env.NODE_ENV === 'production' && env.LOAD_TEST_MODE) {

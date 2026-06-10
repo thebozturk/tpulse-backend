@@ -14,4 +14,6 @@ export interface IFeedRepository {
   ): Promise<PostWithRel[]>;
   /** Takip edilen yazarların postları, hotScore DESC. */
   byAuthors(authorIds: string[], limit: number): Promise<PostWithRel[]>;
+  /** Out-of-network keşif: global hotScore DESC (viewer'ın kendi postları hariç). */
+  discovery(viewerId: string, limit: number): Promise<PostWithRel[]>;
 }

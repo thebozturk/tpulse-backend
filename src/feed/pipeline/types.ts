@@ -18,6 +18,8 @@ export interface FeedQuery {
   favourite: PostFavouriteTargets;
   /** Takip edilen kullanıcı id'leri (in-network: kişi ilgisi). */
   followingIds: string[];
+  /** Daha önce sunulan (Redis served) + client-sent görülen post id'leri. */
+  seenIds: Set<string>;
 }
 
 /** Pipeline boyunca taşınan aday: post + ara skor + köken(ler). */

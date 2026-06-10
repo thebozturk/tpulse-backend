@@ -25,6 +25,6 @@ export class FeedController {
     @CurrentUser() user: AuthUser,
     @Query() query: FeedQueryDto,
   ): Promise<PagedResult<PostResponseDto>> {
-    return this.feed.forYou(user.userId, query.page, query.pageSize);
+    return this.feed.forYou(user.userId, query);
   }
 }

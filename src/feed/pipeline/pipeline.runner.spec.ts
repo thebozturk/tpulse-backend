@@ -24,6 +24,7 @@ const query: FeedQuery = {
   pageSize: 20,
   favourite: { playerIds: [], teamIds: [], reporterUserIds: [] },
   followingIds: [],
+  seenIds: new Set(),
 };
 
 const passthroughSelector: Selector = { select: (c) => c };
