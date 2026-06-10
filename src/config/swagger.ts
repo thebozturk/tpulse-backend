@@ -6,7 +6,7 @@ export function buildSwaggerDocument(app: INestApplication): OpenAPIObject {
   const config = new DocumentBuilder()
     .setTitle('TransferPulse API')
     .setDescription('TransferPulse backend (.NET → NestJS migration)')
-    .setVersion('1.2.0')
+    .setVersion('1.3.0')
     .addBearerAuth()
     .build();
 

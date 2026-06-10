@@ -3010,6 +3010,60 @@
         ]
       }
     },
+    "/api/admin/users/{id}/verify": {
+      "patch": {
+        "operationId": "AdminUsersController_setVerified",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdminVerifyUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/AdminUserDetailResponseDto"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Doğrulama rozeti ata/kaldır (Blue=onaylı kullanıcı, Gold=marka)",
+        "tags": [
+          "admin-users"
+        ]
+      }
+    },
     "/api/admin/users/{id}/reputation": {
       "patch": {
         "operationId": "AdminUsersController_updateReputation",
@@ -9540,7 +9594,7 @@
   "info": {
     "title": "TransferPulse API",
     "description": "TransferPulse backend (.NET → NestJS migration)",
-    "version": "1.2.0",
+    "version": "1.3.0",
     "contact": {}
   },
   "tags": [],
@@ -9667,6 +9721,15 @@
           },
           "userRole": {
             "type": "string"
+          },
+          "verificationType": {
+            "type": "string",
+            "enum": [
+              "Blue",
+              "Gold"
+            ],
+            "nullable": true,
+            "description": "Yazarın doğrulama rozeti (Blue/Gold tik); rozetsizse null"
           },
           "content": {
             "type": "string"
@@ -10008,6 +10071,15 @@
           },
           "ownerPhoto": {
             "type": "string"
+          },
+          "verificationType": {
+            "type": "string",
+            "enum": [
+              "Blue",
+              "Gold"
+            ],
+            "nullable": true,
+            "description": "Yazarın doğrulama rozeti (Blue/Gold tik); rozetsizse null"
           },
           "content": {
             "type": "string"
@@ -10405,6 +10477,15 @@
           "role": {
             "type": "string"
           },
+          "verificationType": {
+            "type": "string",
+            "enum": [
+              "Blue",
+              "Gold"
+            ],
+            "nullable": true,
+            "description": "Doğrulama rozeti: Blue=onaylı kullanıcı, Gold=onaylı marka"
+          },
           "createdAt": {
             "format": "date-time",
             "type": "string"
@@ -10686,6 +10767,15 @@
           "role": {
             "type": "string"
           },
+          "verificationType": {
+            "type": "string",
+            "enum": [
+              "Blue",
+              "Gold"
+            ],
+            "nullable": true,
+            "description": "Doğrulama rozeti: Blue=onaylı kullanıcı, Gold=onaylı marka"
+          },
           "createdAt": {
             "format": "date-time",
             "type": "string"
@@ -10700,6 +10790,11 @@
           "updatedAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "verifiedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Doğrulama rozetinin verildiği an"
           }
         },
         "required": [
@@ -10785,6 +10880,24 @@
         },
         "required": [
           "role"
+        ]
+      },
+      "AdminVerifyUserDto": {
+        "type": "object",
+        "properties": {
+          "verificationType": {
+            "type": "string",
+            "enum": [
+              "Blue",
+              "Gold"
+            ],
+            "nullable": true,
+            "example": "Blue",
+            "description": "Blue = onaylı kullanıcı (mavi tik), Gold = onaylı marka/resmi (sarı tik), null = tiki kaldır"
+          }
+        },
+        "required": [
+          "verificationType"
         ]
       },
       "AdminUpdateReputationDto": {
