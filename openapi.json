@@ -1968,6 +1968,53 @@
         ]
       }
     },
+    "/api/email/unsubscribe": {
+      "post": {
+        "operationId": "EmailController_unsubscribe",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UnsubscribeDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "message"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Geçersiz abonelik tokenı"
+          }
+        },
+        "summary": "Digest/pazarlama e-postalarından çık (imzalı token)",
+        "tags": [
+          "email"
+        ]
+      }
+    },
     "/api/auth/register": {
       "post": {
         "operationId": "AuthController_register",
@@ -2124,6 +2171,97 @@
           }
         },
         "summary": "Şifreyi sıfırla",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/auth/verify-email": {
+      "post": {
+        "operationId": "AuthController_verifyEmail",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerifyEmailDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "message"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Geçersiz/expired doğrulama tokenı"
+          }
+        },
+        "summary": "E-postayı doğrula",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/auth/resend-verification": {
+      "post": {
+        "operationId": "AuthController_resendVerification",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResendVerificationDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "message"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "summary": "Doğrulama e-postasını yeniden gönder (her zaman 200)",
         "tags": [
           "auth"
         ]
@@ -8894,12 +9032,515 @@
           "admin-currency-rates"
         ]
       }
+    },
+    "/api/ingest/posts": {
+      "post": {
+        "operationId": "IngestController_ingestPost",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IngestPostDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/IngestResultDto"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api-key": []
+          }
+        ],
+        "summary": "Bot içeriğini akışa ekle (duyum/son dakika/resmi)",
+        "tags": [
+          "ingestion"
+        ]
+      }
+    },
+    "/api/users/{id}/follow": {
+      "post": {
+        "operationId": "FollowsController_follow",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FollowActionResultDto"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FollowActionResultDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Kullanıcı bulunamadı"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Kullanıcıyı takip et (201 / 200 unchanged / 404)",
+        "tags": [
+          "follows"
+        ]
+      },
+      "delete": {
+        "operationId": "FollowsController_unfollow",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FollowActionResultDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Takibi bırak (200) / zaten takip etmiyor (200)",
+        "tags": [
+          "follows"
+        ]
+      }
+    },
+    "/api/me/following": {
+      "get": {
+        "operationId": "FollowsController_following",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FollowingListResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Takip ettiğim kullanıcıların id listesi",
+        "tags": [
+          "follows"
+        ]
+      }
+    },
+    "/api/users/{id}/block": {
+      "post": {
+        "operationId": "BlocksController_block",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BlockActionResultDto"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BlockActionResultDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Kullanıcıyı engelle (201 / 200 unchanged / 404)",
+        "tags": [
+          "blocks"
+        ]
+      },
+      "delete": {
+        "operationId": "BlocksController_unblock",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BlockActionResultDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Engeli kaldır",
+        "tags": [
+          "blocks"
+        ]
+      }
+    },
+    "/api/users/{id}/mute": {
+      "post": {
+        "operationId": "BlocksController_mute",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BlockActionResultDto"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BlockActionResultDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Kullanıcıyı sustur (201 / 200 unchanged / 404)",
+        "tags": [
+          "blocks"
+        ]
+      },
+      "delete": {
+        "operationId": "BlocksController_unmute",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BlockActionResultDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Susturmayı kaldır",
+        "tags": [
+          "blocks"
+        ]
+      }
+    },
+    "/api/me/muted-keywords": {
+      "get": {
+        "operationId": "MutedKeywordsController_list",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MutedKeywordDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Susturulan kelimelerim",
+        "tags": [
+          "muted-keywords"
+        ]
+      },
+      "post": {
+        "operationId": "MutedKeywordsController_add",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddMutedKeywordDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Zaten susturulmuş"
+          },
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MutedKeywordDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Kelime sustur (201 / 200 zaten var)",
+        "tags": [
+          "muted-keywords"
+        ]
+      }
+    },
+    "/api/me/muted-keywords/{id}": {
+      "delete": {
+        "operationId": "MutedKeywordsController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Silindi"
+          },
+          "404": {
+            "description": "Kelime bulunamadı"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Susturulan kelimeyi kaldır",
+        "tags": [
+          "muted-keywords"
+        ]
+      }
+    },
+    "/api/feed/for-you": {
+      "get": {
+        "operationId": "FeedController_forYou",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20,
+              "type": "number"
+            }
+          },
+          {
+            "name": "seenIds",
+            "required": false,
+            "in": "query",
+            "description": "Client tarafında zaten görülen post id'leri (virgülle).",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/PostResponseDto"
+                      }
+                    },
+                    "page": {
+                      "type": "number"
+                    },
+                    "pageSize": {
+                      "type": "number"
+                    },
+                    "totalCount": {
+                      "type": "number"
+                    },
+                    "totalPages": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "items",
+                    "page",
+                    "pageSize",
+                    "totalCount",
+                    "totalPages"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Senin İçin — skorlanmış kişisel feed (favourite + follow)",
+        "tags": [
+          "feed"
+        ]
+      }
     }
   },
   "info": {
     "title": "TransferPulse API",
     "description": "TransferPulse backend (.NET → NestJS migration)",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "contact": {}
   },
   "tags": [],
@@ -9039,6 +9680,9 @@
           "playerName": {
             "type": "string"
           },
+          "playerNationality": {
+            "type": "string"
+          },
           "playerPhoto": {
             "type": "string"
           },
@@ -9102,6 +9746,18 @@
           },
           "commentCount": {
             "type": "number"
+          },
+          "category": {
+            "type": "number",
+            "description": "Bot içeriği kategorisi (1=duyum, 2=son dakika, 3=resmi); normal postta null"
+          },
+          "imageUrl": {
+            "type": "string",
+            "description": "Bot içeriği görseli"
+          },
+          "sourceUrl": {
+            "type": "string",
+            "description": "Kaynak (tweet) URL"
           }
         },
         "required": [
@@ -9660,6 +10316,18 @@
           "positionsCreated"
         ]
       },
+      "UnsubscribeDto": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "E-posta footer linkindeki imzalı abonelik tokenı"
+          }
+        },
+        "required": [
+          "token"
+        ]
+      },
       "RegisterDto": {
         "type": "object",
         "properties": {
@@ -9834,6 +10502,37 @@
           "email",
           "token",
           "newPassword"
+        ]
+      },
+      "VerifyEmailDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "alice@acme.com",
+            "maxLength": 256
+          },
+          "token": {
+            "type": "string",
+            "description": "E-posta ile gelen ham doğrulama tokenı"
+          }
+        },
+        "required": [
+          "email",
+          "token"
+        ]
+      },
+      "ResendVerificationDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "alice@acme.com",
+            "maxLength": 256
+          }
+        },
+        "required": [
+          "email"
         ]
       },
       "RefreshTokenDto": {
@@ -10263,6 +10962,9 @@
           "playerName": {
             "type": "string"
           },
+          "playerNationality": {
+            "type": "string"
+          },
           "playerPhoto": {
             "type": "string"
           },
@@ -10303,6 +11005,7 @@
           "transferId",
           "playerId",
           "playerName",
+          "playerNationality",
           "fromTeamId",
           "toTeamId",
           "transferDate",
@@ -10317,6 +11020,15 @@
           "league": {
             "$ref": "#/components/schemas/LeagueBriefDto"
           },
+          "leagueId": {
+            "type": "string"
+          },
+          "leagueName": {
+            "type": "string"
+          },
+          "leagueLogo": {
+            "type": "string"
+          },
           "transfers": {
             "type": "array",
             "items": {
@@ -10326,6 +11038,9 @@
         },
         "required": [
           "league",
+          "leagueId",
+          "leagueName",
+          "leagueLogo",
           "transfers"
         ]
       },
@@ -11927,6 +12642,158 @@
         },
         "required": [
           "rate"
+        ]
+      },
+      "IngestResultDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "created",
+              "duplicate"
+            ],
+            "description": "'duplicate' → aynı sourceId daha önce alınmış (idempotent)"
+          }
+        },
+        "required": [
+          "id",
+          "status"
+        ]
+      },
+      "IngestPostDto": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "type": "string",
+            "enum": [
+              "Rumour",
+              "Breaking",
+              "Official"
+            ],
+            "example": "Rumour"
+          },
+          "text": {
+            "type": "string",
+            "maxLength": 2000,
+            "example": "Son dakika: ... transferi gerçekleşti."
+          },
+          "sourceId": {
+            "type": "string",
+            "maxLength": 64,
+            "description": "Tweet id — idempotency anahtarı"
+          },
+          "sourceUrl": {
+            "type": "string",
+            "maxLength": 500,
+            "example": "https://x.com/.../status/123"
+          },
+          "imageUrl": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "playerId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "teamId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "fromTeamId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "toTeamId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "category",
+          "text",
+          "sourceId"
+        ]
+      },
+      "FollowActionResultDto": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true,
+            "description": "Yeni takip oluşturuldu (201) veya takip kaldırıldı."
+          },
+          "unchanged": {
+            "type": "boolean",
+            "example": true,
+            "description": "Durum zaten istenen halde (200) — değişiklik olmadı."
+          }
+        }
+      },
+      "FollowingListResponseDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "example": [
+              "7c9e6679-7425-40de-944b-e07fc1f90ae7"
+            ],
+            "description": "Takip edilen kullanıcıların id listesi.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "items"
+        ]
+      },
+      "BlockActionResultDto": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "unchanged": {
+            "type": "boolean",
+            "example": true
+          }
+        }
+      },
+      "MutedKeywordDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "keyword": {
+            "type": "string",
+            "example": "sponsorlu"
+          }
+        },
+        "required": [
+          "id",
+          "keyword"
+        ]
+      },
+      "AddMutedKeywordDto": {
+        "type": "object",
+        "properties": {
+          "keyword": {
+            "type": "string",
+            "example": "sponsorlu",
+            "minLength": 2,
+            "maxLength": 100,
+            "description": "Bu kelimeyi içeren postlar feed'de gizlenir (case-insensitive)."
+          }
+        },
+        "required": [
+          "keyword"
         ]
       }
     }
