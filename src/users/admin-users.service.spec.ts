@@ -142,7 +142,10 @@ describe('UsersService (BO-2 admin)', () => {
 
   describe('setVerified', () => {
     it('Blue tik atar + verifiedAt yazar', async () => {
-      prisma.user.findUnique.mockResolvedValue({ ...adminActive, role: 'User' });
+      prisma.user.findUnique.mockResolvedValue({
+        ...adminActive,
+        role: 'User',
+      });
 
       const res = await service.setVerified('u1', {
         verificationType: VerificationType.Blue,
@@ -160,7 +163,10 @@ describe('UsersService (BO-2 admin)', () => {
     });
 
     it('Gold tik atar (onaylı marka)', async () => {
-      prisma.user.findUnique.mockResolvedValue({ ...adminActive, role: 'User' });
+      prisma.user.findUnique.mockResolvedValue({
+        ...adminActive,
+        role: 'User',
+      });
 
       const res = await service.setVerified('u1', {
         verificationType: VerificationType.Gold,
