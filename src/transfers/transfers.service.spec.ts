@@ -24,13 +24,15 @@ describe('TransfersService', () => {
   it('query asks repository for non-rumour transfers (isRumour=false)', async () => {
     repo.query.mockResolvedValue({ items: [], total: 0 });
     const filter = { page: 1, pageSize: 20 };
-    await service.query(filter as never);
+    await service.query(filter as never, 'tr');
     expect(repo.query).toHaveBeenCalledWith(filter, false);
   });
 
   it('findById throws NotFound and excludes rumours', async () => {
     repo.getById.mockResolvedValue(null);
-    await expect(service.findById('x')).rejects.toThrow(NotFoundException);
+    await expect(service.findById('x', 'tr')).rejects.toThrow(
+      NotFoundException,
+    );
     expect(repo.getById).toHaveBeenCalledWith('x', false);
   });
 });

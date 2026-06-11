@@ -7,6 +7,15 @@ export class LeagueWriteDto {
   @MaxLength(30)
   name: string;
 
+  @ApiPropertyOptional({
+    maxLength: 30,
+    description: 'Türkçe gösterim adı (boşsa İngilizce `name` gösterilir)',
+  })
+  @IsOptional()
+  @IsString()
+  @MaxLength(30)
+  nameTr?: string;
+
   @ApiProperty({ maxLength: 30 })
   @IsString()
   @MaxLength(30)

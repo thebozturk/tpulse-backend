@@ -11827,6 +11827,10 @@
           "name": {
             "type": "string"
           },
+          "nameTr": {
+            "type": "string",
+            "description": "Ham Türkçe ad (admin panel için)"
+          },
           "country": {
             "type": "string"
           },
@@ -11870,6 +11874,11 @@
           "name": {
             "type": "string",
             "maxLength": 30
+          },
+          "nameTr": {
+            "type": "string",
+            "maxLength": 30,
+            "description": "Türkçe gösterim adı (boşsa İngilizce `name` gösterilir)"
           },
           "country": {
             "type": "string",
@@ -11925,6 +11934,10 @@
           },
           "name": {
             "type": "string"
+          },
+          "nameTr": {
+            "type": "string",
+            "description": "Ham Türkçe ad (admin panel için)"
           },
           "logo": {
             "type": "string"
@@ -11984,6 +11997,10 @@
           },
           "name": {
             "type": "string"
+          },
+          "nameTr": {
+            "type": "string",
+            "description": "Ham Türkçe ad (admin panel için)"
           },
           "logo": {
             "type": "string"
@@ -12061,6 +12078,11 @@
             "type": "string",
             "maxLength": 50
           },
+          "nameTr": {
+            "type": "string",
+            "maxLength": 50,
+            "description": "Türkçe gösterim adı (boşsa İngilizce `name` gösterilir)"
+          },
           "logo": {
             "type": "string"
           },
@@ -12108,6 +12130,14 @@
           },
           "lastName": {
             "type": "string"
+          },
+          "firstNameTr": {
+            "type": "string",
+            "description": "Ham Türkçe ad (admin panel için)"
+          },
+          "lastNameTr": {
+            "type": "string",
+            "description": "Ham Türkçe soyad (admin panel için)"
           },
           "fullName": {
             "type": "string"
@@ -12284,6 +12314,16 @@
           "lastName": {
             "type": "string",
             "maxLength": 32
+          },
+          "firstNameTr": {
+            "type": "string",
+            "maxLength": 32,
+            "description": "Türkçe ad (boşsa firstName)"
+          },
+          "lastNameTr": {
+            "type": "string",
+            "maxLength": 32,
+            "description": "Türkçe soyad (boşsa lastName)"
           },
           "nationality": {
             "type": "string",

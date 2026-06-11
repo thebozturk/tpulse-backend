@@ -2,6 +2,8 @@ import { Controller, Get, Param, ParseUUIDPipe, Query } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Public } from '../common/decorators/public.decorator';
 import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
+import { ReqLang } from '../common/i18n/lang.decorator';
+import { Lang } from '../common/i18n/lang';
 import {
   ApiListResponse,
   ApiPagedResponse,
@@ -28,8 +30,9 @@ export class TeamsController {
   @ApiPagedResponse(TeamResponseDto)
   findAll(
     @Query() query: PaginationQueryDto,
+    @ReqLang() lang: Lang,
   ): Promise<PagedResult<TeamResponseDto>> {
-    return this.teams.findAll(query.page, query.pageSize);
+    return this.teams.findAll(query.page, query.pageSize, lang);
   }
 
   @Get('by-league/:leagueId')
@@ -38,8 +41,9 @@ export class TeamsController {
   @ApiResponse({ status: 404 })
   async findByLeague(
     @Param('leagueId', ParseUUIDPipe) leagueId: string,
+    @ReqLang() lang: Lang,
   ): Promise<ListResponse<TeamResponseDto>> {
-    return { items: await this.teams.findByLeague(leagueId) };
+    return { items: await this.teams.findByLeague(leagueId, lang) };
   }
 
   @Get(':id/detail')
@@ -48,8 +52,9 @@ export class TeamsController {
   @ApiResponse({ status: 404 })
   async detail(
     @Param('id', ParseUUIDPipe) id: string,
+    @ReqLang() lang: Lang,
   ): Promise<SingleResponse<TeamDetailDto>> {
-    return { data: await this.teams.getDetail(id) };
+    return { data: await this.teams.getDetail(id, lang) };
   }
 
   @Get(':teamId/incoming-transfers')
@@ -88,7 +93,8 @@ export class TeamsController {
   @ApiResponse({ status: 404 })
   async findOne(
     @Param('id', ParseUUIDPipe) id: string,
+    @ReqLang() lang: Lang,
   ): Promise<SingleResponse<TeamResponseDto>> {
-    return { data: await this.teams.findById(id) };
+    return { data: await this.teams.findById(id, lang) };
   }
 }

@@ -43,7 +43,7 @@ describe('StatsService', () => {
       maxFee: 80,
       minFee: 20,
     });
-    const dto = await service.getStats({});
+    const dto = await service.getStats({}, 'tr');
     expect(dto).toMatchObject({ totalTransfers: 2, maxFee: 80, minFee: 20 });
     expect(dto.mostExpensiveTransfer).toBeUndefined();
   });
@@ -56,7 +56,7 @@ describe('StatsService', () => {
 
   it('getPeriodSummary requires year or transferPeriodId (400)', async () => {
     await expect(
-      service.getPeriodSummary({ baseCurrency: 'EUR' }),
+      service.getPeriodSummary({ baseCurrency: 'EUR' }, 'tr'),
     ).rejects.toThrow(BadRequestException);
   });
 });

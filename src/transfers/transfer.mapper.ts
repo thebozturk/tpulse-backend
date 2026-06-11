@@ -1,29 +1,33 @@
 import { TransferWithRel } from './transfer.repository';
 import { TransferResponseDto } from './dto/transfer-response.dto';
 import { TeamTransferLineDto } from './dto/team-transfer-line.dto';
+import { DEFAULT_LANG, Lang, pickName } from '../common/i18n/lang';
 
 const fee = (d: TransferWithRel['feeAmount']): number => Number(d);
 
-export function toTransferResponse(t: TransferWithRel): TransferResponseDto {
+export function toTransferResponse(
+  t: TransferWithRel,
+  lang: Lang = DEFAULT_LANG,
+): TransferResponseDto {
   return {
     id: t.id,
     player: {
       id: t.player.id,
-      name: `${t.player.firstName} ${t.player.lastName}`,
+      name: `${pickName(lang, t.player.firstName, t.player.firstNameTr)} ${pickName(lang, t.player.lastName, t.player.lastNameTr)}`,
       photo: t.player.photo ?? undefined,
       nationality: t.player.nationality,
       positionName: t.player.position?.nameEn ?? undefined,
       teamId: t.player.teamId,
-      teamName: t.player.team.name,
+      teamName: pickName(lang, t.player.team.name, t.player.team.nameTr),
     },
     fromTeam: {
       id: t.fromTeam.id,
-      name: t.fromTeam.name,
+      name: pickName(lang, t.fromTeam.name, t.fromTeam.nameTr),
       logo: t.fromTeam.logo ?? undefined,
     },
     toTeam: {
       id: t.toTeam.id,
-      name: t.toTeam.name,
+      name: pickName(lang, t.toTeam.name, t.toTeam.nameTr),
       logo: t.toTeam.logo ?? undefined,
     },
     feeAmount: fee(t.feeAmount),
@@ -44,18 +48,21 @@ export function toTransferResponse(t: TransferWithRel): TransferResponseDto {
   };
 }
 
-export function toTeamTransferLine(t: TransferWithRel): TeamTransferLineDto {
+export function toTeamTransferLine(
+  t: TransferWithRel,
+  lang: Lang = DEFAULT_LANG,
+): TeamTransferLineDto {
   return {
     transferId: t.id,
     playerId: t.playerId,
-    playerName: `${t.player.firstName} ${t.player.lastName}`,
+    playerName: `${pickName(lang, t.player.firstName, t.player.firstNameTr)} ${pickName(lang, t.player.lastName, t.player.lastNameTr)}`,
     playerNationality: t.player.nationality,
     playerPhoto: t.player.photo ?? undefined,
     fromTeamId: t.fromTeamId,
-    fromTeamName: t.fromTeam.name,
+    fromTeamName: pickName(lang, t.fromTeam.name, t.fromTeam.nameTr),
     fromTeamLogo: t.fromTeam.logo ?? undefined,
     toTeamId: t.toTeamId,
-    toTeamName: t.toTeam.name,
+    toTeamName: pickName(lang, t.toTeam.name, t.toTeam.nameTr),
     toTeamLogo: t.toTeam.logo ?? undefined,
     transferDate: t.transferDate,
     feeAmount: fee(t.feeAmount),

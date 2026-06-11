@@ -1,4 +1,5 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Lang, pickName } from '../common/i18n/lang';
 import { PagedResult } from '../common/interfaces/response.interface';
 import { buildPaged } from '../common/pagination';
 import { CacheTag, CacheTtl } from '../common/redis/cache-tags';
@@ -93,55 +94,61 @@ export class TeamsService {
   async findAll(
     page: number,
     pageSize: number,
+    lang: Lang,
   ): Promise<PagedResult<TeamResponseDto>> {
     return this.cache.getOrSet(
-      CacheService.buildKey('teams:list', { page, pageSize }),
+      CacheService.buildKey('teams:list', { page, pageSize, lang }),
       CacheTtl.List,
       async () => {
         const { items, total } = await this.repo.getAll(page, pageSize);
-        return buildPaged(items.map(toTeamResponse), total, page, pageSize);
+        return buildPaged(
+          items.map((t) => toTeamResponse(t, lang)),
+          total,
+          page,
+          pageSize,
+        );
       },
       [CacheTag.Teams],
     );
   }
 
-  async findById(id: string): Promise<TeamResponseDto> {
+  async findById(id: string, lang: Lang): Promise<TeamResponseDto> {
     return this.cache.getOrSet(
-      CacheService.buildKey('teams:byId', { id }),
+      CacheService.buildKey('teams:byId', { id, lang }),
       CacheTtl.List,
       async () => {
         const team = await this.repo.getById(id);
         if (!team) {
           throw new NotFoundException('Takım bulunamadı');
         }
-        return toTeamResponse(team);
+        return toTeamResponse(team, lang);
       },
       [CacheTag.Teams],
     );
   }
 
-  async findByLeague(leagueId: string): Promise<TeamResponseDto[]> {
+  async findByLeague(leagueId: string, lang: Lang): Promise<TeamResponseDto[]> {
     return this.cache.getOrSet(
-      CacheService.buildKey('teams:byLeague', { leagueId }),
+      CacheService.buildKey('teams:byLeague', { leagueId, lang }),
       CacheTtl.List,
       async () => {
         const teams = await this.repo.getByLeagueId(leagueId);
-        return teams.map(toTeamResponse);
+        return teams.map((t) => toTeamResponse(t, lang));
       },
       [CacheTag.Teams],
     );
   }
 
-  async getDetail(id: string): Promise<TeamDetailDto> {
+  async getDetail(id: string, lang: Lang): Promise<TeamDetailDto> {
     return this.cache.getOrSet(
-      CacheService.buildKey('teams:detail', { id }),
+      CacheService.buildKey('teams:detail', { id, lang }),
       CacheTtl.List,
-      () => this.computeDetail(id),
+      () => this.computeDetail(id, lang),
       [CacheTag.Teams, CacheTag.Transfers],
     );
   }
 
-  private async computeDetail(id: string): Promise<TeamDetailDto> {
+  private async computeDetail(id: string, lang: Lang): Promise<TeamDetailDto> {
     const team = await this.repo.getDetailById(id);
     if (!team) {
       throw new NotFoundException('Takım bulunamadı');
@@ -152,19 +159,20 @@ export class TeamsService {
     ]);
     return {
       id: team.id,
-      name: team.name,
+      name: pickName(lang, team.name, team.nameTr),
+      nameTr: team.nameTr ?? undefined,
       logo: team.logo ?? undefined,
       founded: team.founded ?? undefined,
       venueName: team.venueName ?? undefined,
       venueCity: team.venueCity ?? undefined,
       venueCapacity: team.venueCapacity ?? undefined,
       leagueId: team.leagueId,
-      leagueName: team.league.name,
+      leagueName: pickName(lang, team.league.name, team.league.nameTr),
       leagueLogo: team.league.leagueLogo,
       playerCount: team._count.players,
-      squad: team.players.map(toSquadPlayer),
-      recentIncoming: recentIncoming.map(toTeamTransferLine),
-      recentOutgoing: recentOutgoing.map(toTeamTransferLine),
+      squad: team.players.map((p) => toSquadPlayer(p, lang)),
+      recentIncoming: recentIncoming.map((t) => toTeamTransferLine(t, lang)),
+      recentOutgoing: recentOutgoing.map((t) => toTeamTransferLine(t, lang)),
     };
   }
 
@@ -180,7 +188,7 @@ export class TeamsService {
           teamId,
           direction,
         );
-        return items.map(toTeamTransferLine);
+        return items.map((t) => toTeamTransferLine(t));
       },
       [CacheTag.Teams, CacheTag.Transfers],
     );

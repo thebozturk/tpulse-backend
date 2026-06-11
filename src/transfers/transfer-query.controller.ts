@@ -8,6 +8,8 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Public } from '../common/decorators/public.decorator';
+import { ReqLang } from '../common/i18n/lang.decorator';
+import { Lang } from '../common/i18n/lang';
 import {
   ListResponse,
   PagedResult,
@@ -54,8 +56,9 @@ export class TransferQueryController {
   @ApiPagedResponse(TransferResponseDto)
   findAll(
     @Query() filter: TransferFilterDto,
+    @ReqLang() lang: Lang,
   ): Promise<PagedResult<TransferResponseDto>> {
-    return this.transfers.query(filter);
+    return this.transfers.query(filter, lang);
   }
 
   @Get('latest')
@@ -63,8 +66,9 @@ export class TransferQueryController {
   @ApiPagedResponse(TransferResponseDto)
   latest(
     @Query() dto: LatestQueryDto,
+    @ReqLang() lang: Lang,
   ): Promise<PagedResult<TransferResponseDto>> {
-    return this.transfers.latest(dto);
+    return this.transfers.latest(dto, lang);
   }
 
   @Get('top-expensive')
@@ -72,8 +76,9 @@ export class TransferQueryController {
   @ApiPagedResponse(TransferResponseDto)
   topExpensive(
     @Query() dto: TopExpensiveDto,
+    @ReqLang() lang: Lang,
   ): Promise<PagedResult<TransferResponseDto>> {
-    return this.transfers.topExpensive(dto);
+    return this.transfers.topExpensive(dto, lang);
   }
 
   @Get('between-teams')
@@ -81,8 +86,9 @@ export class TransferQueryController {
   @ApiListResponse(TransferResponseDto)
   async betweenTeams(
     @Query() dto: BetweenTeamsDto,
+    @ReqLang() lang: Lang,
   ): Promise<ListResponse<TransferResponseDto>> {
-    return { items: await this.transfers.betweenTeams(dto) };
+    return { items: await this.transfers.betweenTeams(dto, lang) };
   }
 
   @Get('by-year/:year')
@@ -90,8 +96,9 @@ export class TransferQueryController {
   @ApiListResponse(TransferResponseDto)
   async byYear(
     @Param('year', ParseIntPipe) year: number,
+    @ReqLang() lang: Lang,
   ): Promise<ListResponse<TransferResponseDto>> {
-    return { items: await this.transfers.byYear(year) };
+    return { items: await this.transfers.byYear(year, lang) };
   }
 
   @Get('by-month/:year/:month')
@@ -100,8 +107,9 @@ export class TransferQueryController {
   async byMonth(
     @Param('year', ParseIntPipe) year: number,
     @Param('month', ParseIntPipe) month: number,
+    @ReqLang() lang: Lang,
   ): Promise<ListResponse<TransferResponseDto>> {
-    return { items: await this.transfers.byMonth(year, month) };
+    return { items: await this.transfers.byMonth(year, month, lang) };
   }
 
   @Get('latest-by-leagues')
@@ -109,15 +117,19 @@ export class TransferQueryController {
   @ApiListResponse(LeagueTransfersDto)
   async latestByLeagues(
     @Query() dto: LatestByLeaguesDto,
+    @ReqLang() lang: Lang,
   ): Promise<ListResponse<LeagueTransfersDto>> {
-    return { items: await this.transfers.latestByLeagues(dto) };
+    return { items: await this.transfers.latestByLeagues(dto, lang) };
   }
 
   @Get('stats')
   @ApiOperation({ summary: 'Transfer istatistikleri' })
   @ApiResponse({ status: 200, type: TransferStatsDto })
-  getStats(@Query() filter: StatsFilterDto): Promise<TransferStatsDto> {
-    return this.stats.getStats(filter);
+  getStats(
+    @Query() filter: StatsFilterDto,
+    @ReqLang() lang: Lang,
+  ): Promise<TransferStatsDto> {
+    return this.stats.getStats(filter, lang);
   }
 
   @Get('periods')
@@ -139,8 +151,9 @@ export class TransferQueryController {
   })
   periodSummary(
     @Query() query: PeriodSummaryQueryDto,
+    @ReqLang() lang: Lang,
   ): Promise<TransferPeriodSummaryDto> {
-    return this.stats.getPeriodSummary(query);
+    return this.stats.getPeriodSummary(query, lang);
   }
 
   @Get('season-dashboard')
@@ -149,8 +162,9 @@ export class TransferQueryController {
   @ApiResponse({ status: 400 })
   seasonDashboard(
     @Query() query: SeasonDashboardQueryDto,
+    @ReqLang() lang: Lang,
   ): Promise<TransferSeasonDashboardDto> {
-    return this.stats.getSeasonDashboard(query);
+    return this.stats.getSeasonDashboard(query, lang);
   }
 
   @Get(':id')
@@ -159,7 +173,8 @@ export class TransferQueryController {
   @ApiResponse({ status: 404 })
   async findOne(
     @Param('id', ParseUUIDPipe) id: string,
+    @ReqLang() lang: Lang,
   ): Promise<SingleResponse<TransferResponseDto>> {
-    return { data: await this.transfers.findById(id) };
+    return { data: await this.transfers.findById(id, lang) };
   }
 }

@@ -1,6 +1,8 @@
 import { Controller, Get, Param, ParseUUIDPipe, Query } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Public } from '../common/decorators/public.decorator';
+import { ReqLang } from '../common/i18n/lang.decorator';
+import { Lang } from '../common/i18n/lang';
 import {
   ApiListResponse,
   ApiPagedResponse,
@@ -26,8 +28,9 @@ export class RumourController {
   @ApiPagedResponse(TransferResponseDto)
   findAll(
     @Query() filter: RumourFilterDto,
+    @ReqLang() lang: Lang,
   ): Promise<PagedResult<TransferResponseDto>> {
-    return this.rumours.query(filter);
+    return this.rumours.query(filter, lang);
   }
 
   @Get('latest')
@@ -35,8 +38,9 @@ export class RumourController {
   @ApiPagedResponse(TransferResponseDto)
   async latest(
     @Query() dto: LatestQueryDto,
+    @ReqLang() lang: Lang,
   ): Promise<PagedResult<TransferResponseDto>> {
-    return this.rumours.latest(dto);
+    return this.rumours.latest(dto, lang);
   }
 
   @Get('by-player/:playerId')
@@ -44,8 +48,9 @@ export class RumourController {
   @ApiListResponse(TransferResponseDto)
   async byPlayer(
     @Param('playerId', ParseUUIDPipe) playerId: string,
+    @ReqLang() lang: Lang,
   ): Promise<ListResponse<TransferResponseDto>> {
-    return { items: await this.rumours.byPlayer(playerId) };
+    return { items: await this.rumours.byPlayer(playerId, lang) };
   }
 
   @Get('by-team/:teamId')
@@ -53,8 +58,9 @@ export class RumourController {
   @ApiListResponse(TransferResponseDto)
   async byTeam(
     @Param('teamId', ParseUUIDPipe) teamId: string,
+    @ReqLang() lang: Lang,
   ): Promise<ListResponse<TransferResponseDto>> {
-    return { items: await this.rumours.byTeam(teamId) };
+    return { items: await this.rumours.byTeam(teamId, lang) };
   }
 
   @Get(':id')
@@ -63,7 +69,8 @@ export class RumourController {
   @ApiResponse({ status: 404 })
   async findOne(
     @Param('id', ParseUUIDPipe) id: string,
+    @ReqLang() lang: Lang,
   ): Promise<SingleResponse<TransferResponseDto>> {
-    return { data: await this.rumours.findById(id) };
+    return { data: await this.rumours.findById(id, lang) };
   }
 }

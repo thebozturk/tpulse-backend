@@ -6,11 +6,11 @@ export const transferInclude = {
   player: {
     include: {
       position: { select: { nameEn: true } },
-      team: { select: { name: true } },
+      team: { select: { name: true, nameTr: true } },
     },
   },
-  fromTeam: { select: { id: true, name: true, logo: true } },
-  toTeam: { select: { id: true, name: true, logo: true } },
+  fromTeam: { select: { id: true, name: true, nameTr: true, logo: true } },
+  toTeam: { select: { id: true, name: true, nameTr: true, logo: true } },
   createdByUser: {
     select: { id: true, username: true, profilePic: true, role: true },
   },
@@ -84,7 +84,12 @@ export interface ITransferRepository {
     year?: number,
   ): Promise<
     Array<{
-      league: { id: string; name: string; leagueLogo: string };
+      league: {
+        id: string;
+        name: string;
+        nameTr: string | null;
+        leagueLogo: string;
+      };
       transfers: TransferWithRel[];
     }>
   >;

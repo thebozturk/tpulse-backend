@@ -12,6 +12,7 @@ import {
   TopExpensiveDto,
   TransferFilterDto,
 } from './dto/transfer-query.dto';
+import { Lang, pickName } from '../common/i18n/lang';
 import { toTeamTransferLine, toTransferResponse } from './transfer.mapper';
 import {
   ITransferRepository,
@@ -27,14 +28,15 @@ export class TransfersService {
 
   async query(
     filter: TransferFilterDto,
+    lang: Lang,
   ): Promise<PagedResult<TransferResponseDto>> {
     return this.cache.getOrSet(
-      CacheService.buildKey('transfers:list', { ...filter }),
+      CacheService.buildKey('transfers:list', { ...filter, lang }),
       CacheTtl.List,
       async () => {
         const { items, total } = await this.repo.query(filter, false);
         return buildPaged(
-          items.map(toTransferResponse),
+          items.map((t) => toTransferResponse(t, lang)),
           total,
           filter.page,
           filter.pageSize,
@@ -44,26 +46,30 @@ export class TransfersService {
     );
   }
 
-  async findById(id: string): Promise<TransferResponseDto> {
+  async findById(id: string, lang: Lang): Promise<TransferResponseDto> {
     return this.cache.getOrSet(
-      CacheService.buildKey('transfers:byId', { id }),
+      CacheService.buildKey('transfers:byId', { id, lang }),
       CacheTtl.List,
       async () => {
         const t = await this.repo.getById(id, false);
         if (!t) {
           throw new NotFoundException('Transfer bulunamadı');
         }
-        return toTransferResponse(t);
+        return toTransferResponse(t, lang);
       },
       [CacheTag.Transfers],
     );
   }
 
-  async latest(dto: LatestQueryDto): Promise<PagedResult<TransferResponseDto>> {
+  async latest(
+    dto: LatestQueryDto,
+    lang: Lang,
+  ): Promise<PagedResult<TransferResponseDto>> {
     return this.cache.getOrSet(
       CacheService.buildKey('transfers:latest', {
         page: dto.page,
         pageSize: dto.pageSize,
+        lang,
       }),
       CacheTtl.List,
       async () => {
@@ -73,7 +79,7 @@ export class TransfersService {
           false,
         );
         return buildPaged(
-          items.map(toTransferResponse),
+          items.map((t) => toTransferResponse(t, lang)),
           total,
           dto.page,
           dto.pageSize,
@@ -85,9 +91,10 @@ export class TransfersService {
 
   async topExpensive(
     dto: TopExpensiveDto,
+    lang: Lang,
   ): Promise<PagedResult<TransferResponseDto>> {
     return this.cache.getOrSet(
-      CacheService.buildKey('transfers:topExpensive', { ...dto }),
+      CacheService.buildKey('transfers:topExpensive', { ...dto, lang }),
       CacheTtl.List,
       async () => {
         const { items, total } = await this.repo.getTopExpensive(
@@ -96,7 +103,7 @@ export class TransfersService {
           dto.pageSize,
         );
         return buildPaged(
-          items.map(toTransferResponse),
+          items.map((t) => toTransferResponse(t, lang)),
           total,
           dto.page,
           dto.pageSize,
@@ -106,9 +113,12 @@ export class TransfersService {
     );
   }
 
-  async betweenTeams(dto: BetweenTeamsDto): Promise<TransferResponseDto[]> {
+  async betweenTeams(
+    dto: BetweenTeamsDto,
+    lang: Lang,
+  ): Promise<TransferResponseDto[]> {
     return this.cache.getOrSet(
-      CacheService.buildKey('transfers:betweenTeams', { ...dto }),
+      CacheService.buildKey('transfers:betweenTeams', { ...dto, lang }),
       CacheTtl.List,
       async () => {
         const items = await this.repo.getBetweenTeams(
@@ -116,54 +126,67 @@ export class TransfersService {
           dto.toTeamId,
           dto.includeReverse,
         );
-        return items.map(toTransferResponse);
+        return items.map((t) => toTransferResponse(t, lang));
       },
       [CacheTag.Transfers],
     );
   }
 
-  async byYear(year: number): Promise<TransferResponseDto[]> {
+  async byYear(year: number, lang: Lang): Promise<TransferResponseDto[]> {
     return this.cache.getOrSet(
-      CacheService.buildKey('transfers:byYear', { year }),
+      CacheService.buildKey('transfers:byYear', { year, lang }),
       CacheTtl.List,
-      async () => (await this.repo.getByYear(year)).map(toTransferResponse),
+      async () =>
+        (await this.repo.getByYear(year)).map((t) =>
+          toTransferResponse(t, lang),
+        ),
       [CacheTag.Transfers],
     );
   }
 
-  async byMonth(year: number, month: number): Promise<TransferResponseDto[]> {
+  async byMonth(
+    year: number,
+    month: number,
+    lang: Lang,
+  ): Promise<TransferResponseDto[]> {
     return this.cache.getOrSet(
-      CacheService.buildKey('transfers:byMonth', { year, month }),
+      CacheService.buildKey('transfers:byMonth', { year, month, lang }),
       CacheTtl.List,
       async () =>
-        (await this.repo.getByMonth(year, month)).map(toTransferResponse),
+        (await this.repo.getByMonth(year, month)).map((t) =>
+          toTransferResponse(t, lang),
+        ),
       [CacheTag.Transfers],
     );
   }
 
   async latestByLeagues(
     dto: LatestByLeaguesDto,
+    lang: Lang,
   ): Promise<LeagueTransfersDto[]> {
     return this.cache.getOrSet(
-      CacheService.buildKey('transfers:latestByLeagues', { ...dto }),
+      CacheService.buildKey('transfers:latestByLeagues', { ...dto, lang }),
       CacheTtl.List,
       async () => {
         const groups = await this.repo.getLatestByAllLeagues(
           dto.take,
           dto.year,
         );
-        return groups.map((g) => ({
-          league: {
-            id: g.league.id,
-            name: g.league.name,
-            logo: g.league.leagueLogo,
-          },
-          // Flat alanlar mobil için (bkz. LeagueTransfersDto)
-          leagueId: g.league.id,
-          leagueName: g.league.name,
-          leagueLogo: g.league.leagueLogo,
-          transfers: g.transfers.map(toTeamTransferLine),
-        }));
+        return groups.map((g) => {
+          const leagueName = pickName(lang, g.league.name, g.league.nameTr);
+          return {
+            league: {
+              id: g.league.id,
+              name: leagueName,
+              logo: g.league.leagueLogo,
+            },
+            // Flat alanlar mobil için (bkz. LeagueTransfersDto)
+            leagueId: g.league.id,
+            leagueName,
+            leagueLogo: g.league.leagueLogo,
+            transfers: g.transfers.map((t) => toTeamTransferLine(t, lang)),
+          };
+        });
       },
       [CacheTag.Transfers],
     );

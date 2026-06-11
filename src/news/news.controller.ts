@@ -17,6 +17,8 @@ import {
 } from './dto/news-query.dto';
 import { NewsResponseDto } from './dto/news-response.dto';
 import { NewsService } from './news.service';
+import { ReqLang } from '../common/i18n/lang.decorator';
+import { Lang } from '../common/i18n/lang';
 
 @ApiTags('news')
 @Controller('api/news')
@@ -27,8 +29,11 @@ export class NewsController {
   @Get()
   @ApiOperation({ summary: 'Haberleri listele (paged + sort)' })
   @ApiPagedResponse(NewsResponseDto)
-  findAll(@Query() query: NewsQueryDto): Promise<PagedResult<NewsResponseDto>> {
-    return this.news.findAll(query);
+  findAll(
+    @Query() query: NewsQueryDto,
+    @ReqLang() lang: Lang,
+  ): Promise<PagedResult<NewsResponseDto>> {
+    return this.news.findAll(query, lang);
   }
 
   @Get('by-source')
@@ -36,8 +41,9 @@ export class NewsController {
   @ApiPagedResponse(NewsResponseDto)
   bySource(
     @Query() query: NewsBySourceDto,
+    @ReqLang() lang: Lang,
   ): Promise<PagedResult<NewsResponseDto>> {
-    return this.news.findBySource(query);
+    return this.news.findBySource(query, lang);
   }
 
   @Get('by-date-range')
@@ -45,8 +51,9 @@ export class NewsController {
   @ApiPagedResponse(NewsResponseDto)
   byDateRange(
     @Query() query: NewsDateRangeDto,
+    @ReqLang() lang: Lang,
   ): Promise<PagedResult<NewsResponseDto>> {
-    return this.news.findByDateRange(query);
+    return this.news.findByDateRange(query, lang);
   }
 
   @Get('by-player/:playerId')
@@ -55,8 +62,9 @@ export class NewsController {
   byPlayer(
     @Param('playerId', ParseUUIDPipe) playerId: string,
     @Query() page: PaginationQueryDto,
+    @ReqLang() lang: Lang,
   ): Promise<PagedResult<NewsResponseDto>> {
-    return this.news.findByPlayer(playerId, page.page, page.pageSize);
+    return this.news.findByPlayer(playerId, page.page, page.pageSize, lang);
   }
 
   @Get('by-team/:teamId')
@@ -65,8 +73,9 @@ export class NewsController {
   byTeam(
     @Param('teamId', ParseUUIDPipe) teamId: string,
     @Query() page: PaginationQueryDto,
+    @ReqLang() lang: Lang,
   ): Promise<PagedResult<NewsResponseDto>> {
-    return this.news.findByToTeam(teamId, page.page, page.pageSize);
+    return this.news.findByToTeam(teamId, page.page, page.pageSize, lang);
   }
 
   @Get('from-team/:teamId')
@@ -75,8 +84,9 @@ export class NewsController {
   fromTeam(
     @Param('teamId', ParseUUIDPipe) teamId: string,
     @Query() page: PaginationQueryDto,
+    @ReqLang() lang: Lang,
   ): Promise<PagedResult<NewsResponseDto>> {
-    return this.news.findByFromTeam(teamId, page.page, page.pageSize);
+    return this.news.findByFromTeam(teamId, page.page, page.pageSize, lang);
   }
 
   @Get(':newsId')
@@ -85,7 +95,8 @@ export class NewsController {
   @ApiResponse({ status: 404 })
   async findOne(
     @Param('newsId', ParseUUIDPipe) newsId: string,
+    @ReqLang() lang: Lang,
   ): Promise<SingleResponse<NewsResponseDto>> {
-    return { data: await this.news.findById(newsId) };
+    return { data: await this.news.findById(newsId, lang) };
   }
 }

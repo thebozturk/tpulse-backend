@@ -23,7 +23,7 @@ function mapWriteError(e: unknown): never {
 }
 
 const include = {
-  team: { select: { name: true, logo: true } },
+  team: { select: { name: true, nameTr: true, logo: true } },
   position: { select: { nameEn: true } },
 } satisfies object;
 

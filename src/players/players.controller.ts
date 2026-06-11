@@ -1,6 +1,8 @@
 import { Controller, Get, Param, ParseUUIDPipe, Query } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Public } from '../common/decorators/public.decorator';
+import { Lang } from '../common/i18n/lang';
+import { ReqLang } from '../common/i18n/lang.decorator';
 import {
   ListResponse,
   PagedResult,
@@ -33,15 +35,18 @@ export class PlayersController {
   @ApiPagedResponse(PlayerResponseDto)
   findAll(
     @Query() filter: PlayerFilterDto,
+    @ReqLang() lang: Lang,
   ): Promise<PagedResult<PlayerResponseDto>> {
-    return this.players.findAll(filter);
+    return this.players.findAll(filter, lang);
   }
 
   @Get('free-agents')
   @ApiOperation({ summary: 'Serbest oyuncular' })
   @ApiListResponse(PlayerResponseDto)
-  async freeAgents(): Promise<ListResponse<PlayerResponseDto>> {
-    return { items: await this.players.findFreeAgents() };
+  async freeAgents(
+    @ReqLang() lang: Lang,
+  ): Promise<ListResponse<PlayerResponseDto>> {
+    return { items: await this.players.findFreeAgents(lang) };
   }
 
   @Get('search')
@@ -50,8 +55,9 @@ export class PlayersController {
   @ApiResponse({ status: 400, description: 'query boş' })
   searchPlayers(
     @Query() query: PlayerSearchDto,
+    @ReqLang() lang: Lang,
   ): Promise<PagedResult<PlayerResponseDto>> {
-    return this.search.searchPlayersPaged(query);
+    return this.search.searchPlayersPaged(query, lang);
   }
 
   @Get('by-team/:teamId')
@@ -59,8 +65,9 @@ export class PlayersController {
   @ApiListResponse(PlayerResponseDto)
   async byTeam(
     @Param('teamId', ParseUUIDPipe) teamId: string,
+    @ReqLang() lang: Lang,
   ): Promise<ListResponse<PlayerResponseDto>> {
-    return { items: await this.players.findByTeam(teamId) };
+    return { items: await this.players.findByTeam(teamId, lang) };
   }
 
   @Get('by-nationality/:nationality')
@@ -68,8 +75,9 @@ export class PlayersController {
   @ApiListResponse(PlayerResponseDto)
   async byNationality(
     @Param('nationality') nationality: string,
+    @ReqLang() lang: Lang,
   ): Promise<ListResponse<PlayerResponseDto>> {
-    return { items: await this.players.findByNationality(nationality) };
+    return { items: await this.players.findByNationality(nationality, lang) };
   }
 
   @Get(':id/profile')
@@ -79,8 +87,9 @@ export class PlayersController {
   @ApiResponse({ status: 404 })
   async profile(
     @Param('id', ParseUUIDPipe) id: string,
+    @ReqLang() lang: Lang,
   ): Promise<SingleResponse<PlayerProfileDto>> {
-    return { data: await this.players.getProfile(id) };
+    return { data: await this.players.getProfile(id, lang) };
   }
 
   @Get(':playerId/transfers')
@@ -108,7 +117,8 @@ export class PlayersController {
   @ApiResponse({ status: 404 })
   async findOne(
     @Param('id', ParseUUIDPipe) id: string,
+    @ReqLang() lang: Lang,
   ): Promise<SingleResponse<PlayerResponseDto>> {
-    return { data: await this.players.findById(id) };
+    return { data: await this.players.findById(id, lang) };
   }
 }

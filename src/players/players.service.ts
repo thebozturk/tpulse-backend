@@ -1,4 +1,5 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Lang } from '../common/i18n/lang';
 import { PagedResult } from '../common/interfaces/response.interface';
 import { buildPaged } from '../common/pagination';
 import { CacheTag, CacheTtl } from '../common/redis/cache-tags';
@@ -37,9 +38,9 @@ export class PlayersService {
     private readonly cache: CacheService,
   ) {}
 
-  async getProfile(id: string): Promise<PlayerProfileDto> {
+  async getProfile(id: string, lang: Lang): Promise<PlayerProfileDto> {
     return this.cache.getOrSet(
-      CacheService.buildKey('players:profile', { id }),
+      CacheService.buildKey('players:profile', { id, lang }),
       CacheTtl.List,
       async () => {
         const player = await this.repo.getById(id);
@@ -48,14 +49,14 @@ export class PlayersService {
         }
         const [transfers, newsPaged, posts] = await Promise.all([
           this.transfers.getByPlayerId(id),
-          this.news.findByPlayer(id, 1, PROFILE_NEWS),
-          this.posts.byPlayer(id),
+          this.news.findByPlayer(id, 1, PROFILE_NEWS, lang),
+          this.posts.byPlayer(id, undefined, lang),
         ]);
         return {
-          player: toPlayerResponse(player),
+          player: toPlayerResponse(player, lang),
           transfers: transfers
             .slice(0, PROFILE_TRANSFERS)
-            .map(toTeamTransferLine),
+            .map((t) => toTeamTransferLine(t, lang)),
           news: newsPaged.items,
           posts: posts.slice(0, PROFILE_POSTS),
         };
@@ -126,14 +127,15 @@ export class PlayersService {
 
   async findAll(
     filter: PlayerFilterDto,
+    lang: Lang,
   ): Promise<PagedResult<PlayerResponseDto>> {
     return this.cache.getOrSet(
-      CacheService.buildKey('players:list', { ...filter }),
+      CacheService.buildKey('players:list', { ...filter, lang }),
       CacheTtl.List,
       async () => {
         const { items, total } = await this.repo.getAll(filter);
         return buildPaged(
-          items.map(toPlayerResponse),
+          items.map((p) => toPlayerResponse(p, lang)),
           total,
           filter.page,
           filter.pageSize,
@@ -143,45 +145,54 @@ export class PlayersService {
     );
   }
 
-  async findById(id: string): Promise<PlayerResponseDto> {
+  async findById(id: string, lang: Lang): Promise<PlayerResponseDto> {
     return this.cache.getOrSet(
-      CacheService.buildKey('players:byId', { id }),
+      CacheService.buildKey('players:byId', { id, lang }),
       CacheTtl.List,
       async () => {
         const player = await this.repo.getById(id);
         if (!player) {
           throw new NotFoundException('Oyuncu bulunamadı');
         }
-        return toPlayerResponse(player);
+        return toPlayerResponse(player, lang);
       },
       [CacheTag.Players],
     );
   }
 
-  async findByTeam(teamId: string): Promise<PlayerResponseDto[]> {
+  async findByTeam(teamId: string, lang: Lang): Promise<PlayerResponseDto[]> {
     return this.cache.getOrSet(
-      CacheService.buildKey('players:byTeam', { teamId }),
-      CacheTtl.List,
-      async () => (await this.repo.getByTeamId(teamId)).map(toPlayerResponse),
-      [CacheTag.Players],
-    );
-  }
-
-  async findByNationality(nationality: string): Promise<PlayerResponseDto[]> {
-    return this.cache.getOrSet(
-      CacheService.buildKey('players:byNationality', { nationality }),
+      CacheService.buildKey('players:byTeam', { teamId, lang }),
       CacheTtl.List,
       async () =>
-        (await this.repo.getByNationality(nationality)).map(toPlayerResponse),
+        (await this.repo.getByTeamId(teamId)).map((p) =>
+          toPlayerResponse(p, lang),
+        ),
       [CacheTag.Players],
     );
   }
 
-  async findFreeAgents(): Promise<PlayerResponseDto[]> {
+  async findByNationality(
+    nationality: string,
+    lang: Lang,
+  ): Promise<PlayerResponseDto[]> {
     return this.cache.getOrSet(
-      CacheService.buildKey('players:freeAgents'),
+      CacheService.buildKey('players:byNationality', { nationality, lang }),
       CacheTtl.List,
-      async () => (await this.repo.getFreeAgents()).map(toPlayerResponse),
+      async () =>
+        (await this.repo.getByNationality(nationality)).map((p) =>
+          toPlayerResponse(p, lang),
+        ),
+      [CacheTag.Players],
+    );
+  }
+
+  async findFreeAgents(lang: Lang): Promise<PlayerResponseDto[]> {
+    return this.cache.getOrSet(
+      CacheService.buildKey('players:freeAgents', { lang }),
+      CacheTtl.List,
+      async () =>
+        (await this.repo.getFreeAgents()).map((p) => toPlayerResponse(p, lang)),
       [CacheTag.Players],
     );
   }
@@ -191,7 +202,9 @@ export class PlayersService {
       CacheService.buildKey('players:transfers', { playerId }),
       CacheTtl.List,
       async () =>
-        (await this.transfers.getByPlayerId(playerId)).map(toTeamTransferLine),
+        (await this.transfers.getByPlayerId(playerId)).map((t) =>
+          toTeamTransferLine(t),
+        ),
       [CacheTag.Players, CacheTag.Transfers],
     );
   }

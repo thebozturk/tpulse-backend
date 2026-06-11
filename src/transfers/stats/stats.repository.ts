@@ -14,12 +14,16 @@ export interface AggregateResult {
 export interface TeamCount {
   teamId: string;
   teamName: string;
+  teamNameTr: string | null;
   count: number;
 }
 
 export interface PlayerCount {
   playerId: string;
-  playerName: string;
+  playerFirstName: string;
+  playerLastName: string;
+  playerFirstNameTr: string | null;
+  playerLastNameTr: string | null;
   count: number;
 }
 

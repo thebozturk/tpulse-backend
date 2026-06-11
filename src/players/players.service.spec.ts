@@ -38,12 +38,14 @@ describe('PlayersService', () => {
   it('findAll forwards the filter to the repository', async () => {
     repo.getAll.mockResolvedValue({ items: [], total: 0 });
     const filter = { teamId: 't1', page: 2, pageSize: 10 };
-    await service.findAll(filter as never);
+    await service.findAll(filter as never, 'tr');
     expect(repo.getAll).toHaveBeenCalledWith(filter);
   });
 
   it('findById throws NotFound when missing', async () => {
     repo.getById.mockResolvedValue(null);
-    await expect(service.findById('x')).rejects.toThrow(NotFoundException);
+    await expect(service.findById('x', 'tr')).rejects.toThrow(
+      NotFoundException,
+    );
   });
 });

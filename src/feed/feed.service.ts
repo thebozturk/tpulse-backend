@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { AuthUser } from '../common/decorators/current-user.decorator';
+import { DEFAULT_LANG, Lang } from '../common/i18n/lang';
 import { PagedResult } from '../common/interfaces/response.interface';
 import { buildPaged, toSkipTake } from '../common/pagination';
 import { BlocksService } from '../blocks/blocks.service';
@@ -60,6 +61,7 @@ export class FeedService {
   async forYou(
     userId: string,
     dto: FeedQueryDto,
+    lang: Lang = DEFAULT_LANG,
   ): Promise<PagedResult<PostResponseDto>> {
     const { page, pageSize } = dto;
 
@@ -109,9 +111,13 @@ export class FeedService {
     const { skip, take } = toSkipTake(page, pageSize);
     const pageCandidates = ranked.slice(skip, skip + take);
     const pagePosts = pageCandidates.map((c) => c.post);
-    const mapped = await this.posts.mapWithUserState(pagePosts, {
-      userId,
-    } as AuthUser);
+    const mapped = await this.posts.mapWithUserState(
+      pagePosts,
+      {
+        userId,
+      } as AuthUser,
+      lang,
+    );
 
     // Side-effect: bu sayfada sunulanları işaretle (sonraki sayfa dedup).
     await this.served.markServed(

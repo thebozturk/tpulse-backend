@@ -74,11 +74,12 @@ export class PrismaStatsRepository implements IStatsRepository {
     const teamId = grouped[0][field] as string;
     const team = await this.prisma.team.findUnique({
       where: { id: teamId },
-      select: { name: true },
+      select: { name: true, nameTr: true },
     });
     return {
       teamId,
       teamName: team?.name ?? '',
+      teamNameTr: team?.nameTr ?? null,
       count: grouped[0]._count._all,
     };
   }
@@ -99,11 +100,19 @@ export class PrismaStatsRepository implements IStatsRepository {
     const playerId = grouped[0].playerId;
     const player = await this.prisma.player.findUnique({
       where: { id: playerId },
-      select: { firstName: true, lastName: true },
+      select: {
+        firstName: true,
+        lastName: true,
+        firstNameTr: true,
+        lastNameTr: true,
+      },
     });
     return {
       playerId,
-      playerName: player ? `${player.firstName} ${player.lastName}` : '',
+      playerFirstName: player?.firstName ?? '',
+      playerLastName: player?.lastName ?? '',
+      playerFirstNameTr: player?.firstNameTr ?? null,
+      playerLastNameTr: player?.lastNameTr ?? null,
       count: grouped[0]._count._all,
     };
   }

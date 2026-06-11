@@ -37,7 +37,7 @@ describe('LeaguesService', () => {
 
   it('findAll returns paged envelope with teamCount mapped', async () => {
     repo.getAll.mockResolvedValue({ items: [league], total: 1 });
-    const res = await service.findAll(1, 20);
+    const res = await service.findAll(1, 20, 'tr');
     expect(res).toMatchObject({
       page: 1,
       pageSize: 20,
@@ -53,6 +53,8 @@ describe('LeaguesService', () => {
 
   it('findById throws NotFound when missing', async () => {
     repo.getById.mockResolvedValue(null);
-    await expect(service.findById('x')).rejects.toThrow(NotFoundException);
+    await expect(service.findById('x', 'tr')).rejects.toThrow(
+      NotFoundException,
+    );
   });
 });

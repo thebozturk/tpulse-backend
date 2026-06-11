@@ -5,6 +5,8 @@ import {
   CurrentUser,
 } from '../common/decorators/current-user.decorator';
 import { PagedResult } from '../common/interfaces/response.interface';
+import { ReqLang } from '../common/i18n/lang.decorator';
+import { Lang } from '../common/i18n/lang';
 import { ApiPagedResponse } from '../common/swagger/api-envelope.decorators';
 import { PostResponseDto } from '../posts/dto/post-response.dto';
 import { FeedQueryDto } from './dto/feed-query.dto';
@@ -24,7 +26,8 @@ export class FeedController {
   forYou(
     @CurrentUser() user: AuthUser,
     @Query() query: FeedQueryDto,
+    @ReqLang() lang: Lang,
   ): Promise<PagedResult<PostResponseDto>> {
-    return this.feed.forYou(user.userId, query);
+    return this.feed.forYou(user.userId, query, lang);
   }
 }

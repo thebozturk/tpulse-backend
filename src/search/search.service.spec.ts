@@ -40,7 +40,7 @@ describe('SearchService', () => {
   });
 
   it('groups results by type with mapped fields', async () => {
-    const res = await service.search({ q: 'a', limit: 5 });
+    const res = await service.search({ q: 'a', limit: 5 }, 'en');
     expect(res.query).toBe('a');
     expect(res.data.players[0]).toMatchObject({
       type: 'player',
@@ -55,7 +55,10 @@ describe('SearchService', () => {
   });
 
   it('forwards query/page/pageSize to paged player search', async () => {
-    await service.searchPlayersPaged({ query: 'sak', page: 2, pageSize: 30 });
+    await service.searchPlayersPaged(
+      { query: 'sak', page: 2, pageSize: 30 },
+      'tr',
+    );
     expect(repo.searchPlayersPaged).toHaveBeenCalledWith('sak', 2, 30);
   });
 });

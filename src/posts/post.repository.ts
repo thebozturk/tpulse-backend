@@ -13,11 +13,18 @@ export const postInclude = {
     },
   },
   player: {
-    select: { firstName: true, lastName: true, nationality: true, photo: true },
+    select: {
+      firstName: true,
+      firstNameTr: true,
+      lastName: true,
+      lastNameTr: true,
+      nationality: true,
+      photo: true,
+    },
   },
-  team: { select: { name: true, logo: true } },
-  fromTeam: { select: { name: true, logo: true } },
-  toTeam: { select: { name: true, logo: true } },
+  team: { select: { name: true, nameTr: true, logo: true } },
+  fromTeam: { select: { name: true, nameTr: true, logo: true } },
+  toTeam: { select: { name: true, nameTr: true, logo: true } },
 } satisfies Prisma.PostInclude;
 
 export type PostWithRel = Prisma.PostGetPayload<{

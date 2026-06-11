@@ -32,7 +32,7 @@ function isNotFound(e: unknown): boolean {
 }
 
 const include = {
-  league: { select: { name: true } },
+  league: { select: { name: true, nameTr: true } },
   _count: { select: { players: true } },
 } satisfies object;
 
@@ -73,7 +73,7 @@ export class PrismaTeamRepository implements ITeamRepository {
     return this.prisma.team.findUnique({
       where: { id },
       include: {
-        league: { select: { name: true, leagueLogo: true } },
+        league: { select: { name: true, nameTr: true, leagueLogo: true } },
         players: {
           include: { position: { select: { nameEn: true } } },
           orderBy: [{ lastName: 'asc' }, { firstName: 'asc' }],

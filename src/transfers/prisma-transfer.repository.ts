@@ -235,7 +235,7 @@ export class PrismaTransferRepository implements ITransferRepository {
 
   async getLatestByAllLeagues(take: number, year?: number) {
     const leagues = await this.prisma.league.findMany({
-      select: { id: true, name: true, leagueLogo: true },
+      select: { id: true, name: true, nameTr: true, leagueLogo: true },
       orderBy: { name: 'asc' },
     });
     return Promise.all(

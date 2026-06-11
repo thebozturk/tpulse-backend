@@ -20,6 +20,8 @@ import { SuccessResponseDto } from '../common/dto/common-response.dto';
 import { ModerationListQueryDto } from '../common/dto/moderation-list.query.dto';
 import { Roles } from '../common/decorators/roles.decorator';
 import { RolesGuard } from '../common/guards/roles.guard';
+import { ReqLang } from '../common/i18n/lang.decorator';
+import { Lang } from '../common/i18n/lang';
 import { PagedResult } from '../common/interfaces/response.interface';
 import { ApiPagedResponse } from '../common/swagger/api-envelope.decorators';
 import { ThrottlePolicies } from '../common/throttle/throttle-policies';
@@ -39,8 +41,9 @@ export class AdminPostsController {
   @ApiPagedResponse(PostResponseDto)
   list(
     @Query() query: ModerationListQueryDto,
+    @ReqLang() lang: Lang,
   ): Promise<PagedResult<PostResponseDto>> {
-    return this.posts.adminList(query);
+    return this.posts.adminList(query, lang);
   }
 
   @Delete(':id')

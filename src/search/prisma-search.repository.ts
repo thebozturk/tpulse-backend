@@ -9,7 +9,7 @@ import {
 } from './search.repository';
 
 const playerInclude = {
-  team: { select: { name: true, logo: true } },
+  team: { select: { name: true, nameTr: true, logo: true } },
   position: { select: { nameEn: true } },
 } satisfies object;
 
@@ -26,7 +26,7 @@ export class PrismaSearchRepository implements ISearchRepository {
 
   searchPlayers(q: string, limit: number): Promise<PlayerHit[]> {
     return this.prisma.$queryRaw<PlayerHit[]>`
-      SELECT id, "firstName", "lastName", photo, nationality
+      SELECT id, "firstName", "lastName", "firstNameTr", "lastNameTr", photo, nationality
       FROM "player"
       WHERE f_unaccent(lower("firstName" || ' ' || "lastName")) LIKE '%' || f_unaccent(lower(${q})) || '%'
          OR f_unaccent(lower("firstName")) % f_unaccent(lower(${q}))
@@ -43,7 +43,7 @@ export class PrismaSearchRepository implements ISearchRepository {
 
   searchTeams(q: string, limit: number): Promise<TeamHit[]> {
     return this.prisma.$queryRaw<TeamHit[]>`
-      SELECT id, name, logo
+      SELECT id, name, "nameTr", logo
       FROM "team"
       WHERE f_unaccent(lower(name)) LIKE '%' || f_unaccent(lower(${q})) || '%'
          OR f_unaccent(lower(name)) % f_unaccent(lower(${q}))
@@ -54,7 +54,7 @@ export class PrismaSearchRepository implements ISearchRepository {
 
   searchLeagues(q: string, limit: number): Promise<LeagueHit[]> {
     return this.prisma.$queryRaw<LeagueHit[]>`
-      SELECT id, name, "leagueLogo", country
+      SELECT id, name, "nameTr", "leagueLogo", country
       FROM "league"
       WHERE f_unaccent(lower(name)) LIKE '%' || f_unaccent(lower(${q})) || '%'
          OR f_unaccent(lower(name)) % f_unaccent(lower(${q}))

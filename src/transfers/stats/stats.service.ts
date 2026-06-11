@@ -2,6 +2,7 @@ import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { CacheTag, CacheTtl } from '../../common/redis/cache-tags';
 import { CacheService } from '../../common/redis/cache.service';
+import { Lang, pickName } from '../../common/i18n/lang';
 import { TeamTransferLineDto } from '../dto/team-transfer-line.dto';
 import { toTeamTransferLine } from '../transfer.mapper';
 import { TransferWithRel } from '../transfer.repository';
@@ -28,17 +29,21 @@ export class StatsService {
     private readonly cache: CacheService,
   ) {}
 
-  async getStats(filter: StatsFilterDto): Promise<TransferStatsDto> {
+  async getStats(
+    filter: StatsFilterDto,
+    lang: Lang,
+  ): Promise<TransferStatsDto> {
     return this.cache.getOrSet(
-      CacheService.buildKey('transfers:stats', { ...filter }),
+      CacheService.buildKey('transfers:stats', { ...filter, lang }),
       CacheTtl.List,
-      () => this.computeStats(filter),
+      () => this.computeStats(filter, lang),
       [CacheTag.Transfers],
     );
   }
 
   private async computeStats(
     filter: StatsFilterDto,
+    lang: Lang,
   ): Promise<TransferStatsDto> {
     const where = await this.buildWhere(filter);
     const [agg, mostExpensive, latest, earliest, buyer, seller, player] =
@@ -59,17 +64,37 @@ export class StatsService {
       maxFee: agg.maxFee,
       minFee: agg.minFee,
       mostExpensiveTransfer: mostExpensive
-        ? toTeamTransferLine(mostExpensive)
+        ? toTeamTransferLine(mostExpensive, lang)
         : undefined,
-      latestTransfer: latest ? toTeamTransferLine(latest) : undefined,
-      earliestTransfer: earliest ? toTeamTransferLine(earliest) : undefined,
-      mostActiveBuyerTeam: buyer ?? undefined,
-      mostActiveSellerTeam: seller ?? undefined,
-      mostTransferredPlayer: player ?? undefined,
+      latestTransfer: latest ? toTeamTransferLine(latest, lang) : undefined,
+      earliestTransfer: earliest
+        ? toTeamTransferLine(earliest, lang)
+        : undefined,
+      mostActiveBuyerTeam: buyer
+        ? {
+            teamId: buyer.teamId,
+            teamName: pickName(lang, buyer.teamName, buyer.teamNameTr),
+            count: buyer.count,
+          }
+        : undefined,
+      mostActiveSellerTeam: seller
+        ? {
+            teamId: seller.teamId,
+            teamName: pickName(lang, seller.teamName, seller.teamNameTr),
+            count: seller.count,
+          }
+        : undefined,
+      mostTransferredPlayer: player
+        ? {
+            playerId: player.playerId,
+            playerName: `${pickName(lang, player.playerFirstName, player.playerFirstNameTr)} ${pickName(lang, player.playerLastName, player.playerLastNameTr)}`,
+            count: player.count,
+          }
+        : undefined,
       highestFeePlayer: mostExpensive
         ? {
             playerId: mostExpensive.player.id,
-            playerName: `${mostExpensive.player.firstName} ${mostExpensive.player.lastName}`,
+            playerName: `${pickName(lang, mostExpensive.player.firstName, mostExpensive.player.firstNameTr)} ${pickName(lang, mostExpensive.player.lastName, mostExpensive.player.lastNameTr)}`,
             feeAmount: Number(mostExpensive.feeAmount),
           }
         : undefined,
@@ -102,17 +127,19 @@ export class StatsService {
 
   async getPeriodSummary(
     query: PeriodSummaryQueryDto,
+    lang: Lang,
   ): Promise<TransferPeriodSummaryDto> {
     return this.cache.getOrSet(
-      CacheService.buildKey('transfers:periodSummary', { ...query }),
+      CacheService.buildKey('transfers:periodSummary', { ...query, lang }),
       CacheTtl.List,
-      () => this.computePeriodSummary(query),
+      () => this.computePeriodSummary(query, lang),
       [CacheTag.Transfers],
     );
   }
 
   private async computePeriodSummary(
     query: PeriodSummaryQueryDto,
+    lang: Lang,
   ): Promise<TransferPeriodSummaryDto> {
     const { range, periodName } = await this.resolveRange(
       query.year,
@@ -125,6 +152,7 @@ export class StatsService {
     const { lines, total } = await this.convertLines(
       transfers,
       query.baseCurrency,
+      lang,
     );
     return {
       periodName,
@@ -140,17 +168,19 @@ export class StatsService {
 
   async getSeasonDashboard(
     query: SeasonDashboardQueryDto,
+    lang: Lang,
   ): Promise<TransferSeasonDashboardDto> {
     return this.cache.getOrSet(
-      CacheService.buildKey('transfers:seasonDashboard', { ...query }),
+      CacheService.buildKey('transfers:seasonDashboard', { ...query, lang }),
       CacheTtl.List,
-      () => this.computeSeasonDashboard(query),
+      () => this.computeSeasonDashboard(query, lang),
       [CacheTag.Transfers],
     );
   }
 
   private async computeSeasonDashboard(
     query: SeasonDashboardQueryDto,
+    lang: Lang,
   ): Promise<TransferSeasonDashboardDto> {
     const { range, periodName } = await this.resolveRange(
       query.year,
@@ -175,7 +205,7 @@ export class StatsService {
       );
       total += value;
       const cur = spenders.get(t.toTeamId) ?? {
-        teamName: t.toTeam.name,
+        teamName: pickName(lang, t.toTeam.name, t.toTeam.nameTr),
         total: 0,
       };
       cur.total += value;
@@ -184,7 +214,7 @@ export class StatsService {
 
     const lines = transfers
       .map((t) => ({
-        line: toTeamTransferLine(t),
+        line: toTeamTransferLine(t, lang),
         value: this.currency.convertWith(
           Number(t.feeAmount),
           t.feeCurrency,
@@ -215,6 +245,7 @@ export class StatsService {
   private async convertLines(
     transfers: TransferWithRel[],
     base: string,
+    lang: Lang,
   ): Promise<{ lines: TeamTransferLineDto[]; total: number }> {
     const map = await this.currency.rateMap(
       transfers.map((t) => t.feeCurrency),
@@ -229,7 +260,7 @@ export class StatsService {
           map,
         );
         total += value;
-        return { ...toTeamTransferLine(t), feeAmount: value };
+        return { ...toTeamTransferLine(t, lang), feeAmount: value };
       })
       .sort((a, b) => b.feeAmount - a.feeAmount);
     return { lines, total };

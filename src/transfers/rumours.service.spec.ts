@@ -24,13 +24,15 @@ describe('RumoursService', () => {
 
   it('query asks repository for rumours (isRumour=true)', async () => {
     repo.query.mockResolvedValue({ items: [], total: 0 });
-    await service.query({ page: 1, pageSize: 20 } as never);
+    await service.query({ page: 1, pageSize: 20 } as never, 'tr');
     expect(repo.query).toHaveBeenCalledWith({ page: 1, pageSize: 20 }, true);
   });
 
   it('findById throws NotFound and queries with isRumour=true', async () => {
     repo.getById.mockResolvedValue(null);
-    await expect(service.findById('x')).rejects.toThrow(NotFoundException);
+    await expect(service.findById('x', 'tr')).rejects.toThrow(
+      NotFoundException,
+    );
     expect(repo.getById).toHaveBeenCalledWith('x', true);
   });
 });

@@ -120,7 +120,7 @@ export class FootballDataSeeder {
     }
     r.leaguesInserted++;
     const created = await this.prisma.league.create({
-      data: { externalId: lg.externalId, ...data },
+      data: { externalId: lg.externalId, ...data, nameTr: lg.name },
     });
     return created.id;
   }
@@ -149,7 +149,7 @@ export class FootballDataSeeder {
     }
     r.teamsInserted++;
     const created = await this.prisma.team.create({
-      data: { externalId: t.externalId, ...data },
+      data: { externalId: t.externalId, ...data, nameTr: t.name },
     });
     return created.id;
   }
@@ -183,7 +183,12 @@ export class FootballDataSeeder {
     }
     r.playersInserted++;
     await this.prisma.player.create({
-      data: { externalId: p.externalId, ...data },
+      data: {
+        externalId: p.externalId,
+        ...data,
+        firstNameTr: p.firstName,
+        lastNameTr: p.lastName,
+      },
     });
   }
 }

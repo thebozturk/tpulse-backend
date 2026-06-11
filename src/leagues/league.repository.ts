@@ -9,6 +9,7 @@ export type LeagueWithCount = Prisma.LeagueGetPayload<{
 
 export interface LeagueWriteInput {
   name: string;
+  nameTr?: string;
   country: string;
   countryLogo: string;
   leagueLogo: string;

@@ -1,12 +1,20 @@
+import { Lang, pickName } from '../common/i18n/lang';
 import { PlayerWithRel } from './player.repository';
 import { PlayerResponseDto } from './dto/player-response.dto';
 
-export function toPlayerResponse(player: PlayerWithRel): PlayerResponseDto {
+export function toPlayerResponse(
+  player: PlayerWithRel,
+  lang: Lang,
+): PlayerResponseDto {
+  const firstName = pickName(lang, player.firstName, player.firstNameTr);
+  const lastName = pickName(lang, player.lastName, player.lastNameTr);
   return {
     id: player.id,
-    firstName: player.firstName,
-    lastName: player.lastName,
-    fullName: `${player.firstName} ${player.lastName}`,
+    firstName,
+    lastName,
+    firstNameTr: player.firstNameTr ?? undefined,
+    lastNameTr: player.lastNameTr ?? undefined,
+    fullName: `${firstName} ${lastName}`,
     nationality: player.nationality,
     birthDate: player.birthDate ?? undefined,
     height: player.height ?? undefined,
@@ -16,7 +24,7 @@ export function toPlayerResponse(player: PlayerWithRel): PlayerResponseDto {
     birthCountry: player.birthCountry ?? undefined,
     isFree: player.isFree,
     teamId: player.teamId,
-    teamName: player.team.name,
+    teamName: pickName(lang, player.team.name, player.team.nameTr),
     teamLogo: player.team.logo ?? undefined,
     positionId: player.positionId ?? undefined,
     positionName: player.position?.nameEn ?? undefined,

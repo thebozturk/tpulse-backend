@@ -278,6 +278,7 @@ export class FootballDataSyncService {
       data: {
         externalId: ext.externalId,
         name: ext.name,
+        nameTr: ext.name, // Türkçe gösterim adı varsayılanı; admin panelden değiştirir, re-sync ezmez.
         country: ext.country,
         countryLogo: ext.countryLogo,
         leagueLogo: logo?.url ?? ext.leagueLogo,
@@ -326,6 +327,7 @@ export class FootballDataSyncService {
       data: {
         externalId: ext.externalId,
         ...base,
+        nameTr: ext.name, // Türkçe gösterim adı varsayılanı; admin panelden değiştirir, re-sync ezmez.
         logo: logo?.url ?? ext.logo,
         logoSourceUrl: ext.logo,
       },
@@ -379,6 +381,8 @@ export class FootballDataSyncService {
       data: {
         externalId: ext.externalId,
         ...base,
+        firstNameTr: ext.firstName, // Türkçe gösterim adı varsayılanı; admin panelden değiştirir, re-sync ezmez.
+        lastNameTr: ext.lastName,
         photo: photo?.url ?? ext.photo,
         photoSourceUrl: ext.photo,
       },

@@ -134,6 +134,7 @@ model League {
   id                  String  @id @default(uuid()) @db.Uuid
   externalId          Int?    @unique
   name                String  @unique @db.VarChar(30)
+  nameTr              String? @db.VarChar(30)
   country             String  @db.VarChar(30)
   countryLogo         String
   leagueLogo          String
@@ -150,6 +151,7 @@ model Team {
   id                String  @id @default(uuid()) @db.Uuid
   externalId        Int?    @unique
   name              String  @unique @db.VarChar(50)
+  nameTr            String? @db.VarChar(50)
   logo              String?
   logoLockedByAdmin Boolean @default(false)
   logoSourceUrl     String?
@@ -189,7 +191,9 @@ model Player {
   id                 String    @id @default(uuid()) @db.Uuid
   externalId         Int?      @unique
   firstName          String    @db.VarChar(32)
+  firstNameTr        String?   @db.VarChar(32)
   lastName           String    @db.VarChar(32)
+  lastNameTr         String?   @db.VarChar(32)
   nationality        String    @db.VarChar(32)
   birthDate          DateTime? @db.Date
   height             Int?      @db.SmallInt

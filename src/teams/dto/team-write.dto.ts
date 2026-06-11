@@ -7,6 +7,15 @@ export class TeamWriteDto {
   @MaxLength(50)
   name: string;
 
+  @ApiPropertyOptional({
+    maxLength: 50,
+    description: 'Türkçe gösterim adı (boşsa İngilizce `name` gösterilir)',
+  })
+  @IsOptional()
+  @IsString()
+  @MaxLength(50)
+  nameTr?: string;
+
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()

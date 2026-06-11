@@ -4,7 +4,7 @@ export const PLAYER_REPOSITORY = Symbol('PLAYER_REPOSITORY');
 
 export type PlayerWithRel = Prisma.PlayerGetPayload<{
   include: {
-    team: { select: { name: true; logo: true } };
+    team: { select: { name: true; nameTr: true; logo: true } };
     position: { select: { nameEn: true } };
   };
 }>;
@@ -22,6 +22,8 @@ export interface PlayerFilter {
 export interface PlayerWriteInput {
   firstName: string;
   lastName: string;
+  firstNameTr?: string;
+  lastNameTr?: string;
   nationality: string;
   birthDate?: Date;
   height?: number;

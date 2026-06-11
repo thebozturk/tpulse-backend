@@ -28,13 +28,15 @@ const include = {
     select: {
       id: true,
       firstName: true,
+      firstNameTr: true,
       lastName: true,
+      lastNameTr: true,
       nationality: true,
       photo: true,
     },
   },
-  fromTeam: { select: { id: true, name: true, logo: true } },
-  toTeam: { select: { id: true, name: true, logo: true } },
+  fromTeam: { select: { id: true, name: true, nameTr: true, logo: true } },
+  toTeam: { select: { id: true, name: true, nameTr: true, logo: true } },
 } satisfies object;
 
 @Injectable()

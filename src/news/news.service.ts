@@ -16,6 +16,7 @@ import {
 import { CreateNewsDto, UpdateNewsDto } from './dto/news-write.dto';
 import { toNewsResponse } from './news.mapper';
 import { INewsRepository, NEWS_REPOSITORY } from './news.repository';
+import { Lang } from '../common/i18n/lang';
 
 const IMAGE_FOLDER = 'news';
 const IMAGE_QUALITY = 80;
@@ -89,76 +90,84 @@ export class NewsService {
     }
   }
 
-  async findAll(query: NewsQueryDto): Promise<PagedResult<NewsResponseDto>> {
+  async findAll(
+    query: NewsQueryDto,
+    lang: Lang,
+  ): Promise<PagedResult<NewsResponseDto>> {
     const { items, total } = await this.repo.getAll(
       query.page,
       query.pageSize,
       query.sortBy,
       query.order,
     );
-    return this.page(items, total, query.page, query.pageSize);
+    return this.page(items, total, query.page, query.pageSize, lang);
   }
 
-  async findById(id: string): Promise<NewsResponseDto> {
+  async findById(id: string, lang: Lang): Promise<NewsResponseDto> {
     const news = await this.repo.getById(id);
     if (!news) {
       throw new NotFoundException('Haber bulunamadı');
     }
-    return toNewsResponse(news);
+    return toNewsResponse(news, lang);
   }
 
   async findByPlayer(
     playerId: string,
     page: number,
     pageSize: number,
+    lang: Lang,
   ): Promise<PagedResult<NewsResponseDto>> {
     const { items, total } = await this.repo.getByPlayerId(
       playerId,
       page,
       pageSize,
     );
-    return this.page(items, total, page, pageSize);
+    return this.page(items, total, page, pageSize, lang);
   }
 
   async findByToTeam(
     teamId: string,
     page: number,
     pageSize: number,
+    lang: Lang,
   ): Promise<PagedResult<NewsResponseDto>> {
     const { items, total } = await this.repo.getByToTeamId(
       teamId,
       page,
       pageSize,
     );
-    return this.page(items, total, page, pageSize);
+    return this.page(items, total, page, pageSize, lang);
   }
 
   async findByFromTeam(
     teamId: string,
     page: number,
     pageSize: number,
+    lang: Lang,
   ): Promise<PagedResult<NewsResponseDto>> {
     const { items, total } = await this.repo.getByFromTeamId(
       teamId,
       page,
       pageSize,
     );
-    return this.page(items, total, page, pageSize);
+    return this.page(items, total, page, pageSize, lang);
   }
 
   async findBySource(
     query: NewsBySourceDto,
+    lang: Lang,
   ): Promise<PagedResult<NewsResponseDto>> {
     const { items, total } = await this.repo.getBySourceName(
       query.sourceName,
       query.page,
       query.pageSize,
     );
-    return this.page(items, total, query.page, query.pageSize);
+    return this.page(items, total, query.page, query.pageSize, lang);
   }
 
   async findByDateRange(
     query: NewsDateRangeDto,
+    lang: Lang,
   ): Promise<PagedResult<NewsResponseDto>> {
     const { items, total } = await this.repo.getByDateRange(
       query.startDate,
@@ -166,7 +175,7 @@ export class NewsService {
       query.page,
       query.pageSize,
     );
-    return this.page(items, total, query.page, query.pageSize);
+    return this.page(items, total, query.page, query.pageSize, lang);
   }
 
   private page(
@@ -174,7 +183,13 @@ export class NewsService {
     total: number,
     page: number,
     pageSize: number,
+    lang: Lang,
   ): PagedResult<NewsResponseDto> {
-    return buildPaged(items.map(toNewsResponse), total, page, pageSize);
+    return buildPaged(
+      items.map((item) => toNewsResponse(item, lang)),
+      total,
+      page,
+      pageSize,
+    );
   }
 }

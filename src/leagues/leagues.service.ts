@@ -1,4 +1,5 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Lang } from '../common/i18n/lang';
 import { PagedResult } from '../common/interfaces/response.interface';
 import { buildPaged } from '../common/pagination';
 import { CacheTag, CacheTtl } from '../common/redis/cache-tags';
@@ -95,43 +96,49 @@ export class LeaguesService {
   async findAll(
     page: number,
     pageSize: number,
+    lang: Lang,
   ): Promise<PagedResult<LeagueResponseDto>> {
     return this.cache.getOrSet(
-      CacheService.buildKey('leagues:list', { page, pageSize }),
+      CacheService.buildKey('leagues:list', { page, pageSize, lang }),
       CacheTtl.List,
       async () => {
         const { items, total } = await this.repo.getAll(page, pageSize);
-        return buildPaged(items.map(toLeagueResponse), total, page, pageSize);
+        return buildPaged(
+          items.map((l) => toLeagueResponse(l, lang)),
+          total,
+          page,
+          pageSize,
+        );
       },
       [CacheTag.Leagues],
     );
   }
 
-  async findById(id: string): Promise<LeagueResponseDto> {
+  async findById(id: string, lang: Lang): Promise<LeagueResponseDto> {
     return this.cache.getOrSet(
-      CacheService.buildKey('leagues:byId', { id }),
+      CacheService.buildKey('leagues:byId', { id, lang }),
       CacheTtl.List,
       async () => {
         const league = await this.repo.getById(id);
         if (!league) {
           throw new NotFoundException('Lig bulunamadı');
         }
-        return toLeagueResponse(league);
+        return toLeagueResponse(league, lang);
       },
       [CacheTag.Leagues],
     );
   }
 
-  async findByCode(code: string): Promise<LeagueResponseDto> {
+  async findByCode(code: string, lang: Lang): Promise<LeagueResponseDto> {
     return this.cache.getOrSet(
-      CacheService.buildKey('leagues:byCode', { code }),
+      CacheService.buildKey('leagues:byCode', { code, lang }),
       CacheTtl.List,
       async () => {
         const league = await this.repo.getByCode(code);
         if (!league) {
           throw new NotFoundException('Lig bulunamadı');
         }
-        return toLeagueResponse(league);
+        return toLeagueResponse(league, lang);
       },
       [CacheTag.Leagues],
     );
@@ -152,7 +159,7 @@ export class LeaguesService {
           query.pageSize,
         );
         return buildPaged(
-          items.map(toTeamTransferLine),
+          items.map((t) => toTeamTransferLine(t)),
           total,
           query.page,
           query.pageSize,
@@ -180,7 +187,7 @@ export class LeaguesService {
           take,
           year,
         );
-        return items.map(toTeamTransferLine);
+        return items.map((t) => toTeamTransferLine(t));
       },
       [CacheTag.Leagues, CacheTag.Transfers],
     );
@@ -205,7 +212,7 @@ export class LeaguesService {
           filter,
         );
         return buildPaged(
-          items.map(toTeamTransferLine),
+          items.map((t) => toTeamTransferLine(t)),
           total,
           filter.page,
           filter.pageSize,

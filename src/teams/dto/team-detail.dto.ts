@@ -13,6 +13,8 @@ export class SquadPlayerDto {
 export class TeamDetailDto {
   @ApiProperty() id: string;
   @ApiProperty() name: string;
+  @ApiPropertyOptional({ description: 'Ham Türkçe ad (admin panel için)' })
+  nameTr?: string;
   @ApiPropertyOptional() logo?: string;
   @ApiPropertyOptional() founded?: number;
   @ApiPropertyOptional() venueName?: string;

@@ -4,14 +4,14 @@ export const TEAM_REPOSITORY = Symbol('TEAM_REPOSITORY');
 
 export type TeamWithRel = Prisma.TeamGetPayload<{
   include: {
-    league: { select: { name: true } };
+    league: { select: { name: true; nameTr: true } };
     _count: { select: { players: true } };
   };
 }>;
 
 export type TeamDetailWithRel = Prisma.TeamGetPayload<{
   include: {
-    league: { select: { name: true; leagueLogo: true } };
+    league: { select: { name: true; nameTr: true; leagueLogo: true } };
     players: { include: { position: { select: { nameEn: true } } } };
     _count: { select: { players: true } };
   };
@@ -19,6 +19,7 @@ export type TeamDetailWithRel = Prisma.TeamGetPayload<{
 
 export interface TeamWriteInput {
   name: string;
+  nameTr?: string;
   logo?: string;
   leagueId: string;
 }

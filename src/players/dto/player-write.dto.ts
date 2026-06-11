@@ -15,6 +15,24 @@ import {
 export class PlayerWriteDto {
   @ApiProperty({ maxLength: 32 }) @IsString() @MaxLength(32) firstName: string;
   @ApiProperty({ maxLength: 32 }) @IsString() @MaxLength(32) lastName: string;
+
+  @ApiPropertyOptional({
+    maxLength: 32,
+    description: 'Türkçe ad (boşsa firstName)',
+  })
+  @IsOptional()
+  @IsString()
+  @MaxLength(32)
+  firstNameTr?: string;
+
+  @ApiPropertyOptional({
+    maxLength: 32,
+    description: 'Türkçe soyad (boşsa lastName)',
+  })
+  @IsOptional()
+  @IsString()
+  @MaxLength(32)
+  lastNameTr?: string;
   @ApiProperty({ maxLength: 32 })
   @IsString()
   @MaxLength(32)

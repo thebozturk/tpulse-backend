@@ -27,6 +27,8 @@ import {
   CurrentUser,
 } from '../common/decorators/current-user.decorator';
 import { Public } from '../common/decorators/public.decorator';
+import { ReqLang } from '../common/i18n/lang.decorator';
+import { Lang } from '../common/i18n/lang';
 import { OptionalJwtAuthGuard } from '../common/guards/optional-jwt.guard';
 import {
   ListResponse,
@@ -74,8 +76,9 @@ export class PostsController {
   @ApiListResponse(PostResponseDto)
   async my(
     @CurrentUser() user: AuthUser,
+    @ReqLang() lang: Lang,
   ): Promise<ListResponse<PostResponseDto>> {
-    return { items: await this.posts.my(user.userId) };
+    return { items: await this.posts.my(user.userId, lang) };
   }
 
   @Get()
@@ -86,8 +89,9 @@ export class PostsController {
   feed(
     @Query() filter: PostFilterDto,
     @CurrentUser() user: AuthUser | undefined,
+    @ReqLang() lang: Lang,
   ): Promise<PagedResult<PostResponseDto>> {
-    return this.posts.feed(filter, user);
+    return this.posts.feed(filter, user, lang);
   }
 
   @Get('by-player/:playerId')
@@ -98,8 +102,9 @@ export class PostsController {
   async byPlayer(
     @Param('playerId', ParseUUIDPipe) playerId: string,
     @CurrentUser() user: AuthUser | undefined,
+    @ReqLang() lang: Lang,
   ): Promise<ListResponse<PostResponseDto>> {
-    return { items: await this.posts.byPlayer(playerId, user) };
+    return { items: await this.posts.byPlayer(playerId, user, lang) };
   }
 
   @Get('by-team/:teamId')
@@ -110,8 +115,9 @@ export class PostsController {
   async byTeam(
     @Param('teamId', ParseUUIDPipe) teamId: string,
     @CurrentUser() user: AuthUser | undefined,
+    @ReqLang() lang: Lang,
   ): Promise<ListResponse<PostResponseDto>> {
-    return { items: await this.posts.byTeam(teamId, user) };
+    return { items: await this.posts.byTeam(teamId, user, lang) };
   }
 
   @Get(':id')
@@ -122,8 +128,9 @@ export class PostsController {
   async findOne(
     @Param('id', ParseUUIDPipe) id: string,
     @CurrentUser() user: AuthUser | undefined,
+    @ReqLang() lang: Lang,
   ): Promise<SingleResponse<PostResponseDto>> {
-    return { data: await this.posts.findById(id, user) };
+    return { data: await this.posts.findById(id, user, lang) };
   }
 
   @Post()

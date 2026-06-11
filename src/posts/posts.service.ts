@@ -7,6 +7,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { AuthUser } from '../common/decorators/current-user.decorator';
+import { DEFAULT_LANG, Lang } from '../common/i18n/lang';
 import { PagedResult } from '../common/interfaces/response.interface';
 import { buildPaged } from '../common/pagination';
 import { HotScoreService } from '../common/scoring/hot-score.service';
@@ -39,6 +40,7 @@ export class PostsService {
   async feed(
     filter: PostFilterDto,
     user?: AuthUser,
+    lang: Lang = DEFAULT_LANG,
   ): Promise<PagedResult<PostResponseDto>> {
     if (filter.onlyFavourites) {
       if (!user) {
@@ -56,36 +58,48 @@ export class PostsService {
         ...filter,
         favouriteTargets: targets,
       });
-      const mapped = await this.hydrate(items, user);
+      const mapped = await this.hydrate(items, user, lang);
       return buildPaged(mapped, total, filter.page, filter.pageSize);
     }
     const { items, total } = await this.repo.feed(filter);
-    const mapped = await this.hydrate(items, user);
+    const mapped = await this.hydrate(items, user, lang);
     return buildPaged(mapped, total, filter.page, filter.pageSize);
   }
 
-  async findById(id: string, user?: AuthUser): Promise<PostResponseDto> {
+  async findById(
+    id: string,
+    user?: AuthUser,
+    lang: Lang = DEFAULT_LANG,
+  ): Promise<PostResponseDto> {
     const post = await this.repo.getById(id);
     if (!post) {
       throw new NotFoundException('Gönderi bulunamadı');
     }
-    return (await this.hydrate([post], user))[0];
+    return (await this.hydrate([post], user, lang))[0];
   }
 
   async byPlayer(
     playerId: string,
     user?: AuthUser,
+    lang: Lang = DEFAULT_LANG,
   ): Promise<PostResponseDto[]> {
-    return this.hydrate(await this.repo.getByPlayer(playerId), user);
+    return this.hydrate(await this.repo.getByPlayer(playerId), user, lang);
   }
 
-  async byTeam(teamId: string, user?: AuthUser): Promise<PostResponseDto[]> {
-    return this.hydrate(await this.repo.getByTeam(teamId), user);
+  async byTeam(
+    teamId: string,
+    user?: AuthUser,
+    lang: Lang = DEFAULT_LANG,
+  ): Promise<PostResponseDto[]> {
+    return this.hydrate(await this.repo.getByTeam(teamId), user, lang);
   }
 
-  async my(userId: string): Promise<PostResponseDto[]> {
+  async my(
+    userId: string,
+    lang: Lang = DEFAULT_LANG,
+  ): Promise<PostResponseDto[]> {
     const items = await this.repo.getByOwner(userId);
-    return this.hydrate(items, { userId } as AuthUser);
+    return this.hydrate(items, { userId } as AuthUser, lang);
   }
 
   newCount(afterPostId: string): Promise<number> {
@@ -172,19 +186,22 @@ export class PostsService {
   }
 
   /** BO-3: moderasyon listesi (ownerId/q filtreli, sayfalı). feed altyapısını kullanır. */
-  async adminList(filter: {
-    ownerId?: string;
-    q?: string;
-    page: number;
-    pageSize: number;
-  }): Promise<PagedResult<PostResponseDto>> {
+  async adminList(
+    filter: {
+      ownerId?: string;
+      q?: string;
+      page: number;
+      pageSize: number;
+    },
+    lang: Lang = DEFAULT_LANG,
+  ): Promise<PagedResult<PostResponseDto>> {
     const { items, total } = await this.repo.feed({
       ownerId: filter.ownerId,
       search: filter.q,
       page: filter.page,
       pageSize: filter.pageSize,
     });
-    const mapped = await this.hydrate(items);
+    const mapped = await this.hydrate(items, undefined, lang);
     return buildPaged(mapped, total, filter.page, filter.pageSize);
   }
 
@@ -215,16 +232,18 @@ export class PostsService {
   mapWithUserState(
     posts: PostWithRel[],
     user?: AuthUser,
+    lang: Lang = DEFAULT_LANG,
   ): Promise<PostResponseDto[]> {
-    return this.hydrate(posts, user);
+    return this.hydrate(posts, user, lang);
   }
 
   private async hydrate(
     posts: PostWithRel[],
     user?: AuthUser,
+    lang: Lang = DEFAULT_LANG,
   ): Promise<PostResponseDto[]> {
     if (!user) {
-      return posts.map((p) => toPostResponse(p, false, undefined));
+      return posts.map((p) => toPostResponse(p, false, lang, undefined));
     }
     const ids = posts.map((p) => p.id);
     const [liked, votes] = await Promise.all([
@@ -232,7 +251,7 @@ export class PostsService {
       this.repo.getUserVotes(user.userId, ids),
     ]);
     return posts.map((p) =>
-      toPostResponse(p, liked.has(p.id), votes.get(p.id)),
+      toPostResponse(p, liked.has(p.id), lang, votes.get(p.id)),
     );
   }
 }
