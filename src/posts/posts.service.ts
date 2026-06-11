@@ -6,6 +6,7 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
+import { BlocksService } from '../blocks/blocks.service';
 import { AuthUser } from '../common/decorators/current-user.decorator';
 import { DEFAULT_LANG, Lang } from '../common/i18n/lang';
 import { PagedResult } from '../common/interfaces/response.interface';
@@ -35,6 +36,7 @@ export class PostsService {
     private readonly outbox: OutboxService,
     private readonly favourites: FavouritesService,
     private readonly hotScore: HotScoreService,
+    private readonly blocks: BlocksService,
   ) {}
 
   async feed(
@@ -42,6 +44,9 @@ export class PostsService {
     user?: AuthUser,
     lang: Lang = DEFAULT_LANG,
   ): Promise<PagedResult<PostResponseDto>> {
+    const suppressedAuthorIds = user
+      ? await this.blocks.getSuppressedAuthorIds(user.userId)
+      : undefined;
     if (filter.onlyFavourites) {
       if (!user) {
         throw new UnauthorizedException('Favori feed için giriş gerekli');
@@ -57,11 +62,15 @@ export class PostsService {
       const { items, total } = await this.repo.feed({
         ...filter,
         favouriteTargets: targets,
+        suppressedAuthorIds,
       });
       const mapped = await this.hydrate(items, user, lang);
       return buildPaged(mapped, total, filter.page, filter.pageSize);
     }
-    const { items, total } = await this.repo.feed(filter);
+    const { items, total } = await this.repo.feed({
+      ...filter,
+      suppressedAuthorIds,
+    });
     const mapped = await this.hydrate(items, user, lang);
     return buildPaged(mapped, total, filter.page, filter.pageSize);
   }

@@ -43,6 +43,8 @@ export interface PostFilter {
   ownerId?: string;
   search?: string;
   favouriteTargets?: PostFavouriteTargets;
+  /** Feed bastırma: engellenen/susturulan yazarların id'leri (notIn). */
+  suppressedAuthorIds?: string[];
   page: number;
   pageSize: number;
 }

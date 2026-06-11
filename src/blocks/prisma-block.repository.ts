@@ -1,6 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../common/prisma/prisma.service';
-import { IBlockRepository, MutedKeywordRow } from './block.repository';
+import {
+  BlockedMutedUserRow,
+  IBlockRepository,
+  MutedKeywordRow,
+} from './block.repository';
+
+const PROFILE_SELECT = {
+  id: true,
+  username: true,
+  nickname: true,
+  profilePic: true,
+  verificationType: true,
+} as const;
 
 @Injectable()
 export class PrismaBlockRepository implements IBlockRepository {
@@ -65,6 +77,24 @@ export class PrismaBlockRepository implements IBlockRepository {
         ...mutes.map((m) => m.mutedId),
       ]),
     ];
+  }
+
+  async getBlockedUsers(userId: string): Promise<BlockedMutedUserRow[]> {
+    const rows = await this.prisma.userBlock.findMany({
+      where: { blockerId: userId },
+      select: { blocked: { select: PROFILE_SELECT } },
+      orderBy: { createdAt: 'desc' },
+    });
+    return rows.map((r) => r.blocked);
+  }
+
+  async getMutedUsers(userId: string): Promise<BlockedMutedUserRow[]> {
+    const rows = await this.prisma.userMute.findMany({
+      where: { muterId: userId },
+      select: { muted: { select: PROFILE_SELECT } },
+      orderBy: { createdAt: 'desc' },
+    });
+    return rows.map((r) => r.muted);
   }
 
   async addKeyword(

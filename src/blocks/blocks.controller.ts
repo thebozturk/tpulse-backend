@@ -1,6 +1,7 @@
 import {
   Controller,
   Delete,
+  Get,
   HttpStatus,
   Param,
   ParseUUIDPipe,
@@ -19,9 +20,10 @@ import {
   AuthUser,
   CurrentUser,
 } from '../common/decorators/current-user.decorator';
+import { ListResponse } from '../common/interfaces/response.interface';
 import { ThrottlePolicies } from '../common/throttle/throttle-policies';
 import { BlocksService } from './blocks.service';
-import { BlockActionResultDto } from './dto/block.dto';
+import { BlockActionResultDto, BlockedMutedUserDto } from './dto/block.dto';
 
 @ApiTags('blocks')
 @ApiBearerAuth()
@@ -29,6 +31,24 @@ import { BlockActionResultDto } from './dto/block.dto';
 @Throttle(ThrottlePolicies.write)
 export class BlocksController {
   constructor(private readonly blocks: BlocksService) {}
+
+  @Get('me/blocks')
+  @ApiOperation({ summary: 'Engellediğim kullanıcılar' })
+  @ApiResponse({ status: 200, type: [BlockedMutedUserDto] })
+  async listBlocks(
+    @CurrentUser() user: AuthUser,
+  ): Promise<ListResponse<BlockedMutedUserDto>> {
+    return { items: await this.blocks.listBlockedUsers(user.userId) };
+  }
+
+  @Get('me/mutes')
+  @ApiOperation({ summary: 'Susturduğum kullanıcılar' })
+  @ApiResponse({ status: 200, type: [BlockedMutedUserDto] })
+  async listMutes(
+    @CurrentUser() user: AuthUser,
+  ): Promise<ListResponse<BlockedMutedUserDto>> {
+    return { items: await this.blocks.listMutedUsers(user.userId) };
+  }
 
   @Post('users/:id/block')
   @ApiOperation({ summary: 'Kullanıcıyı engelle (201 / 200 unchanged / 404)' })

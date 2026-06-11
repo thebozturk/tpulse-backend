@@ -22,7 +22,11 @@ export class PrismaPostRepository implements IPostRepository {
     const where: Prisma.PostWhereInput = {
       playerId: filter.playerId,
       teamId: filter.teamId,
-      ownerId: filter.ownerId,
+      ownerId:
+        filter.ownerId ??
+        (filter.suppressedAuthorIds?.length
+          ? { notIn: filter.suppressedAuthorIds }
+          : undefined),
       ...(filter.search
         ? { content: { contains: filter.search, mode: 'insensitive' } }
         : {}),

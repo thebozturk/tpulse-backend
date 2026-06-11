@@ -1,8 +1,18 @@
+import { VerificationType } from '@prisma/client';
+
 export const BLOCK_REPOSITORY = Symbol('BLOCK_REPOSITORY');
 
 export interface MutedKeywordRow {
   id: string;
   keyword: string;
+}
+
+export interface BlockedMutedUserRow {
+  id: string;
+  username: string;
+  nickname: string;
+  profilePic: string | null;
+  verificationType: VerificationType | null;
 }
 
 export interface IBlockRepository {
@@ -13,6 +23,10 @@ export interface IBlockRepository {
   userExists(userId: string): Promise<boolean>;
   /** Feed bastırma: block ∪ mute edilen yazar id'leri (tekilleştirilmiş). */
   getSuppressedAuthorIds(userId: string): Promise<string[]>;
+  /** Kullanıcının engellediği profiller (en yeni önce). */
+  getBlockedUsers(userId: string): Promise<BlockedMutedUserRow[]>;
+  /** Kullanıcının susturduğu profiller (en yeni önce). */
+  getMutedUsers(userId: string): Promise<BlockedMutedUserRow[]>;
   /** Eklenmişse satır, zaten varsa null (idempotent). keyword normalize gelmiş olmalı. */
   addKeyword(userId: string, keyword: string): Promise<MutedKeywordRow | null>;
   removeKeyword(userId: string, keywordId: string): Promise<boolean>;

@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import {
   BLOCK_REPOSITORY,
+  BlockedMutedUserRow,
   IBlockRepository,
   MutedKeywordRow,
 } from './block.repository';
@@ -63,6 +64,14 @@ export class BlocksService {
 
   listKeywords(userId: string): Promise<MutedKeywordRow[]> {
     return this.repo.getKeywords(userId);
+  }
+
+  listBlockedUsers(userId: string): Promise<BlockedMutedUserRow[]> {
+    return this.repo.getBlockedUsers(userId);
+  }
+
+  listMutedUsers(userId: string): Promise<BlockedMutedUserRow[]> {
+    return this.repo.getMutedUsers(userId);
   }
 
   // ── Feed query hydration için ──────────────────────────────

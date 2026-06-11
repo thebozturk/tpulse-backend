@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { VerificationType } from '@prisma/client';
 import { Transform } from 'class-transformer';
 import { IsString, MaxLength, MinLength } from 'class-validator';
 
@@ -8,6 +9,19 @@ export class BlockActionResultDto {
 
   @ApiProperty({ required: false, example: true })
   unchanged?: boolean;
+}
+
+export class BlockedMutedUserDto {
+  @ApiProperty() id: string;
+  @ApiProperty({ example: 'transfermarkt' }) username: string;
+  @ApiProperty({ example: 'Transfer Haber' }) nickname: string;
+  @ApiProperty({
+    nullable: true,
+    example: 'https://cdn.example/avatars/x.webp',
+  })
+  profilePic: string | null;
+  @ApiProperty({ enum: VerificationType, nullable: true })
+  verificationType: VerificationType | null;
 }
 
 export class AddMutedKeywordDto {

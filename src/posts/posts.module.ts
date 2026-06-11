@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { BlocksModule } from '../blocks/blocks.module';
 import { ScoringModule } from '../common/scoring/scoring.module';
 import { FavouritesModule } from '../favourites/favourites.module';
 import { MessagingModule } from '../messaging/messaging.module';
@@ -9,7 +10,7 @@ import { PostsService } from './posts.service';
 import { PrismaPostRepository } from './prisma-post.repository';
 
 @Module({
-  imports: [MessagingModule, FavouritesModule, ScoringModule],
+  imports: [MessagingModule, FavouritesModule, ScoringModule, BlocksModule],
   controllers: [PostsController, AdminPostsController],
   providers: [
     PostsService,

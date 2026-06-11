@@ -15,6 +15,8 @@ describe('BlocksService', () => {
       unmute: jest.fn(),
       userExists: jest.fn(),
       getSuppressedAuthorIds: jest.fn(),
+      getBlockedUsers: jest.fn(),
+      getMutedUsers: jest.fn(),
       addKeyword: jest.fn(),
       removeKeyword: jest.fn(),
       getKeywords: jest.fn(),
@@ -68,5 +70,35 @@ describe('BlocksService', () => {
     await expect(service.removeKeyword('a', 'k')).rejects.toThrow(
       NotFoundException,
     );
+  });
+
+  it('listBlockedUsers delegates to repo.getBlockedUsers', async () => {
+    const rows = [
+      {
+        id: 'b1',
+        username: 'u',
+        nickname: 'n',
+        profilePic: null,
+        verificationType: null,
+      },
+    ];
+    repo.getBlockedUsers.mockResolvedValue(rows);
+    await expect(service.listBlockedUsers('a')).resolves.toBe(rows);
+    expect(repo.getBlockedUsers).toHaveBeenCalledWith('a');
+  });
+
+  it('listMutedUsers delegates to repo.getMutedUsers', async () => {
+    const rows = [
+      {
+        id: 'm1',
+        username: 'u',
+        nickname: 'n',
+        profilePic: null,
+        verificationType: null,
+      },
+    ];
+    repo.getMutedUsers.mockResolvedValue(rows);
+    await expect(service.listMutedUsers('a')).resolves.toBe(rows);
+    expect(repo.getMutedUsers).toHaveBeenCalledWith('a');
   });
 });

@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { PostType, PostVoteChoice } from '../common/enums';
+import { BlocksService } from '../blocks/blocks.service';
 import { FavouritesService } from '../favourites/favourites.service';
 import { OutboxService } from '../messaging/outbox.service';
 import { HotScoreService } from '../common/scoring/hot-score.service';
@@ -15,6 +16,7 @@ describe('PostsService', () => {
   let service: PostsService;
   let repo: Record<string, jest.Mock>;
   let outbox: { enqueue: jest.Mock };
+  let blocks: { getSuppressedAuthorIds: jest.Mock };
 
   beforeEach(async () => {
     repo = {
@@ -23,8 +25,14 @@ describe('PostsService', () => {
       isLiked: jest.fn(),
       getOwnerAndType: jest.fn(),
       update: jest.fn(),
+      feed: jest.fn().mockResolvedValue({ items: [], total: 0 }),
+      getLikedPostIds: jest.fn().mockResolvedValue(new Set()),
+      getUserVotes: jest.fn().mockResolvedValue(new Map()),
     };
     outbox = { enqueue: jest.fn().mockResolvedValue(undefined) };
+    blocks = {
+      getSuppressedAuthorIds: jest.fn().mockResolvedValue(['x', 'y']),
+    };
     const module = await Test.createTestingModule({
       providers: [
         PostsService,
@@ -32,9 +40,28 @@ describe('PostsService', () => {
         { provide: OutboxService, useValue: outbox },
         { provide: FavouritesService, useValue: { getTargets: jest.fn() } },
         { provide: HotScoreService, useValue: { recompute: jest.fn() } },
+        { provide: BlocksService, useValue: blocks },
       ],
     }).compile();
     service = module.get(PostsService);
+  });
+
+  it('feed passes suppressedAuthorIds for a logged-in user', async () => {
+    await service.feed({ page: 1, pageSize: 20, onlyFavourites: false }, {
+      userId: 'u1',
+    } as never);
+    expect(blocks.getSuppressedAuthorIds).toHaveBeenCalledWith('u1');
+    expect(repo.feed).toHaveBeenCalledWith(
+      expect.objectContaining({ suppressedAuthorIds: ['x', 'y'] }),
+    );
+  });
+
+  it('feed does not suppress for anonymous user', async () => {
+    await service.feed({ page: 1, pageSize: 20, onlyFavourites: false });
+    expect(blocks.getSuppressedAuthorIds).not.toHaveBeenCalled();
+    expect(repo.feed).toHaveBeenCalledWith(
+      expect.objectContaining({ suppressedAuthorIds: undefined }),
+    );
   });
 
   it('createAsync enqueues post.create after shape validation', async () => {
