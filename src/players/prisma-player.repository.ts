@@ -4,6 +4,7 @@ import { PrismaService } from '../common/prisma/prisma.service';
 import { toSkipTake } from '../common/pagination';
 import {
   IPlayerRepository,
+  PlayerDetailWithRel,
   PlayerFilter,
   PlayerWithRel,
   PlayerWriteInput,
@@ -26,6 +27,19 @@ const include = {
   team: { select: { name: true, nameTr: true, logo: true } },
   position: { select: { nameEn: true } },
 } satisfies object;
+
+// Tekil GET — temel ilişkiler + tüm istatistikler (lig/takım bağlamıyla, sezona göre).
+const detailInclude = {
+  team: { select: { name: true, nameTr: true, logo: true } },
+  position: { select: { nameEn: true } },
+  statistics: {
+    include: {
+      league: { select: { name: true, nameTr: true, leagueLogo: true } },
+      team: { select: { name: true, nameTr: true, logo: true } },
+    },
+    orderBy: [{ season: 'desc' }, { leagueExternalId: 'asc' }],
+  },
+} satisfies Prisma.PlayerInclude;
 
 @Injectable()
 export class PrismaPlayerRepository implements IPlayerRepository {
@@ -114,8 +128,11 @@ export class PrismaPlayerRepository implements IPlayerRepository {
     return { items, total };
   }
 
-  getById(id: string): Promise<PlayerWithRel | null> {
-    return this.prisma.player.findUnique({ where: { id }, include });
+  getById(id: string): Promise<PlayerDetailWithRel | null> {
+    return this.prisma.player.findUnique({
+      where: { id },
+      include: detailInclude,
+    });
   }
 
   getByTeamId(teamId: string): Promise<PlayerWithRel[]> {

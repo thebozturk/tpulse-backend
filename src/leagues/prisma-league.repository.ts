@@ -4,6 +4,7 @@ import { PrismaService } from '../common/prisma/prisma.service';
 import { toSkipTake } from '../common/pagination';
 import {
   ILeagueRepository,
+  LeagueDetailWithRel,
   LeagueWithCount,
   LeagueWriteInput,
 } from './league.repository';
@@ -17,6 +18,15 @@ function isNotFound(e: unknown): boolean {
 const withTeamCount = {
   _count: { select: { teams: true } },
 } satisfies object;
+
+// Tekil GET — teamCount + lige bağlı takımlar (oyuncu sayılarıyla, ada göre sıralı).
+const detailInclude = {
+  _count: { select: { teams: true } },
+  teams: {
+    include: { _count: { select: { players: true } } },
+    orderBy: { name: 'asc' },
+  },
+} satisfies Prisma.LeagueInclude;
 
 @Injectable()
 export class PrismaLeagueRepository implements ILeagueRepository {
@@ -39,10 +49,10 @@ export class PrismaLeagueRepository implements ILeagueRepository {
     return { items, total };
   }
 
-  getById(id: string): Promise<LeagueWithCount | null> {
+  getById(id: string): Promise<LeagueDetailWithRel | null> {
     return this.prisma.league.findUnique({
       where: { id },
-      include: withTeamCount,
+      include: detailInclude,
     });
   }
 

@@ -17,7 +17,7 @@ import { PlayerFilterDto } from './dto/player-filter.dto';
 import { PlayerProfileDto } from './dto/player-profile.dto';
 import { PlayerResponseDto } from './dto/player-response.dto';
 import { PlayerWriteDto } from './dto/player-write.dto';
-import { toPlayerResponse } from './player.mapper';
+import { toPlayerDetail, toPlayerResponse } from './player.mapper';
 import { IPlayerRepository, PLAYER_REPOSITORY } from './player.repository';
 
 const IMAGE_FOLDER = 'players';
@@ -53,7 +53,7 @@ export class PlayersService {
           this.posts.byPlayer(id, undefined, lang),
         ]);
         return {
-          player: toPlayerResponse(player, lang),
+          player: toPlayerDetail(player, lang),
           transfers: transfers
             .slice(0, PROFILE_TRANSFERS)
             .map((t) => toTeamTransferLine(t, lang)),
@@ -154,7 +154,7 @@ export class PlayersService {
         if (!player) {
           throw new NotFoundException('Oyuncu bulunamadı');
         }
-        return toPlayerResponse(player, lang);
+        return toPlayerDetail(player, lang);
       },
       [CacheTag.Players],
     );

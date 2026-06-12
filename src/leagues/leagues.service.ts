@@ -15,7 +15,7 @@ import {
 import { LeagueResponseDto } from './dto/league-response.dto';
 import { LeagueTransfersQueryDto } from './dto/league-transfers-query.dto';
 import { LeagueWriteDto } from './dto/league-write.dto';
-import { toLeagueResponse } from './league.mapper';
+import { toLeagueDetail, toLeagueResponse } from './league.mapper';
 import { ILeagueRepository, LEAGUE_REPOSITORY } from './league.repository';
 
 const IMAGE_FOLDER = 'leagues';
@@ -123,9 +123,9 @@ export class LeaguesService {
         if (!league) {
           throw new NotFoundException('Lig bulunamadı');
         }
-        return toLeagueResponse(league, lang);
+        return toLeagueDetail(league, lang);
       },
-      [CacheTag.Leagues],
+      [CacheTag.Leagues, CacheTag.Teams],
     );
   }
 

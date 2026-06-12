@@ -1,4 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { PlayerStatisticDto } from './player-statistic.dto';
 
 export class PlayerResponseDto {
   @ApiProperty() id: string;
@@ -22,4 +23,9 @@ export class PlayerResponseDto {
   @ApiPropertyOptional() teamLogo?: string;
   @ApiPropertyOptional() positionId?: string;
   @ApiPropertyOptional() positionName?: string;
+  @ApiPropertyOptional({
+    type: [PlayerStatisticDto],
+    description: 'Lig × sezon istatistikleri — yalnız tekil futbolcu GET’inde',
+  })
+  statistics?: PlayerStatisticDto[];
 }
