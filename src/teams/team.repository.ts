@@ -28,6 +28,7 @@ export interface ITeamRepository {
   getAll(
     page: number,
     pageSize: number,
+    search?: string,
   ): Promise<{ items: TeamWithRel[]; total: number }>;
   getById(id: string): Promise<TeamWithRel | null>;
   getByLeagueId(leagueId: string): Promise<TeamWithRel[]>;

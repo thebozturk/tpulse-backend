@@ -95,12 +95,13 @@ export class TeamsService {
     page: number,
     pageSize: number,
     lang: Lang,
+    search?: string,
   ): Promise<PagedResult<TeamResponseDto>> {
     return this.cache.getOrSet(
-      CacheService.buildKey('teams:list', { page, pageSize, lang }),
+      CacheService.buildKey('teams:list', { page, pageSize, lang, search }),
       CacheTtl.List,
       async () => {
-        const { items, total } = await this.repo.getAll(page, pageSize);
+        const { items, total } = await this.repo.getAll(page, pageSize, search);
         return buildPaged(
           items.map((t) => toTeamResponse(t, lang)),
           total,

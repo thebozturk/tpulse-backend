@@ -1,7 +1,7 @@
 import { Controller, Get, Param, ParseUUIDPipe, Query } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Public } from '../common/decorators/public.decorator';
-import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
+import { TeamFilterDto } from './dto/team-filter.dto';
 import { ReqLang } from '../common/i18n/lang.decorator';
 import { Lang } from '../common/i18n/lang';
 import {
@@ -29,10 +29,10 @@ export class TeamsController {
   @ApiOperation({ summary: 'Takim listele (paged)' })
   @ApiPagedResponse(TeamResponseDto)
   findAll(
-    @Query() query: PaginationQueryDto,
+    @Query() query: TeamFilterDto,
     @ReqLang() lang: Lang,
   ): Promise<PagedResult<TeamResponseDto>> {
-    return this.teams.findAll(query.page, query.pageSize, lang);
+    return this.teams.findAll(query.page, query.pageSize, lang, query.search);
   }
 
   @Get('by-league/:leagueId')

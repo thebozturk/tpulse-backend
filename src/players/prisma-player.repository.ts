@@ -34,19 +34,16 @@ export class PrismaPlayerRepository implements IPlayerRepository {
   async getAll(
     filter: PlayerFilter,
   ): Promise<{ items: PlayerWithRel[]; total: number }> {
+    // Metinsel arama: aksan-duyarsız (f_unaccent) + tam isim (token-AND).
+    // "victor osimhen" → her token tam ad içinde geçer; "kilicsoy" → "Kılıçsoy".
+    if (filter.search?.trim()) {
+      return this.searchAll(filter);
+    }
     const where: Prisma.PlayerWhereInput = {
       teamId: filter.teamId,
       nationality: filter.nationality,
       positionId: filter.positionId,
       isFree: filter.isFree,
-      ...(filter.search
-        ? {
-            OR: [
-              { firstName: { contains: filter.search, mode: 'insensitive' } },
-              { lastName: { contains: filter.search, mode: 'insensitive' } },
-            ],
-          }
-        : {}),
     };
     const { skip, take } = toSkipTake(filter.page, filter.pageSize);
     const [items, total] = await Promise.all([
@@ -59,6 +56,61 @@ export class PrismaPlayerRepository implements IPlayerRepository {
       }),
       this.prisma.player.count({ where }),
     ]);
+    return { items, total };
+  }
+
+  /** f_unaccent token-AND arama + diğer filtreler; benzerliğe göre sıralı, paged. */
+  private async searchAll(
+    filter: PlayerFilter,
+  ): Promise<{ items: PlayerWithRel[]; total: number }> {
+    const q = filter.search!.trim();
+    const tokens = q.split(/\s+/).filter(Boolean).slice(0, 8);
+    const fullName = Prisma.sql`f_unaccent(lower("firstName" || ' ' || "lastName"))`;
+    const conds: Prisma.Sql[] = [
+      Prisma.join(
+        tokens.map(
+          (t) =>
+            Prisma.sql`${fullName} LIKE '%' || f_unaccent(lower(${t})) || '%'`,
+        ),
+        ' AND ',
+      ),
+    ];
+    if (filter.teamId) {
+      conds.push(Prisma.sql`"teamId" = ${filter.teamId}::uuid`);
+    }
+    if (filter.nationality) {
+      conds.push(Prisma.sql`nationality = ${filter.nationality}`);
+    }
+    if (filter.positionId) {
+      conds.push(Prisma.sql`"positionId" = ${filter.positionId}::uuid`);
+    }
+    if (filter.isFree !== undefined) {
+      conds.push(Prisma.sql`"isFree" = ${filter.isFree}`);
+    }
+    const whereSql = Prisma.join(conds, ' AND ');
+    const { skip, take } = toSkipTake(filter.page, filter.pageSize);
+
+    const [idRows, countRows] = await Promise.all([
+      this.prisma.$queryRaw<{ id: string }[]>(Prisma.sql`
+        SELECT id FROM "player" WHERE ${whereSql}
+        ORDER BY similarity(${fullName}, f_unaccent(lower(${q}))) DESC, "lastName" ASC
+        LIMIT ${take} OFFSET ${skip}`),
+      this.prisma.$queryRaw<{ count: number }[]>(Prisma.sql`
+        SELECT COUNT(*)::int AS count FROM "player" WHERE ${whereSql}`),
+    ]);
+    const ids = idRows.map((r) => r.id);
+    const total = Number(countRows[0]?.count ?? 0);
+    if (ids.length === 0) {
+      return { items: [], total };
+    }
+    const players = await this.prisma.player.findMany({
+      where: { id: { in: ids } },
+      include,
+    });
+    const byId = new Map(players.map((p) => [p.id, p]));
+    const items = ids
+      .map((id) => byId.get(id))
+      .filter((p): p is PlayerWithRel => p !== undefined);
     return { items, total };
   }
 

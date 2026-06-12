@@ -43,7 +43,12 @@ export class PrismaTeamRepository implements ITeamRepository {
   async getAll(
     page: number,
     pageSize: number,
+    search?: string,
   ): Promise<{ items: TeamWithRel[]; total: number }> {
+    // Aksan-duyarsız (f_unaccent) isim araması — name + nameTr (token-AND).
+    if (search?.trim()) {
+      return this.searchAll(page, pageSize, search.trim());
+    }
     const { skip, take } = toSkipTake(page, pageSize);
     const [items, total] = await Promise.all([
       this.prisma.team.findMany({
@@ -54,6 +59,46 @@ export class PrismaTeamRepository implements ITeamRepository {
       }),
       this.prisma.team.count(),
     ]);
+    return { items, total };
+  }
+
+  private async searchAll(
+    page: number,
+    pageSize: number,
+    q: string,
+  ): Promise<{ items: TeamWithRel[]; total: number }> {
+    const tokens = q.split(/\s+/).filter(Boolean).slice(0, 8);
+    // name VEYA nameTr içinde her token geçmeli (ikisi de aksan-duyarsız).
+    const target = Prisma.sql`f_unaccent(lower(name || ' ' || coalesce("nameTr", '')))`;
+    const tokenSql = Prisma.join(
+      tokens.map(
+        (t) => Prisma.sql`${target} LIKE '%' || f_unaccent(lower(${t})) || '%'`,
+      ),
+      ' AND ',
+    );
+    const { skip, take } = toSkipTake(page, pageSize);
+
+    const [idRows, countRows] = await Promise.all([
+      this.prisma.$queryRaw<{ id: string }[]>(Prisma.sql`
+        SELECT id FROM "team" WHERE ${tokenSql}
+        ORDER BY similarity(f_unaccent(lower(name)), f_unaccent(lower(${q}))) DESC, name ASC
+        LIMIT ${take} OFFSET ${skip}`),
+      this.prisma.$queryRaw<{ count: number }[]>(Prisma.sql`
+        SELECT COUNT(*)::int AS count FROM "team" WHERE ${tokenSql}`),
+    ]);
+    const ids = idRows.map((r) => r.id);
+    const total = Number(countRows[0]?.count ?? 0);
+    if (ids.length === 0) {
+      return { items: [], total };
+    }
+    const teams = await this.prisma.team.findMany({
+      where: { id: { in: ids } },
+      include,
+    });
+    const byId = new Map(teams.map((t) => [t.id, t]));
+    const items = ids
+      .map((id) => byId.get(id))
+      .filter((t): t is TeamWithRel => t !== undefined);
     return { items, total };
   }
 
