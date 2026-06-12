@@ -75,6 +75,9 @@ export const configuration = () => {
         .filter(Boolean)
         .map(Number),
       season: env.API_FOOTBALL_SEASON,
+      maxRpm: env.API_FOOTBALL_MAX_RPM,
+      dailyReserve: env.API_FOOTBALL_DAILY_RESERVE,
+      fetchSquads: env.API_FOOTBALL_FETCH_SQUADS,
       syncCron: env.SYNC_CRON,
       detectTransfers: env.DETECT_TRANSFERS,
       mirrorImages: env.MIRROR_IMAGES,

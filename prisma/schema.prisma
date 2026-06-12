@@ -143,7 +143,8 @@ model League {
   leagueLogoSourceUrl String?
   leagueCode          String? @unique @db.VarChar(10)
 
-  teams Team[]
+  teams       Team[]
+  playerStats PlayerStatistic[]
 
   @@map("league")
 }
@@ -162,15 +163,16 @@ model Team {
   venueCapacity     Int?
   leagueId          String  @db.Uuid
 
-  league            League     @relation(fields: [leagueId], references: [id], onDelete: Restrict)
+  league            League            @relation(fields: [leagueId], references: [id], onDelete: Restrict)
   players           Player[]
-  incomingTransfers Transfer[] @relation("ToTeam")
-  outgoingTransfers Transfer[] @relation("FromTeam")
-  newsFrom          News[]     @relation("NewsFromTeam")
-  newsTo            News[]     @relation("NewsToTeam")
-  postsTeam         Post[]     @relation("PostTeam")
-  postsFrom         Post[]     @relation("PostFromTeam")
-  postsTo           Post[]     @relation("PostToTeam")
+  incomingTransfers Transfer[]        @relation("ToTeam")
+  outgoingTransfers Transfer[]        @relation("FromTeam")
+  newsFrom          News[]            @relation("NewsFromTeam")
+  newsTo            News[]            @relation("NewsToTeam")
+  postsTeam         Post[]            @relation("PostTeam")
+  postsFrom         Post[]            @relation("PostFromTeam")
+  postsTo           Post[]            @relation("PostToTeam")
+  playerStats       PlayerStatistic[]
 
   @@index([leagueId])
   @@map("team")
@@ -208,16 +210,81 @@ model Player {
   teamId             String    @db.Uuid
   positionId         String?   @db.Uuid
 
-  team      Team       @relation(fields: [teamId], references: [id], onDelete: Restrict)
-  position  Position?  @relation(fields: [positionId], references: [id], onDelete: SetNull)
-  transfers Transfer[]
-  news      News[]
-  posts     Post[]     @relation("PostPlayer")
+  team       Team              @relation(fields: [teamId], references: [id], onDelete: Restrict)
+  position   Position?         @relation(fields: [positionId], references: [id], onDelete: SetNull)
+  transfers  Transfer[]
+  news       News[]
+  posts      Post[]            @relation("PostPlayer")
+  statistics PlayerStatistic[]
 
   @@index([teamId])
   @@index([nationality])
   @@index([isFree])
   @@map("player")
+}
+
+// Oyuncu sezon istatistikleri — API-Football /players cevabındaki statistics[]
+// girdisi başına bir satır (oyuncu × lig × sezon). Ekstra API isteği gerektirmez.
+model PlayerStatistic {
+  id               String  @id @default(uuid()) @db.Uuid
+  playerId         String  @db.Uuid
+  leagueId         String? @db.Uuid
+  teamId           String? @db.Uuid
+  leagueExternalId Int
+  season           Int     @db.SmallInt
+
+  appearances Int?     @db.SmallInt
+  lineups     Int?     @db.SmallInt
+  minutes     Int?
+  rating      Decimal? @db.Decimal(4, 2)
+  captain     Boolean  @default(false)
+
+  goalsTotal    Int? @db.SmallInt
+  goalsConceded Int? @db.SmallInt
+  goalsAssists  Int? @db.SmallInt
+  goalsSaves    Int? @db.SmallInt
+
+  shotsTotal Int? @db.SmallInt
+  shotsOn    Int? @db.SmallInt
+
+  passesTotal    Int?
+  passesKey      Int? @db.SmallInt
+  passesAccuracy Int? @db.SmallInt
+
+  tacklesTotal         Int? @db.SmallInt
+  tacklesBlocks        Int? @db.SmallInt
+  tacklesInterceptions Int? @db.SmallInt
+
+  duelsTotal Int? @db.SmallInt
+  duelsWon   Int? @db.SmallInt
+
+  dribblesAttempts Int? @db.SmallInt
+  dribblesSuccess  Int? @db.SmallInt
+
+  foulsDrawn     Int? @db.SmallInt
+  foulsCommitted Int? @db.SmallInt
+
+  cardsYellow    Int? @db.SmallInt
+  cardsYellowRed Int? @db.SmallInt
+  cardsRed       Int? @db.SmallInt
+
+  penaltyWon       Int? @db.SmallInt
+  penaltyCommitted Int? @db.SmallInt
+  penaltyScored    Int? @db.SmallInt
+  penaltyMissed    Int? @db.SmallInt
+  penaltySaved     Int? @db.SmallInt
+
+  createdAt DateTime  @default(now()) @db.Timestamptz
+  updatedAt DateTime? @db.Timestamptz
+
+  player Player  @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  league League? @relation(fields: [leagueId], references: [id], onDelete: SetNull)
+  team   Team?   @relation(fields: [teamId], references: [id], onDelete: SetNull)
+
+  @@unique([playerId, leagueExternalId, season])
+  @@index([playerId])
+  @@index([leagueId, season])
+  @@map("player_statistic")
 }
 
 model Transfer {

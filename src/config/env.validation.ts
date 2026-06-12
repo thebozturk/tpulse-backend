@@ -85,6 +85,20 @@ export const envSchema = z
       .default('https://v3.football.api-sports.io'),
     API_FOOTBALL_LEAGUE_IDS: z.string().default(''),
     API_FOOTBALL_SEASON: z.coerce.number().int().default(2024),
+    // Throttle: dakikada gönderilecek azami istek (plan limiti 300 → 250 güvenli).
+    API_FOOTBALL_MAX_RPM: z.coerce.number().int().positive().default(250),
+    // Günlük kota rezervi: header'daki kalan hak bunun altına inince dur+ertele.
+    API_FOOTBALL_DAILY_RESERVE: z.coerce
+      .number()
+      .int()
+      .nonnegative()
+      .default(50),
+    // Kadro çekimi: /players (stat'lı) sonrası /players/squads ile 0-dakikalık
+    // kayıtlı oyuncuları da ekle (takım başına +1 istek). Varsayılan AÇIK.
+    API_FOOTBALL_FETCH_SQUADS: z
+      .enum(['true', 'false'])
+      .default('true')
+      .transform((v) => v === 'true'),
     SYNC_CRON: z.string().optional(),
     DETECT_TRANSFERS: z
       .enum(['true', 'false'])
