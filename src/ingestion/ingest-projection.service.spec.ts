@@ -144,6 +144,20 @@ describe('IngestProjectionService', () => {
     expect(res).toEqual({ projectedAs: 'none' });
   });
 
+  it('Official ama transfer üçlüsü eksik → feed-only (none), hata atmaz', async () => {
+    const res = await service.project(tx, {
+      postId: 'post1',
+      shape: { postType: PostType.Transfer }, // playerId/fromTeamId/toTeamId yok
+      category: BotContentCategory.Official,
+      dto: makeDto({ category: 'Official' }),
+      ownerId: 'sys1',
+    });
+    expect(transferRepo.findOpenRumour).not.toHaveBeenCalled();
+    expect(transferRepo.createTransfer).not.toHaveBeenCalled();
+    expect(transferRepo.createRumour).not.toHaveBeenCalled();
+    expect(res).toEqual({ projectedAs: 'none' });
+  });
+
   it('Team/Player şekli → News (title + slug + sourceId türetilir)', async () => {
     const res = await service.project(tx, {
       postId: 'post1',

@@ -59,6 +59,17 @@ export class IngestProjectionService {
       input.shape.postType,
       input.category,
     );
+    // Savunma: Rumour/Official ama oyuncu+takım üçlüsü eksikse transfer kaydı
+    // açamayız — istek patlamasın, içerik yalnız akışta kalsın (feed-only).
+    if (
+      (target === 'rumour' || target === 'transfer') &&
+      !this.hasTransferTriple(input.shape)
+    ) {
+      this.logger.warn(
+        `Transfer yansıması atlandı (eksik oyuncu/takım): post=${input.postId} category=${input.category}`,
+      );
+      return { projectedAs: 'none' };
+    }
     switch (target) {
       case 'rumour':
         return this.projectRumour(tx, input);
@@ -70,6 +81,10 @@ export class IngestProjectionService {
       default:
         return { projectedAs: 'none' };
     }
+  }
+
+  private hasTransferTriple(shape: ResolvedShape): boolean {
+    return !!(shape.playerId && shape.fromTeamId && shape.toTeamId);
   }
 
   private async projectRumour(
