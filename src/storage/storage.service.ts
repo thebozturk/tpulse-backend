@@ -51,6 +51,10 @@ export class StorageService {
         Key: key,
         Body: buffer,
         ContentType: contentType,
+        // Key deterministik (entityId.webp) ve güncellemede AYNI key ezilir →
+        // immutable KULLANMA (eski görsel takılı kalır). 1 gün cache: mobil hız +
+        // güncelleme en geç 1 günde yansır.
+        CacheControl: 'public, max-age=86400',
       }),
     );
     this.logger.log(`S3 upload: ${key}`);
