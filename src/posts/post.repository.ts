@@ -45,6 +45,8 @@ export interface PostFilter {
   favouriteTargets?: PostFavouriteTargets;
   /** Feed bastırma: engellenen/susturulan yazarların id'leri (notIn). */
   suppressedAuthorIds?: string[];
+  /** Susturulan kelimeler: content'inde bunlardan birini içeren post elenir. */
+  mutedKeywords?: string[];
   page: number;
   pageSize: number;
 }

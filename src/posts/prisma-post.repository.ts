@@ -30,6 +30,15 @@ export class PrismaPostRepository implements IPostRepository {
       ...(filter.search
         ? { content: { contains: filter.search, mode: 'insensitive' } }
         : {}),
+      ...(filter.mutedKeywords?.length
+        ? {
+            NOT: {
+              OR: filter.mutedKeywords.map((kw) => ({
+                content: { contains: kw, mode: 'insensitive' as const },
+              })),
+            },
+          }
+        : {}),
       ...(filter.favouriteTargets
         ? {
             OR: [

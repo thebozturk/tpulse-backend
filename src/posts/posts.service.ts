@@ -44,9 +44,12 @@ export class PostsService {
     user?: AuthUser,
     lang: Lang = DEFAULT_LANG,
   ): Promise<PagedResult<PostResponseDto>> {
-    const suppressedAuthorIds = user
-      ? await this.blocks.getSuppressedAuthorIds(user.userId)
-      : undefined;
+    const [suppressedAuthorIds, mutedKeywords] = user
+      ? await Promise.all([
+          this.blocks.getSuppressedAuthorIds(user.userId),
+          this.blocks.getMutedKeywords(user.userId),
+        ])
+      : [undefined, undefined];
     if (filter.onlyFavourites) {
       if (!user) {
         throw new UnauthorizedException('Favori feed için giriş gerekli');
@@ -63,6 +66,7 @@ export class PostsService {
         ...filter,
         favouriteTargets: targets,
         suppressedAuthorIds,
+        mutedKeywords,
       });
       const mapped = await this.hydrate(items, user, lang);
       return buildPaged(mapped, total, filter.page, filter.pageSize);
@@ -70,6 +74,7 @@ export class PostsService {
     const { items, total } = await this.repo.feed({
       ...filter,
       suppressedAuthorIds,
+      mutedKeywords,
     });
     const mapped = await this.hydrate(items, user, lang);
     return buildPaged(mapped, total, filter.page, filter.pageSize);
