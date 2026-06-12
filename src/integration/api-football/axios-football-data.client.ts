@@ -19,7 +19,7 @@ interface ApiEnvelope<T> {
 }
 interface RawLeague {
   league: { id: number; name: string; logo: string; type: string };
-  country: { name: string; flag: string };
+  country: { name: string; flag: string | null };
   seasons?: { year: number; current?: boolean }[];
 }
 interface RawTeam {

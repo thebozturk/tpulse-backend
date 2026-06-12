@@ -238,7 +238,7 @@ export class FootballDataSyncService {
       }
       maps.seenTeams.add(t.externalId);
       try {
-        const teamId = await this.upsertTeam(t, leagueId, counts);
+        const teamId = await this.upsertTeam(t, leagueId, meta.type, counts);
         maps.teamIdByExt.set(t.externalId, teamId);
         // Kadro + stat yalnız lig-tipi competition'larda (milli takım reassign'ı önle).
         if (meta.type === 'League') {
@@ -390,6 +390,7 @@ export class FootballDataSyncService {
   private async upsertTeam(
     ext: ExternalTeam,
     leagueId: string,
+    kind: 'League' | 'Cup',
     counts: Counts,
   ): Promise<string> {
     const existing = await this.prisma.team.findUnique({
@@ -408,7 +409,6 @@ export class FootballDataSyncService {
       venueName: ext.venueName,
       venueCity: ext.venueCity,
       venueCapacity: ext.venueCapacity,
-      leagueId,
     };
     if (existing) {
       counts.teamsUpdated++;
@@ -416,6 +416,9 @@ export class FootballDataSyncService {
         where: { id: existing.id },
         data: {
           ...base,
+          // Kupa-tipi mevcut takımın leagueId'sini EZMEZ → kulüp domestik ligine bağlı kalır.
+          // (örn. Galatasaray UCL'de görülse de Süper Lig'de kalır.)
+          ...(kind === 'League' ? { leagueId } : {}),
           ...(logo ? { logo: logo.url, logoSourceUrl: logo.source } : {}),
         },
       });
@@ -426,6 +429,7 @@ export class FootballDataSyncService {
       data: {
         externalId: ext.externalId,
         ...base,
+        leagueId, // yeni takım: domestik lig (League) veya yalnız-kupa/milli takım (Cup)
         nameTr: ext.name, // Türkçe gösterim adı varsayılanı; admin panelden değiştirir, re-sync ezmez.
         logo: logo?.url ?? ext.logo,
         logoSourceUrl: ext.logo,

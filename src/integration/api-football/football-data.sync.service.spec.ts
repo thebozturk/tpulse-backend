@@ -161,6 +161,24 @@ describe('FootballDataSyncService', () => {
     expect(client.getPlayersByTeam).toHaveBeenCalledTimes(1);
   });
 
+  it('kupa-tipi mevcut takimin leagueId-sini guncellemez (domestik lig korunur)', async () => {
+    client.getLeaguesIndex.mockResolvedValue([leagueMeta(2, 'Cup')]);
+    const module = await build({ 'apiFootball.leagueIds': [2] });
+    prisma.team.findUnique.mockResolvedValue({
+      id: 'tm',
+      externalId: 42,
+      logoSourceUrl: null,
+      logoLockedByAdmin: false,
+    });
+    service = module.get(FootballDataSyncService);
+
+    await service.syncAll();
+
+    expect(prisma.team.update).toHaveBeenCalledTimes(1);
+    const updateData = prisma.team.update.mock.calls[0][0].data;
+    expect(updateData.leagueId).toBeUndefined(); // kupa leagueId'yi ezmez
+  });
+
   it('quota tükenince kalan ligleri remaining ile döner, Partial yazar', async () => {
     client.getLeaguesIndex.mockResolvedValue([leagueMeta(39, 'League')]);
     client.getPlayersByTeam.mockRejectedValue(new QuotaExhaustedError(0));

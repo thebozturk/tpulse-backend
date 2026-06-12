@@ -134,10 +134,12 @@ model MutedKeyword {
 model League {
   id                  String  @id @default(uuid()) @db.Uuid
   externalId          Int?    @unique
-  name                String  @unique @db.VarChar(30)
+  // Ad ülkeler arası tekrarlanır (Bundesliga: DE+AT; Premier League: EN+RU+UA+EG).
+  // Natural key externalId; name UNIQUE DEĞİL.
+  name                String  @db.VarChar(30)
   nameTr              String? @db.VarChar(30)
   country             String  @db.VarChar(30)
-  countryLogo         String
+  countryLogo         String? // Uluslararası kupalarda (country='World') flag null
   leagueLogo          String
   logoLockedByAdmin   Boolean @default(false)
   leagueLogoSourceUrl String?
@@ -152,7 +154,8 @@ model League {
 model Team {
   id                String  @id @default(uuid()) @db.Uuid
   externalId        Int?    @unique
-  name              String  @unique @db.VarChar(50)
+  // Ad ülkeler arası tekrarlanabilir (ör. iki "Arsenal"). Natural key externalId.
+  name              String  @db.VarChar(50)
   nameTr            String? @db.VarChar(50)
   logo              String?
   logoLockedByAdmin Boolean @default(false)

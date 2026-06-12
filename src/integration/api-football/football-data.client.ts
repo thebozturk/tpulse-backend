@@ -16,7 +16,7 @@ export interface ExternalLeague {
   externalId: number;
   name: string;
   country: string;
-  countryLogo: string;
+  countryLogo: string | null; // Uluslararası kupalarda (World) flag null gelir
   leagueLogo: string;
 }
 

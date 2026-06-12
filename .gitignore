@@ -107,3 +107,4 @@ pids/
 
 # Yük testi çıktıları (k6 --summary-export)
 load-results/
+tpulse-football-data.sql*
