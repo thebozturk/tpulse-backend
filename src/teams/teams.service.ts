@@ -14,7 +14,11 @@ import {
 import { TeamDetailDto } from './dto/team-detail.dto';
 import { TeamResponseDto } from './dto/team-response.dto';
 import { TeamWriteDto } from './dto/team-write.dto';
-import { toSquadPlayer, toTeamResponse } from './team.mapper';
+import {
+  computeTeamSeasonTotals,
+  toSquadPlayer,
+  toTeamResponse,
+} from './team.mapper';
 import { ITeamRepository, TEAM_REPOSITORY } from './team.repository';
 
 const RECENT_TAKE = 10;
@@ -145,7 +149,7 @@ export class TeamsService {
       CacheService.buildKey('teams:detail', { id, lang }),
       CacheTtl.List,
       () => this.computeDetail(id, lang),
-      [CacheTag.Teams, CacheTag.Transfers],
+      [CacheTag.Teams, CacheTag.Transfers, CacheTag.Players],
     );
   }
 
@@ -171,7 +175,8 @@ export class TeamsService {
       leagueName: pickName(lang, team.league.name, team.league.nameTr),
       leagueLogo: team.league.leagueLogo,
       playerCount: team._count.players,
-      squad: team.players.map((p) => toSquadPlayer(p, lang)),
+      seasonTotals: computeTeamSeasonTotals(team.players, team.leagueId),
+      squad: team.players.map((p) => toSquadPlayer(p, lang, team.leagueId)),
       recentIncoming: recentIncoming.map((t) => toTeamTransferLine(t, lang)),
       recentOutgoing: recentOutgoing.map((t) => toTeamTransferLine(t, lang)),
     };

@@ -120,7 +120,24 @@ export class PrismaTeamRepository implements ITeamRepository {
       include: {
         league: { select: { name: true, nameTr: true, leagueLogo: true } },
         players: {
-          include: { position: { select: { nameEn: true } } },
+          include: {
+            position: { select: { nameEn: true } },
+            // Kadro oyuncusunun tüm sezon stat satırları; mapper takımın ligine ait
+            // olanı seçer (lig bağlamı için leagueId + season).
+            statistics: {
+              select: {
+                leagueId: true,
+                season: true,
+                appearances: true,
+                minutes: true,
+                goalsTotal: true,
+                goalsAssists: true,
+                rating: true,
+                cardsYellow: true,
+                cardsRed: true,
+              },
+            },
+          },
           orderBy: [{ lastName: 'asc' }, { firstName: 'asc' }],
         },
         _count: { select: { players: true } },

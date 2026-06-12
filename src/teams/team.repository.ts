@@ -12,7 +12,24 @@ export type TeamWithRel = Prisma.TeamGetPayload<{
 export type TeamDetailWithRel = Prisma.TeamGetPayload<{
   include: {
     league: { select: { name: true; nameTr: true; leagueLogo: true } };
-    players: { include: { position: { select: { nameEn: true } } } };
+    players: {
+      include: {
+        position: { select: { nameEn: true } };
+        statistics: {
+          select: {
+            leagueId: true;
+            season: true;
+            appearances: true;
+            minutes: true;
+            goalsTotal: true;
+            goalsAssists: true;
+            rating: true;
+            cardsYellow: true;
+            cardsRed: true;
+          };
+        };
+      };
+    };
     _count: { select: { players: true } };
   };
 }>;
