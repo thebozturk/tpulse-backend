@@ -27,6 +27,9 @@ export class ImageUploadService {
     if (!this.image.isValidSize(file.size)) {
       throw new BadRequestException('Görsel 5MB sınırını aşıyor');
     }
+    if (!this.image.hasAllowedImageSignature(file.buffer)) {
+      throw new BadRequestException('Dosya içeriği geçerli bir görsel değil');
+    }
     const webp = await this.image.toWebP(file.buffer, quality);
     return this.storage.upload(webp, folder, `${entityId}.webp`, 'image/webp');
   }
