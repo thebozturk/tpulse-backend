@@ -1141,6 +1141,326 @@
         ]
       }
     },
+    "/api/me/blocks": {
+      "get": {
+        "operationId": "BlocksController_listBlocks",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BlockedMutedUserDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Engellediğim kullanıcılar",
+        "tags": [
+          "blocks"
+        ]
+      }
+    },
+    "/api/me/mutes": {
+      "get": {
+        "operationId": "BlocksController_listMutes",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BlockedMutedUserDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Susturduğum kullanıcılar",
+        "tags": [
+          "blocks"
+        ]
+      }
+    },
+    "/api/users/{id}/block": {
+      "post": {
+        "operationId": "BlocksController_block",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BlockActionResultDto"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BlockActionResultDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Kullanıcıyı engelle (201 / 200 unchanged / 404)",
+        "tags": [
+          "blocks"
+        ]
+      },
+      "delete": {
+        "operationId": "BlocksController_unblock",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BlockActionResultDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Engeli kaldır",
+        "tags": [
+          "blocks"
+        ]
+      }
+    },
+    "/api/users/{id}/mute": {
+      "post": {
+        "operationId": "BlocksController_mute",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BlockActionResultDto"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BlockActionResultDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Kullanıcıyı sustur (201 / 200 unchanged / 404)",
+        "tags": [
+          "blocks"
+        ]
+      },
+      "delete": {
+        "operationId": "BlocksController_unmute",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BlockActionResultDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Susturmayı kaldır",
+        "tags": [
+          "blocks"
+        ]
+      }
+    },
+    "/api/me/muted-keywords": {
+      "get": {
+        "operationId": "MutedKeywordsController_list",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MutedKeywordDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Susturulan kelimelerim",
+        "tags": [
+          "muted-keywords"
+        ]
+      },
+      "post": {
+        "operationId": "MutedKeywordsController_add",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddMutedKeywordDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Zaten susturulmuş"
+          },
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MutedKeywordDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Kelime sustur (201 / 200 zaten var)",
+        "tags": [
+          "muted-keywords"
+        ]
+      }
+    },
+    "/api/me/muted-keywords/{id}": {
+      "delete": {
+        "operationId": "MutedKeywordsController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Silindi"
+          },
+          "404": {
+            "description": "Kelime bulunamadı"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Susturulan kelimeyi kaldır",
+        "tags": [
+          "muted-keywords"
+        ]
+      }
+    },
     "/api/posts/{postId}/comments": {
       "get": {
         "operationId": "CommentController_list",
@@ -5782,6 +6102,15 @@
               "default": 20,
               "type": "number"
             }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "description": "İsim araması (aksan-duyarsız)",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -9242,266 +9571,6 @@
         ]
       }
     },
-    "/api/users/{id}/block": {
-      "post": {
-        "operationId": "BlocksController_block",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BlockActionResultDto"
-                }
-              }
-            }
-          },
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BlockActionResultDto"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "bearer": []
-          }
-        ],
-        "summary": "Kullanıcıyı engelle (201 / 200 unchanged / 404)",
-        "tags": [
-          "blocks"
-        ]
-      },
-      "delete": {
-        "operationId": "BlocksController_unblock",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BlockActionResultDto"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "bearer": []
-          }
-        ],
-        "summary": "Engeli kaldır",
-        "tags": [
-          "blocks"
-        ]
-      }
-    },
-    "/api/users/{id}/mute": {
-      "post": {
-        "operationId": "BlocksController_mute",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BlockActionResultDto"
-                }
-              }
-            }
-          },
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BlockActionResultDto"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "bearer": []
-          }
-        ],
-        "summary": "Kullanıcıyı sustur (201 / 200 unchanged / 404)",
-        "tags": [
-          "blocks"
-        ]
-      },
-      "delete": {
-        "operationId": "BlocksController_unmute",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BlockActionResultDto"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "bearer": []
-          }
-        ],
-        "summary": "Susturmayı kaldır",
-        "tags": [
-          "blocks"
-        ]
-      }
-    },
-    "/api/me/muted-keywords": {
-      "get": {
-        "operationId": "MutedKeywordsController_list",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/MutedKeywordDto"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "bearer": []
-          }
-        ],
-        "summary": "Susturulan kelimelerim",
-        "tags": [
-          "muted-keywords"
-        ]
-      },
-      "post": {
-        "operationId": "MutedKeywordsController_add",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddMutedKeywordDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Zaten susturulmuş"
-          },
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MutedKeywordDto"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "bearer": []
-          }
-        ],
-        "summary": "Kelime sustur (201 / 200 zaten var)",
-        "tags": [
-          "muted-keywords"
-        ]
-      }
-    },
-    "/api/me/muted-keywords/{id}": {
-      "delete": {
-        "operationId": "MutedKeywordsController_remove",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Silindi"
-          },
-          "404": {
-            "description": "Kelime bulunamadı"
-          }
-        },
-        "security": [
-          {
-            "bearer": []
-          }
-        ],
-        "summary": "Susturulan kelimeyi kaldır",
-        "tags": [
-          "muted-keywords"
-        ]
-      }
-    },
     "/api/feed/for-you": {
       "get": {
         "operationId": "FeedController_forYou",
@@ -10249,6 +10318,86 @@
         },
         "required": [
           "favourites"
+        ]
+      },
+      "BlockedMutedUserDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string",
+            "example": "transfermarkt"
+          },
+          "nickname": {
+            "type": "string",
+            "example": "Transfer Haber"
+          },
+          "profilePic": {
+            "type": "string",
+            "nullable": true,
+            "example": "https://cdn.example/avatars/x.webp"
+          },
+          "verificationType": {
+            "type": "string",
+            "enum": [
+              "Blue",
+              "Gold"
+            ],
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "username",
+          "nickname",
+          "profilePic",
+          "verificationType"
+        ]
+      },
+      "BlockActionResultDto": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "unchanged": {
+            "type": "boolean",
+            "example": true
+          }
+        }
+      },
+      "MutedKeywordDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "keyword": {
+            "type": "string",
+            "example": "sponsorlu"
+          }
+        },
+        "required": [
+          "id",
+          "keyword"
+        ]
+      },
+      "AddMutedKeywordDto": {
+        "type": "object",
+        "properties": {
+          "keyword": {
+            "type": "string",
+            "example": "sponsorlu",
+            "minLength": 2,
+            "maxLength": 100,
+            "description": "Bu kelimeyi içeren postlar feed'de gizlenir (case-insensitive)."
+          }
+        },
+        "required": [
+          "keyword"
         ]
       },
       "CommentDto": {
@@ -11818,6 +11967,31 @@
           "data"
         ]
       },
+      "LeagueTeamDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "nameTr": {
+            "type": "string"
+          },
+          "logo": {
+            "type": "string"
+          },
+          "playerCount": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "playerCount"
+        ]
+      },
       "LeagueResponseDto": {
         "type": "object",
         "properties": {
@@ -11835,7 +12009,8 @@
             "type": "string"
           },
           "countryLogo": {
-            "type": "string"
+            "type": "string",
+            "description": "Uluslararası kupalarda null olabilir"
           },
           "leagueLogo": {
             "type": "string"
@@ -11845,13 +12020,19 @@
           },
           "teamCount": {
             "type": "number"
+          },
+          "teams": {
+            "description": "Lige bağlı takımlar — yalnız tekil lig GET’inde",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LeagueTeamDto"
+            }
           }
         },
         "required": [
           "id",
           "name",
           "country",
-          "countryLogo",
           "leagueLogo",
           "teamCount"
         ]
@@ -11960,6 +12141,69 @@
           "playerCount"
         ]
       },
+      "TeamSeasonTotalsDto": {
+        "type": "object",
+        "properties": {
+          "season": {
+            "type": "number"
+          },
+          "goals": {
+            "type": "number"
+          },
+          "assists": {
+            "type": "number"
+          },
+          "yellowCards": {
+            "type": "number"
+          },
+          "redCards": {
+            "type": "number"
+          },
+          "playersWithStats": {
+            "type": "number",
+            "description": "Stat satırı olan oyuncu sayısı"
+          }
+        },
+        "required": [
+          "goals",
+          "assists",
+          "yellowCards",
+          "redCards",
+          "playersWithStats"
+        ]
+      },
+      "SquadPlayerStatsDto": {
+        "type": "object",
+        "properties": {
+          "season": {
+            "type": "number"
+          },
+          "appearances": {
+            "type": "number"
+          },
+          "minutes": {
+            "type": "number"
+          },
+          "goals": {
+            "type": "number"
+          },
+          "assists": {
+            "type": "number"
+          },
+          "rating": {
+            "type": "number"
+          },
+          "yellowCards": {
+            "type": "number"
+          },
+          "redCards": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "season"
+        ]
+      },
       "SquadPlayerDto": {
         "type": "object",
         "properties": {
@@ -11980,6 +12224,24 @@
           },
           "isFree": {
             "type": "boolean"
+          },
+          "birthDate": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "height": {
+            "type": "number"
+          },
+          "weight": {
+            "type": "number"
+          },
+          "stats": {
+            "description": "Bu lig sezonundaki özet (varsa)",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SquadPlayerStatsDto"
+              }
+            ]
           }
         },
         "required": [
@@ -12028,6 +12290,14 @@
           },
           "playerCount": {
             "type": "number"
+          },
+          "seasonTotals": {
+            "description": "Kadronun bu ligdeki güncel sezon toplamı",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TeamSeasonTotalsDto"
+              }
+            ]
           },
           "squad": {
             "type": "array",
@@ -12119,6 +12389,133 @@
           "imageUrl"
         ]
       },
+      "PlayerStatisticDto": {
+        "type": "object",
+        "properties": {
+          "season": {
+            "type": "number"
+          },
+          "leagueId": {
+            "type": "string"
+          },
+          "leagueExternalId": {
+            "type": "number"
+          },
+          "leagueName": {
+            "type": "string"
+          },
+          "leagueLogo": {
+            "type": "string"
+          },
+          "teamId": {
+            "type": "string"
+          },
+          "teamName": {
+            "type": "string"
+          },
+          "teamLogo": {
+            "type": "string"
+          },
+          "appearances": {
+            "type": "number"
+          },
+          "lineups": {
+            "type": "number"
+          },
+          "minutes": {
+            "type": "number"
+          },
+          "rating": {
+            "type": "number"
+          },
+          "captain": {
+            "type": "boolean"
+          },
+          "goalsTotal": {
+            "type": "number"
+          },
+          "goalsConceded": {
+            "type": "number"
+          },
+          "goalsAssists": {
+            "type": "number"
+          },
+          "goalsSaves": {
+            "type": "number"
+          },
+          "shotsTotal": {
+            "type": "number"
+          },
+          "shotsOn": {
+            "type": "number"
+          },
+          "passesTotal": {
+            "type": "number"
+          },
+          "passesKey": {
+            "type": "number"
+          },
+          "passesAccuracy": {
+            "type": "number"
+          },
+          "tacklesTotal": {
+            "type": "number"
+          },
+          "tacklesBlocks": {
+            "type": "number"
+          },
+          "tacklesInterceptions": {
+            "type": "number"
+          },
+          "duelsTotal": {
+            "type": "number"
+          },
+          "duelsWon": {
+            "type": "number"
+          },
+          "dribblesAttempts": {
+            "type": "number"
+          },
+          "dribblesSuccess": {
+            "type": "number"
+          },
+          "foulsDrawn": {
+            "type": "number"
+          },
+          "foulsCommitted": {
+            "type": "number"
+          },
+          "cardsYellow": {
+            "type": "number"
+          },
+          "cardsYellowRed": {
+            "type": "number"
+          },
+          "cardsRed": {
+            "type": "number"
+          },
+          "penaltyWon": {
+            "type": "number"
+          },
+          "penaltyCommitted": {
+            "type": "number"
+          },
+          "penaltyScored": {
+            "type": "number"
+          },
+          "penaltyMissed": {
+            "type": "number"
+          },
+          "penaltySaved": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "season",
+          "leagueExternalId",
+          "captain"
+        ]
+      },
       "PlayerResponseDto": {
         "type": "object",
         "properties": {
@@ -12181,6 +12578,13 @@
           },
           "positionName": {
             "type": "string"
+          },
+          "statistics": {
+            "description": "Lig × sezon istatistikleri — yalnız tekil futbolcu GET’inde",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PlayerStatisticDto"
+            }
           }
         },
         "required": [
@@ -13005,6 +13409,26 @@
               "duplicate"
             ],
             "description": "'duplicate' → aynı sourceId daha önce alınmış (idempotent)"
+          },
+          "projectedAs": {
+            "type": "string",
+            "enum": [
+              "rumour",
+              "transfer",
+              "news",
+              "none"
+            ],
+            "description": "Akış dışında yansıdığı sekme (created ise)"
+          },
+          "transferId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Oluşan/güncellenen Transfer/Duyum id (rumour|transfer ise)"
+          },
+          "newsId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Oluşan Haber id (news ise)"
           }
         },
         "required": [
@@ -13058,6 +13482,21 @@
           "toTeamId": {
             "type": "string",
             "format": "uuid"
+          },
+          "feeAmount": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Bonservis (yalnız resmi transferde anlamlı)"
+          },
+          "feeCurrency": {
+            "type": "string",
+            "maxLength": 10,
+            "example": "EUR"
+          },
+          "transferDate": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Resmi transfer tarihi (yoksa şimdi alınır)"
           }
         },
         "required": [
@@ -13097,50 +13536,6 @@
         },
         "required": [
           "items"
-        ]
-      },
-      "BlockActionResultDto": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean",
-            "example": true
-          },
-          "unchanged": {
-            "type": "boolean",
-            "example": true
-          }
-        }
-      },
-      "MutedKeywordDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "keyword": {
-            "type": "string",
-            "example": "sponsorlu"
-          }
-        },
-        "required": [
-          "id",
-          "keyword"
-        ]
-      },
-      "AddMutedKeywordDto": {
-        "type": "object",
-        "properties": {
-          "keyword": {
-            "type": "string",
-            "example": "sponsorlu",
-            "minLength": 2,
-            "maxLength": 100,
-            "description": "Bu kelimeyi içeren postlar feed'de gizlenir (case-insensitive)."
-          }
-        },
-        "required": [
-          "keyword"
         ]
       },
       "CreateWaitlistDto": {
