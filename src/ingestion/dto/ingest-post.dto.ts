@@ -1,5 +1,15 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsIn, IsOptional, IsString, IsUUID, MaxLength } from 'class-validator';
+import { Type } from 'class-transformer';
+import {
+  IsDate,
+  IsIn,
+  IsNumber,
+  IsOptional,
+  IsString,
+  IsUUID,
+  MaxLength,
+  Min,
+} from 'class-validator';
 import {
   BOT_CONTENT_CATEGORY_KEYS,
   BotContentCategoryKey,
@@ -60,4 +70,29 @@ export class IngestPostDto {
   @IsOptional()
   @IsUUID()
   toTeamId?: string;
+
+  @ApiPropertyOptional({
+    minimum: 0,
+    description: 'Bonservis (yalnız resmi transferde anlamlı)',
+  })
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  @Min(0)
+  feeAmount?: number;
+
+  @ApiPropertyOptional({ maxLength: 10, example: 'EUR' })
+  @IsOptional()
+  @IsString()
+  @MaxLength(10)
+  feeCurrency?: string;
+
+  @ApiPropertyOptional({
+    format: 'date-time',
+    description: 'Resmi transfer tarihi (yoksa şimdi alınır)',
+  })
+  @IsOptional()
+  @Type(() => Date)
+  @IsDate()
+  transferDate?: Date;
 }

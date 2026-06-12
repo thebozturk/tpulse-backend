@@ -23,6 +23,7 @@ enum UserStatus {
 enum TransferSource {
   Manual
   ApiSports
+  Bot
 }
 
 // Doğrulama rozeti: Blue = onaylı kullanıcı (muhabir vb.),
@@ -231,6 +232,7 @@ model Transfer {
   isRumour        Boolean        @default(false)
   isDeleted       Boolean        @default(false)
   source          TransferSource @default(Manual)
+  sourceId        String?        @unique @db.VarChar(64)
   createdAt       DateTime       @default(now()) @db.Timestamptz
   updatedAt       DateTime?      @db.Timestamptz
 
@@ -394,6 +396,7 @@ model News {
   imageUrl    String?
   sourceName  String?  @db.VarChar(128)
   sourceUrl   String?
+  sourceId    String?  @unique @db.VarChar(64)
   title       String
   content     String?
 

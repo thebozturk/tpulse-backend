@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import { Prisma, TransferSource } from '@prisma/client';
 
 export const TRANSFER_REPOSITORY = Symbol('TRANSFER_REPOSITORY');
 
@@ -120,6 +120,12 @@ export interface ITransferRepository {
     toTeamId: string,
     transferDate: Date,
   ): Promise<boolean>;
+  // Açık (isRumour:true, isDeleted:false) duyumu bulur — duyum→resmi dedup için.
+  findOpenRumour(
+    playerId: string,
+    fromTeamId: string,
+    toTeamId: string,
+  ): Promise<{ id: string } | null>;
   createTransfer(
     data: TransferWriteInput,
     tx?: Prisma.TransactionClient,
@@ -151,6 +157,9 @@ export interface RumourWriteInput {
   feeAmount: number;
   feeCurrency: string;
   createdByUserId: string;
+  // Bot ingest yansıması için (manuel yazımda undefined).
+  source?: TransferSource;
+  sourceId?: string;
 }
 
 export type RumourUpdateInput = Omit<RumourWriteInput, 'createdByUserId'>;
@@ -163,6 +172,9 @@ export interface TransferWriteInput {
   feeAmount: number;
   feeCurrency: string;
   createdByUserId?: string;
+  // Bot ingest yansıması için (manuel/admin yazımda undefined).
+  source?: TransferSource;
+  sourceId?: string;
 }
 
 export interface TransferPatchInput {

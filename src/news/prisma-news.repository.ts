@@ -94,9 +94,13 @@ export class PrismaNewsRepository implements INewsRepository {
     );
   }
 
-  async create(data: NewsWriteInput): Promise<{ id: string }> {
+  async create(
+    data: NewsWriteInput,
+    tx?: Prisma.TransactionClient,
+  ): Promise<{ id: string }> {
+    const client = tx ?? this.prisma;
     try {
-      const news = await this.prisma.news.create({ data });
+      const news = await client.news.create({ data });
       return { id: news.id };
     } catch (e) {
       mapWriteError(e);

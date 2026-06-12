@@ -304,6 +304,24 @@ export class PrismaTransferRepository implements ITransferRepository {
     return dup !== null;
   }
 
+  findOpenRumour(
+    playerId: string,
+    fromTeamId: string,
+    toTeamId: string,
+  ): Promise<{ id: string } | null> {
+    return this.prisma.transfer.findFirst({
+      where: {
+        playerId,
+        fromTeamId,
+        toTeamId,
+        isRumour: true,
+        isDeleted: false,
+      },
+      select: { id: true },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
   async createTransfer(
     data: TransferWriteInput,
     tx?: Prisma.TransactionClient,

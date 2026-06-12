@@ -57,7 +57,10 @@ export interface INewsRepository {
     page: number,
     pageSize: number,
   ): Promise<{ items: NewsWithRel[]; total: number }>;
-  create(data: NewsWriteInput): Promise<{ id: string }>;
+  create(
+    data: NewsWriteInput,
+    tx?: Prisma.TransactionClient,
+  ): Promise<{ id: string }>;
   update(id: string, data: NewsWriteInput): Promise<boolean>;
   remove(id: string): Promise<boolean>;
   removeBulk(ids: string[]): Promise<number>;
@@ -74,6 +77,8 @@ export interface NewsWriteInput {
   imageUrl?: string;
   sourceName?: string;
   sourceUrl?: string;
+  // Bot ingest yansıması için idempotency anahtarı (manuel yazımda undefined).
+  sourceId?: string;
   title: string;
   content?: string;
 }

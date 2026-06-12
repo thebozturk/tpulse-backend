@@ -12,6 +12,6 @@ import { PrismaNewsRepository } from './prisma-news.repository';
     NewsService,
     { provide: NEWS_REPOSITORY, useClass: PrismaNewsRepository },
   ],
-  exports: [NewsService],
+  exports: [NewsService, NEWS_REPOSITORY],
 })
 export class NewsModule {}
