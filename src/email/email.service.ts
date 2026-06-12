@@ -150,9 +150,18 @@ export class EmailService {
     devNote?: string,
   ): Promise<void> {
     if (!this.resend) {
-      this.logger.log(
-        `[EMAIL DISABLED] "${rendered.subject}" → ${to}${devNote ? ` · ${devNote}` : ''}`,
-      );
+      // devNote reset/doğrulama URL'i (ham token) içerebilir — ÜRETİMDE ASLA
+      // log'lama. Prod'da Resend kapalıysa bu bir yanlış konfigürasyondur:
+      // token'sız uyarı bas (sızıntı yok, sorun görünür kalsın).
+      if (process.env.NODE_ENV === 'production') {
+        this.logger.warn(
+          `E-posta gönderilemiyor (RESEND_API_KEY tanımsız): "${rendered.subject}" → ${to}`,
+        );
+      } else {
+        this.logger.log(
+          `[EMAIL DISABLED] "${rendered.subject}" → ${to}${devNote ? ` · ${devNote}` : ''}`,
+        );
+      }
       return;
     }
     const { error } = await this.resend.emails.send({
