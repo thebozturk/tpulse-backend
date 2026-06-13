@@ -58,6 +58,8 @@ export class PrismaPlayerRepository implements IPlayerRepository {
       nationality: filter.nationality,
       positionId: filter.positionId,
       isFree: filter.isFree,
+      // Lig filtresi takım ilişkisi üzerinden (player'da doğrudan leagueId yok).
+      ...(filter.leagueId ? { team: { leagueId: filter.leagueId } } : {}),
     };
     const { skip, take } = toSkipTake(filter.page, filter.pageSize);
     const [items, total] = await Promise.all([
@@ -89,6 +91,12 @@ export class PrismaPlayerRepository implements IPlayerRepository {
         ' AND ',
       ),
     ];
+    if (filter.leagueId) {
+      // player'da leagueId yok → takım üzerinden subquery.
+      conds.push(
+        Prisma.sql`"teamId" IN (SELECT id FROM "team" WHERE "leagueId" = ${filter.leagueId}::uuid)`,
+      );
+    }
     if (filter.teamId) {
       conds.push(Prisma.sql`"teamId" = ${filter.teamId}::uuid`);
     }

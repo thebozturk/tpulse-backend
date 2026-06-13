@@ -13,6 +13,7 @@ import {
   TRANSFER_REPOSITORY,
 } from '../transfers/transfer.repository';
 import { TeamDetailDto } from './dto/team-detail.dto';
+import { TeamFilterDto } from './dto/team-filter.dto';
 import { TeamResponseDto } from './dto/team-response.dto';
 import { TeamWriteDto } from './dto/team-write.dto';
 import {
@@ -97,21 +98,19 @@ export class TeamsService {
   }
 
   async findAll(
-    page: number,
-    pageSize: number,
+    filter: TeamFilterDto,
     lang: Lang,
-    search?: string,
   ): Promise<PagedResult<TeamResponseDto>> {
     return this.cache.getOrSet(
-      CacheService.buildKey('teams:list', { page, pageSize, lang, search }),
+      CacheService.buildKey('teams:list', { ...filter, lang }),
       CacheTtl.List,
       async () => {
-        const { items, total } = await this.repo.getAll(page, pageSize, search);
+        const { items, total } = await this.repo.getAll(filter);
         return buildPaged(
           items.map((t) => toTeamResponse(t, lang)),
           total,
-          page,
-          pageSize,
+          filter.page,
+          filter.pageSize,
         );
       },
       [CacheTag.Teams],

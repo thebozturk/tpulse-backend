@@ -6251,6 +6251,15 @@
             }
           },
           {
+            "name": "leagueId",
+            "required": false,
+            "in": "query",
+            "description": "Lig filtresi",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "search",
             "required": false,
             "in": "query",
@@ -6299,7 +6308,7 @@
             }
           }
         },
-        "summary": "Takim listele (paged)",
+        "summary": "Takim listele (lig + isim filtreli, paged)",
         "tags": [
           "teams"
         ]
@@ -7087,6 +7096,15 @@
               "maximum": 100,
               "default": 20,
               "type": "number"
+            }
+          },
+          {
+            "name": "leagueId",
+            "required": false,
+            "in": "query",
+            "description": "Lig filtresi (takım üzerinden)",
+            "schema": {
+              "type": "string"
             }
           },
           {

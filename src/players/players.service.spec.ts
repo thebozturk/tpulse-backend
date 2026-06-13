@@ -42,6 +42,13 @@ describe('PlayersService', () => {
     expect(repo.getAll).toHaveBeenCalledWith(filter);
   });
 
+  it('findAll lig filtresini de repository.getAll içine geçirir', async () => {
+    repo.getAll.mockResolvedValue({ items: [], total: 0 });
+    const filter = { leagueId: 'l1', search: 'osimhen', page: 1, pageSize: 20 };
+    await service.findAll(filter as never, 'tr');
+    expect(repo.getAll).toHaveBeenCalledWith(filter);
+  });
+
   it('findById throws NotFound when missing', async () => {
     repo.getById.mockResolvedValue(null);
     await expect(service.findById('x', 'tr')).rejects.toThrow(

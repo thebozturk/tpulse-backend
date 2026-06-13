@@ -24,6 +24,7 @@ export type PlayerDetailWithRel = Prisma.PlayerGetPayload<{
 }>;
 
 export interface PlayerFilter {
+  leagueId?: string;
   teamId?: string;
   nationality?: string;
   positionId?: string;

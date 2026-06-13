@@ -41,12 +41,15 @@ export interface TeamWriteInput {
   leagueId: string;
 }
 
+export interface TeamFilter {
+  leagueId?: string;
+  search?: string;
+  page: number;
+  pageSize: number;
+}
+
 export interface ITeamRepository {
-  getAll(
-    page: number,
-    pageSize: number,
-    search?: string,
-  ): Promise<{ items: TeamWithRel[]; total: number }>;
+  getAll(filter: TeamFilter): Promise<{ items: TeamWithRel[]; total: number }>;
   getById(id: string): Promise<TeamWithRel | null>;
   getByLeagueId(
     leagueId: string,

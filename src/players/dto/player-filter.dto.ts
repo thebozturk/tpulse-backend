@@ -10,6 +10,11 @@ import {
 import { PaginationQueryDto } from '../../common/dto/pagination-query.dto';
 
 export class PlayerFilterDto extends PaginationQueryDto {
+  @ApiPropertyOptional({ description: 'Lig filtresi (takım üzerinden)' })
+  @IsOptional()
+  @IsUUID()
+  leagueId?: string;
+
   @ApiPropertyOptional()
   @IsOptional()
   @IsUUID()

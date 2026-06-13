@@ -28,13 +28,13 @@ export class TeamsController {
   constructor(private readonly teams: TeamsService) {}
 
   @Get()
-  @ApiOperation({ summary: 'Takim listele (paged)' })
+  @ApiOperation({ summary: 'Takim listele (lig + isim filtreli, paged)' })
   @ApiPagedResponse(TeamResponseDto)
   findAll(
     @Query() query: TeamFilterDto,
     @ReqLang() lang: Lang,
   ): Promise<PagedResult<TeamResponseDto>> {
-    return this.teams.findAll(query.page, query.pageSize, lang, query.search);
+    return this.teams.findAll(query, lang);
   }
 
   @Get('by-league/:leagueId')

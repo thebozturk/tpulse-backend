@@ -9,6 +9,7 @@ import { toSkipTake } from '../common/pagination';
 import {
   ITeamRepository,
   TeamDetailWithRel,
+  TeamFilter,
   TeamWithRel,
   TeamWriteInput,
 } from './team.repository';
@@ -41,50 +42,56 @@ export class PrismaTeamRepository implements ITeamRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async getAll(
-    page: number,
-    pageSize: number,
-    search?: string,
+    filter: TeamFilter,
   ): Promise<{ items: TeamWithRel[]; total: number }> {
     // Aksan-duyarsız (f_unaccent) isim araması — name + nameTr (token-AND).
-    if (search?.trim()) {
-      return this.searchAll(page, pageSize, search.trim());
+    if (filter.search?.trim()) {
+      return this.searchAll(filter);
     }
-    const { skip, take } = toSkipTake(page, pageSize);
+    const where: Prisma.TeamWhereInput = { leagueId: filter.leagueId };
+    const { skip, take } = toSkipTake(filter.page, filter.pageSize);
     const [items, total] = await Promise.all([
       this.prisma.team.findMany({
+        where,
         skip,
         take,
         orderBy: { name: 'asc' },
         include,
       }),
-      this.prisma.team.count(),
+      this.prisma.team.count({ where }),
     ]);
     return { items, total };
   }
 
   private async searchAll(
-    page: number,
-    pageSize: number,
-    q: string,
+    filter: TeamFilter,
   ): Promise<{ items: TeamWithRel[]; total: number }> {
+    const q = filter.search!.trim();
     const tokens = q.split(/\s+/).filter(Boolean).slice(0, 8);
     // name VEYA nameTr içinde her token geçmeli (ikisi de aksan-duyarsız).
     const target = Prisma.sql`f_unaccent(lower(name || ' ' || coalesce("nameTr", '')))`;
-    const tokenSql = Prisma.join(
-      tokens.map(
-        (t) => Prisma.sql`${target} LIKE '%' || f_unaccent(lower(${t})) || '%'`,
+    const conds: Prisma.Sql[] = [
+      Prisma.join(
+        tokens.map(
+          (t) =>
+            Prisma.sql`${target} LIKE '%' || f_unaccent(lower(${t})) || '%'`,
+        ),
+        ' AND ',
       ),
-      ' AND ',
-    );
-    const { skip, take } = toSkipTake(page, pageSize);
+    ];
+    if (filter.leagueId) {
+      conds.push(Prisma.sql`"leagueId" = ${filter.leagueId}::uuid`);
+    }
+    const whereSql = Prisma.join(conds, ' AND ');
+    const { skip, take } = toSkipTake(filter.page, filter.pageSize);
 
     const [idRows, countRows] = await Promise.all([
       this.prisma.$queryRaw<{ id: string }[]>(Prisma.sql`
-        SELECT id FROM "team" WHERE ${tokenSql}
+        SELECT id FROM "team" WHERE ${whereSql}
         ORDER BY similarity(f_unaccent(lower(name)), f_unaccent(lower(${q}))) DESC, name ASC
         LIMIT ${take} OFFSET ${skip}`),
       this.prisma.$queryRaw<{ count: number }[]>(Prisma.sql`
-        SELECT COUNT(*)::int AS count FROM "team" WHERE ${tokenSql}`),
+        SELECT COUNT(*)::int AS count FROM "team" WHERE ${whereSql}`),
     ]);
     const ids = idRows.map((r) => r.id);
     const total = Number(countRows[0]?.count ?? 0);
