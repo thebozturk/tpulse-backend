@@ -1,16 +1,18 @@
 import { Controller, Get, Param, ParseUUIDPipe, Query } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Public } from '../common/decorators/public.decorator';
+import {
+  PaginationQueryDto,
+  PagedSortQueryDto,
+} from '../common/dto/pagination-query.dto';
 import { TeamFilterDto } from './dto/team-filter.dto';
 import { ReqLang } from '../common/i18n/lang.decorator';
 import { Lang } from '../common/i18n/lang';
 import {
-  ApiListResponse,
   ApiPagedResponse,
   ApiSingleResponse,
 } from '../common/swagger/api-envelope.decorators';
 import {
-  ListResponse,
   PagedResult,
   SingleResponse,
 } from '../common/interfaces/response.interface';
@@ -36,14 +38,15 @@ export class TeamsController {
   }
 
   @Get('by-league/:leagueId')
-  @ApiOperation({ summary: 'Lige gore takimlar' })
-  @ApiListResponse(TeamResponseDto)
+  @ApiOperation({ summary: 'Lige gore takimlar (paged)' })
+  @ApiPagedResponse(TeamResponseDto)
   @ApiResponse({ status: 404 })
-  async findByLeague(
+  findByLeague(
     @Param('leagueId', ParseUUIDPipe) leagueId: string,
+    @Query() query: PaginationQueryDto,
     @ReqLang() lang: Lang,
-  ): Promise<ListResponse<TeamResponseDto>> {
-    return { items: await this.teams.findByLeague(leagueId, lang) };
+  ): Promise<PagedResult<TeamResponseDto>> {
+    return this.teams.findByLeague(leagueId, query.page, query.pageSize, lang);
   }
 
   @Get(':id/detail')
@@ -58,33 +61,39 @@ export class TeamsController {
   }
 
   @Get(':teamId/incoming-transfers')
-  @ApiOperation({ summary: 'Takima gelen transferler' })
-  @ApiListResponse(TeamTransferLineDto)
+  @ApiOperation({ summary: 'Takima gelen transferler (paged)' })
+  @ApiPagedResponse(TeamTransferLineDto)
   @ApiResponse({ status: 404 })
-  async incoming(
+  incoming(
     @Param('teamId', ParseUUIDPipe) teamId: string,
-  ): Promise<ListResponse<TeamTransferLineDto>> {
-    return { items: await this.teams.transfersOf(teamId, 'incoming') };
+    @Query() query: PagedSortQueryDto,
+    @ReqLang() lang: Lang,
+  ): Promise<PagedResult<TeamTransferLineDto>> {
+    return this.teams.transfersOf(teamId, 'incoming', query, lang);
   }
 
   @Get(':teamId/outgoing-transfers')
-  @ApiOperation({ summary: 'Takimdan giden transferler' })
-  @ApiListResponse(TeamTransferLineDto)
+  @ApiOperation({ summary: 'Takimdan giden transferler (paged)' })
+  @ApiPagedResponse(TeamTransferLineDto)
   @ApiResponse({ status: 404 })
-  async outgoing(
+  outgoing(
     @Param('teamId', ParseUUIDPipe) teamId: string,
-  ): Promise<ListResponse<TeamTransferLineDto>> {
-    return { items: await this.teams.transfersOf(teamId, 'outgoing') };
+    @Query() query: PagedSortQueryDto,
+    @ReqLang() lang: Lang,
+  ): Promise<PagedResult<TeamTransferLineDto>> {
+    return this.teams.transfersOf(teamId, 'outgoing', query, lang);
   }
 
   @Get(':teamId/transfers')
-  @ApiOperation({ summary: 'Takimin tum transferleri (gelen+giden)' })
-  @ApiListResponse(TeamTransferLineDto)
+  @ApiOperation({ summary: 'Takimin tum transferleri (gelen+giden, paged)' })
+  @ApiPagedResponse(TeamTransferLineDto)
   @ApiResponse({ status: 404 })
-  async allTransfers(
+  allTransfers(
     @Param('teamId', ParseUUIDPipe) teamId: string,
-  ): Promise<ListResponse<TeamTransferLineDto>> {
-    return { items: await this.teams.transfersOf(teamId, 'all') };
+    @Query() query: PagedSortQueryDto,
+    @ReqLang() lang: Lang,
+  ): Promise<PagedResult<TeamTransferLineDto>> {
+    return this.teams.transfersOf(teamId, 'all', query, lang);
   }
 
   @Get(':id')

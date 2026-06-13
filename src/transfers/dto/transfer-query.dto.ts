@@ -18,6 +18,20 @@ export class TransferFilterDto extends PaginationQueryDto {
   @ApiPropertyOptional() @IsOptional() @IsUUID() fromTeamId?: string;
   @ApiPropertyOptional() @IsOptional() @IsUUID() toTeamId?: string;
 
+  @ApiPropertyOptional({
+    description: 'Takım filtresi — gelen VEYA giden (iki taraftan biri)',
+  })
+  @IsOptional()
+  @IsUUID()
+  teamId?: string;
+
+  @ApiPropertyOptional({
+    description: 'Lig filtresi — kaynak VEYA hedef takımın ligi',
+  })
+  @IsOptional()
+  @IsUUID()
+  leagueId?: string;
+
   @ApiPropertyOptional()
   @IsOptional()
   @Type(() => Date)
@@ -74,7 +88,7 @@ export class RumourFilterDto extends PaginationQueryDto {
   @ApiPropertyOptional() @IsOptional() @IsString() @MaxLength(20) sort?: string;
 }
 
-export class BetweenTeamsDto {
+export class BetweenTeamsDto extends PaginationQueryDto {
   @ApiPropertyOptional() @IsUUID() fromTeamId: string;
   @ApiPropertyOptional() @IsUUID() toTeamId: string;
   @ApiPropertyOptional({ default: false })

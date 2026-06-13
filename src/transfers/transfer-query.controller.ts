@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Public } from '../common/decorators/public.decorator';
+import { PagedSortQueryDto } from '../common/dto/pagination-query.dto';
 import { ReqLang } from '../common/i18n/lang.decorator';
 import { Lang } from '../common/i18n/lang';
 import {
@@ -82,34 +83,36 @@ export class TransferQueryController {
   }
 
   @Get('between-teams')
-  @ApiOperation({ summary: 'İki takım arası transferler' })
-  @ApiListResponse(TransferResponseDto)
-  async betweenTeams(
+  @ApiOperation({ summary: 'İki takım arası transferler (paged)' })
+  @ApiPagedResponse(TransferResponseDto)
+  betweenTeams(
     @Query() dto: BetweenTeamsDto,
     @ReqLang() lang: Lang,
-  ): Promise<ListResponse<TransferResponseDto>> {
-    return { items: await this.transfers.betweenTeams(dto, lang) };
+  ): Promise<PagedResult<TransferResponseDto>> {
+    return this.transfers.betweenTeams(dto, lang);
   }
 
   @Get('by-year/:year')
-  @ApiOperation({ summary: 'Yıla göre transferler' })
-  @ApiListResponse(TransferResponseDto)
-  async byYear(
+  @ApiOperation({ summary: 'Yıla göre transferler (paged)' })
+  @ApiPagedResponse(TransferResponseDto)
+  byYear(
     @Param('year', ParseIntPipe) year: number,
+    @Query() query: PagedSortQueryDto,
     @ReqLang() lang: Lang,
-  ): Promise<ListResponse<TransferResponseDto>> {
-    return { items: await this.transfers.byYear(year, lang) };
+  ): Promise<PagedResult<TransferResponseDto>> {
+    return this.transfers.byYear(year, query, lang);
   }
 
   @Get('by-month/:year/:month')
-  @ApiOperation({ summary: 'Ay/yıla göre transferler' })
-  @ApiListResponse(TransferResponseDto)
-  async byMonth(
+  @ApiOperation({ summary: 'Ay/yıla göre transferler (paged)' })
+  @ApiPagedResponse(TransferResponseDto)
+  byMonth(
     @Param('year', ParseIntPipe) year: number,
     @Param('month', ParseIntPipe) month: number,
+    @Query() query: PagedSortQueryDto,
     @ReqLang() lang: Lang,
-  ): Promise<ListResponse<TransferResponseDto>> {
-    return { items: await this.transfers.byMonth(year, month, lang) };
+  ): Promise<PagedResult<TransferResponseDto>> {
+    return this.transfers.byMonth(year, month, query, lang);
   }
 
   @Get('latest-by-leagues')

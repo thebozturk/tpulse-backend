@@ -48,7 +48,11 @@ export interface ITeamRepository {
     search?: string,
   ): Promise<{ items: TeamWithRel[]; total: number }>;
   getById(id: string): Promise<TeamWithRel | null>;
-  getByLeagueId(leagueId: string): Promise<TeamWithRel[]>;
+  getByLeagueId(
+    leagueId: string,
+    page: number,
+    pageSize: number,
+  ): Promise<{ items: TeamWithRel[]; total: number }>;
   getDetailById(id: string): Promise<TeamDetailWithRel | null>;
   create(data: TeamWriteInput): Promise<{ id: string }>;
   update(id: string, data: TeamWriteInput): Promise<boolean>;

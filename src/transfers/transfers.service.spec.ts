@@ -10,7 +10,13 @@ describe('TransfersService', () => {
   let repo: Record<string, jest.Mock>;
 
   beforeEach(async () => {
-    repo = { query: jest.fn(), getById: jest.fn() };
+    repo = {
+      query: jest.fn(),
+      getById: jest.fn(),
+      getByYear: jest.fn(),
+      getByMonth: jest.fn(),
+      getBetweenTeams: jest.fn(),
+    };
     const module = await Test.createTestingModule({
       providers: [
         TransfersService,
@@ -34,5 +40,36 @@ describe('TransfersService', () => {
       NotFoundException,
     );
     expect(repo.getById).toHaveBeenCalledWith('x', false);
+  });
+
+  it('byYear forwards pagination + sort and returns PagedResult envelope', async () => {
+    repo.getByYear.mockResolvedValue({ items: [], total: 0 });
+    const result = await service.byYear(
+      2025,
+      { page: 2, pageSize: 10, sort: '-feeAmount' } as never,
+      'tr',
+    );
+    expect(repo.getByYear).toHaveBeenCalledWith(2025, 2, 10, '-feeAmount');
+    expect(result).toMatchObject({
+      page: 2,
+      pageSize: 10,
+      totalCount: 0,
+      totalPages: 0,
+    });
+  });
+
+  it('betweenTeams forwards pagination to repository', async () => {
+    repo.getBetweenTeams.mockResolvedValue({ items: [], total: 0 });
+    await service.betweenTeams(
+      {
+        fromTeamId: 'a',
+        toTeamId: 'b',
+        includeReverse: true,
+        page: 1,
+        pageSize: 20,
+      } as never,
+      'tr',
+    );
+    expect(repo.getBetweenTeams).toHaveBeenCalledWith('a', 'b', true, 1, 20);
   });
 });

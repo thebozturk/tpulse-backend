@@ -1,4 +1,5 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { PagedSortQueryDto } from '../common/dto/pagination-query.dto';
 import { Lang, pickName } from '../common/i18n/lang';
 import { PagedResult } from '../common/interfaces/response.interface';
 import { buildPaged } from '../common/pagination';
@@ -132,13 +133,32 @@ export class TeamsService {
     );
   }
 
-  async findByLeague(leagueId: string, lang: Lang): Promise<TeamResponseDto[]> {
+  async findByLeague(
+    leagueId: string,
+    page: number,
+    pageSize: number,
+    lang: Lang,
+  ): Promise<PagedResult<TeamResponseDto>> {
     return this.cache.getOrSet(
-      CacheService.buildKey('teams:byLeague', { leagueId, lang }),
+      CacheService.buildKey('teams:byLeague', {
+        leagueId,
+        page,
+        pageSize,
+        lang,
+      }),
       CacheTtl.List,
       async () => {
-        const teams = await this.repo.getByLeagueId(leagueId);
-        return teams.map((t) => toTeamResponse(t, lang));
+        const { items, total } = await this.repo.getByLeagueId(
+          leagueId,
+          page,
+          pageSize,
+        );
+        return buildPaged(
+          items.map((t) => toTeamResponse(t, lang)),
+          total,
+          page,
+          pageSize,
+        );
       },
       [CacheTag.Teams],
     );
@@ -185,16 +205,31 @@ export class TeamsService {
   async transfersOf(
     teamId: string,
     direction: 'incoming' | 'outgoing' | 'all',
-  ): Promise<TeamTransferLineDto[]> {
+    query: PagedSortQueryDto,
+    lang: Lang,
+  ): Promise<PagedResult<TeamTransferLineDto>> {
     return this.cache.getOrSet(
-      CacheService.buildKey('teams:transfers', { teamId, direction }),
+      CacheService.buildKey('teams:transfers', {
+        teamId,
+        direction,
+        ...query,
+        lang,
+      }),
       CacheTtl.List,
       async () => {
-        const items = await this.transfers.getByTeamDirectional(
+        const { items, total } = await this.transfers.getByTeamDirectional(
           teamId,
           direction,
+          query.page,
+          query.pageSize,
+          query.sort,
         );
-        return items.map((t) => toTeamTransferLine(t));
+        return buildPaged(
+          items.map((t) => toTeamTransferLine(t, lang)),
+          total,
+          query.page,
+          query.pageSize,
+        );
       },
       [CacheTag.Teams, CacheTag.Transfers],
     );

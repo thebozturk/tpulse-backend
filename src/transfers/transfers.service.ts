@@ -1,4 +1,5 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { PagedSortQueryDto } from '../common/dto/pagination-query.dto';
 import { PagedResult } from '../common/interfaces/response.interface';
 import { buildPaged } from '../common/pagination';
 import { CacheTag, CacheTtl } from '../common/redis/cache-tags';
@@ -116,30 +117,51 @@ export class TransfersService {
   async betweenTeams(
     dto: BetweenTeamsDto,
     lang: Lang,
-  ): Promise<TransferResponseDto[]> {
+  ): Promise<PagedResult<TransferResponseDto>> {
     return this.cache.getOrSet(
       CacheService.buildKey('transfers:betweenTeams', { ...dto, lang }),
       CacheTtl.List,
       async () => {
-        const items = await this.repo.getBetweenTeams(
+        const { items, total } = await this.repo.getBetweenTeams(
           dto.fromTeamId,
           dto.toTeamId,
           dto.includeReverse,
+          dto.page,
+          dto.pageSize,
         );
-        return items.map((t) => toTransferResponse(t, lang));
+        return buildPaged(
+          items.map((t) => toTransferResponse(t, lang)),
+          total,
+          dto.page,
+          dto.pageSize,
+        );
       },
       [CacheTag.Transfers],
     );
   }
 
-  async byYear(year: number, lang: Lang): Promise<TransferResponseDto[]> {
+  async byYear(
+    year: number,
+    query: PagedSortQueryDto,
+    lang: Lang,
+  ): Promise<PagedResult<TransferResponseDto>> {
     return this.cache.getOrSet(
-      CacheService.buildKey('transfers:byYear', { year, lang }),
+      CacheService.buildKey('transfers:byYear', { year, ...query, lang }),
       CacheTtl.List,
-      async () =>
-        (await this.repo.getByYear(year)).map((t) =>
-          toTransferResponse(t, lang),
-        ),
+      async () => {
+        const { items, total } = await this.repo.getByYear(
+          year,
+          query.page,
+          query.pageSize,
+          query.sort,
+        );
+        return buildPaged(
+          items.map((t) => toTransferResponse(t, lang)),
+          total,
+          query.page,
+          query.pageSize,
+        );
+      },
       [CacheTag.Transfers],
     );
   }
@@ -147,15 +169,32 @@ export class TransfersService {
   async byMonth(
     year: number,
     month: number,
+    query: PagedSortQueryDto,
     lang: Lang,
-  ): Promise<TransferResponseDto[]> {
+  ): Promise<PagedResult<TransferResponseDto>> {
     return this.cache.getOrSet(
-      CacheService.buildKey('transfers:byMonth', { year, month, lang }),
+      CacheService.buildKey('transfers:byMonth', {
+        year,
+        month,
+        ...query,
+        lang,
+      }),
       CacheTtl.List,
-      async () =>
-        (await this.repo.getByMonth(year, month)).map((t) =>
-          toTransferResponse(t, lang),
-        ),
+      async () => {
+        const { items, total } = await this.repo.getByMonth(
+          year,
+          month,
+          query.page,
+          query.pageSize,
+          query.sort,
+        );
+        return buildPaged(
+          items.map((t) => toTransferResponse(t, lang)),
+          total,
+          query.page,
+          query.pageSize,
+        );
+      },
       [CacheTag.Transfers],
     );
   }

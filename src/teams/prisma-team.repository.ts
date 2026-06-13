@@ -106,12 +106,24 @@ export class PrismaTeamRepository implements ITeamRepository {
     return this.prisma.team.findUnique({ where: { id }, include });
   }
 
-  getByLeagueId(leagueId: string): Promise<TeamWithRel[]> {
-    return this.prisma.team.findMany({
-      where: { leagueId },
-      orderBy: { name: 'asc' },
-      include,
-    });
+  async getByLeagueId(
+    leagueId: string,
+    page: number,
+    pageSize: number,
+  ): Promise<{ items: TeamWithRel[]; total: number }> {
+    const { skip, take } = toSkipTake(page, pageSize);
+    const where = { leagueId };
+    const [items, total] = await Promise.all([
+      this.prisma.team.findMany({
+        where,
+        skip,
+        take,
+        orderBy: { name: 'asc' },
+        include,
+      }),
+      this.prisma.team.count({ where }),
+    ]);
+    return { items, total };
   }
 
   getDetailById(id: string): Promise<TeamDetailWithRel | null> {

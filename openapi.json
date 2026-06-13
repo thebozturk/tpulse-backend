@@ -3488,6 +3488,24 @@
             }
           },
           {
+            "name": "teamId",
+            "required": false,
+            "in": "query",
+            "description": "Takım filtresi — gelen VEYA giden (iki taraftan biri)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "leagueId",
+            "required": false,
+            "in": "query",
+            "description": "Lig filtresi — kaynak VEYA hedef takımın ligi",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "dateFrom",
             "required": false,
             "in": "query",
@@ -3757,6 +3775,27 @@
         "operationId": "TransferQueryController_betweenTeams",
         "parameters": [
           {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20,
+              "type": "number"
+            }
+          },
+          {
             "name": "fromTeamId",
             "required": false,
             "in": "query",
@@ -3795,17 +3834,33 @@
                       "items": {
                         "$ref": "#/components/schemas/TransferResponseDto"
                       }
+                    },
+                    "page": {
+                      "type": "number"
+                    },
+                    "pageSize": {
+                      "type": "number"
+                    },
+                    "totalCount": {
+                      "type": "number"
+                    },
+                    "totalPages": {
+                      "type": "number"
                     }
                   },
                   "required": [
-                    "items"
+                    "items",
+                    "page",
+                    "pageSize",
+                    "totalCount",
+                    "totalPages"
                   ]
                 }
               }
             }
           }
         },
-        "summary": "İki takım arası transferler",
+        "summary": "İki takım arası transferler (paged)",
         "tags": [
           "transfers"
         ]
@@ -3822,6 +3877,36 @@
             "schema": {
               "type": "number"
             }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20,
+              "type": "number"
+            }
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "description": "field veya -field (örn. -feeAmount)",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -3837,17 +3922,33 @@
                       "items": {
                         "$ref": "#/components/schemas/TransferResponseDto"
                       }
+                    },
+                    "page": {
+                      "type": "number"
+                    },
+                    "pageSize": {
+                      "type": "number"
+                    },
+                    "totalCount": {
+                      "type": "number"
+                    },
+                    "totalPages": {
+                      "type": "number"
                     }
                   },
                   "required": [
-                    "items"
+                    "items",
+                    "page",
+                    "pageSize",
+                    "totalCount",
+                    "totalPages"
                   ]
                 }
               }
             }
           }
         },
-        "summary": "Yıla göre transferler",
+        "summary": "Yıla göre transferler (paged)",
         "tags": [
           "transfers"
         ]
@@ -3872,6 +3973,36 @@
             "schema": {
               "type": "number"
             }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20,
+              "type": "number"
+            }
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "description": "field veya -field (örn. -feeAmount)",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -3887,17 +4018,33 @@
                       "items": {
                         "$ref": "#/components/schemas/TransferResponseDto"
                       }
+                    },
+                    "page": {
+                      "type": "number"
+                    },
+                    "pageSize": {
+                      "type": "number"
+                    },
+                    "totalCount": {
+                      "type": "number"
+                    },
+                    "totalPages": {
+                      "type": "number"
                     }
                   },
                   "required": [
-                    "items"
+                    "items",
+                    "page",
+                    "pageSize",
+                    "totalCount",
+                    "totalPages"
                   ]
                 }
               }
             }
           }
         },
-        "summary": "Ay/yıla göre transferler",
+        "summary": "Ay/yıla göre transferler (paged)",
         "tags": [
           "transfers"
         ]
@@ -6169,6 +6316,27 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20,
+              "type": "number"
+            }
           }
         ],
         "responses": {
@@ -6184,10 +6352,26 @@
                       "items": {
                         "$ref": "#/components/schemas/TeamResponseDto"
                       }
+                    },
+                    "page": {
+                      "type": "number"
+                    },
+                    "pageSize": {
+                      "type": "number"
+                    },
+                    "totalCount": {
+                      "type": "number"
+                    },
+                    "totalPages": {
+                      "type": "number"
                     }
                   },
                   "required": [
-                    "items"
+                    "items",
+                    "page",
+                    "pageSize",
+                    "totalCount",
+                    "totalPages"
                   ]
                 }
               }
@@ -6197,7 +6381,7 @@
             "description": ""
           }
         },
-        "summary": "Lige gore takimlar",
+        "summary": "Lige gore takimlar (paged)",
         "tags": [
           "teams"
         ]
@@ -6256,6 +6440,36 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20,
+              "type": "number"
+            }
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "description": "field veya -field (örn. -feeAmount)",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -6271,10 +6485,26 @@
                       "items": {
                         "$ref": "#/components/schemas/TeamTransferLineDto"
                       }
+                    },
+                    "page": {
+                      "type": "number"
+                    },
+                    "pageSize": {
+                      "type": "number"
+                    },
+                    "totalCount": {
+                      "type": "number"
+                    },
+                    "totalPages": {
+                      "type": "number"
                     }
                   },
                   "required": [
-                    "items"
+                    "items",
+                    "page",
+                    "pageSize",
+                    "totalCount",
+                    "totalPages"
                   ]
                 }
               }
@@ -6284,7 +6514,7 @@
             "description": ""
           }
         },
-        "summary": "Takima gelen transferler",
+        "summary": "Takima gelen transferler (paged)",
         "tags": [
           "teams"
         ]
@@ -6301,48 +6531,33 @@
             "schema": {
               "type": "string"
             }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "items": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/TeamTransferLineDto"
-                      }
-                    }
-                  },
-                  "required": [
-                    "items"
-                  ]
-                }
-              }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
             }
           },
-          "404": {
-            "description": ""
-          }
-        },
-        "summary": "Takimdan giden transferler",
-        "tags": [
-          "teams"
-        ]
-      }
-    },
-    "/api/teams/{teamId}/transfers": {
-      "get": {
-        "operationId": "TeamsController_allTransfers",
-        "parameters": [
           {
-            "name": "teamId",
-            "required": true,
-            "in": "path",
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20,
+              "type": "number"
+            }
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "description": "field veya -field (örn. -feeAmount)",
             "schema": {
               "type": "string"
             }
@@ -6361,10 +6576,26 @@
                       "items": {
                         "$ref": "#/components/schemas/TeamTransferLineDto"
                       }
+                    },
+                    "page": {
+                      "type": "number"
+                    },
+                    "pageSize": {
+                      "type": "number"
+                    },
+                    "totalCount": {
+                      "type": "number"
+                    },
+                    "totalPages": {
+                      "type": "number"
                     }
                   },
                   "required": [
-                    "items"
+                    "items",
+                    "page",
+                    "pageSize",
+                    "totalCount",
+                    "totalPages"
                   ]
                 }
               }
@@ -6374,7 +6605,98 @@
             "description": ""
           }
         },
-        "summary": "Takimin tum transferleri (gelen+giden)",
+        "summary": "Takimdan giden transferler (paged)",
+        "tags": [
+          "teams"
+        ]
+      }
+    },
+    "/api/teams/{teamId}/transfers": {
+      "get": {
+        "operationId": "TeamsController_allTransfers",
+        "parameters": [
+          {
+            "name": "teamId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20,
+              "type": "number"
+            }
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "description": "field veya -field (örn. -feeAmount)",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/TeamTransferLineDto"
+                      }
+                    },
+                    "page": {
+                      "type": "number"
+                    },
+                    "pageSize": {
+                      "type": "number"
+                    },
+                    "totalCount": {
+                      "type": "number"
+                    },
+                    "totalPages": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "items",
+                    "page",
+                    "pageSize",
+                    "totalCount",
+                    "totalPages"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": ""
+          }
+        },
+        "summary": "Takimin tum transferleri (gelen+giden, paged)",
         "tags": [
           "teams"
         ]

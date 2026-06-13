@@ -24,6 +24,10 @@ export interface TransferFilter {
   playerId?: string;
   fromTeamId?: string;
   toTeamId?: string;
+  // Tek takım — gelen veya giden (iki taraftan biri)
+  teamId?: string;
+  // Lig — kaynak veya hedef takımın ligi
+  leagueId?: string;
   ownerId?: string;
   dateFrom?: Date;
   dateTo?: Date;
@@ -58,9 +62,22 @@ export interface ITransferRepository {
     fromTeamId: string,
     toTeamId: string,
     includeReverse: boolean,
-  ): Promise<TransferWithRel[]>;
-  getByYear(year: number): Promise<TransferWithRel[]>;
-  getByMonth(year: number, month: number): Promise<TransferWithRel[]>;
+    page: number,
+    pageSize: number,
+  ): Promise<Paged<TransferWithRel>>;
+  getByYear(
+    year: number,
+    page: number,
+    pageSize: number,
+    sort?: string,
+  ): Promise<Paged<TransferWithRel>>;
+  getByMonth(
+    year: number,
+    month: number,
+    page: number,
+    pageSize: number,
+    sort?: string,
+  ): Promise<Paged<TransferWithRel>>;
 
   // Lig
   getByLeagueId(
@@ -98,7 +115,10 @@ export interface ITransferRepository {
   getByTeamDirectional(
     teamId: string,
     direction: 'incoming' | 'outgoing' | 'all',
-  ): Promise<TransferWithRel[]>;
+    page: number,
+    pageSize: number,
+    sort?: string,
+  ): Promise<Paged<TransferWithRel>>;
   getRecentByTeam(
     teamId: string,
     direction: 'incoming' | 'outgoing',

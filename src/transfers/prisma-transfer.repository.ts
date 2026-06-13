@@ -5,6 +5,7 @@ import {
   ExtendedPrismaClient,
 } from '../common/prisma/extended-prisma';
 import { toSkipTake } from '../common/pagination';
+import { parseSort } from '../common/sort';
 import {
   ITransferRepository,
   Paged,
@@ -39,21 +40,32 @@ export class PrismaTransferRepository implements ITransferRepository {
   ) {}
 
   private orderBy(sort?: string): Prisma.TransferOrderByWithRelationInput {
-    if (!sort) {
-      return { createdAt: 'desc' };
-    }
-    const desc = sort.startsWith('-');
-    const field = desc ? sort.slice(1) : sort;
-    if (!SORT_FIELDS.has(field)) {
-      return { createdAt: 'desc' };
-    }
-    return { [field]: desc ? 'desc' : 'asc' };
+    const parsed = parseSort(sort, SORT_FIELDS);
+    return parsed
+      ? { [parsed.field]: parsed.direction }
+      : { createdAt: 'desc' };
   }
 
   private baseWhere(
     filter: TransferFilter,
     isRumour: boolean,
   ): Prisma.TransferWhereInput {
+    // Tek-takım (iki taraftan biri) ve lig filtreleri ayrı OR grupları ister →
+    // AND altında topla (top-level'da iki OR anahtarı olamaz).
+    const and: Prisma.TransferWhereInput[] = [];
+    if (filter.teamId) {
+      and.push({
+        OR: [{ fromTeamId: filter.teamId }, { toTeamId: filter.teamId }],
+      });
+    }
+    if (filter.leagueId) {
+      and.push({
+        OR: [
+          { fromTeam: { leagueId: filter.leagueId } },
+          { toTeam: { leagueId: filter.leagueId } },
+        ],
+      });
+    }
     return {
       isRumour,
       playerId: filter.playerId,
@@ -67,6 +79,7 @@ export class PrismaTransferRepository implements ITransferRepository {
       ...(filter.feeMin !== undefined || filter.feeMax !== undefined
         ? { feeAmount: { gte: filter.feeMin, lte: filter.feeMax } }
         : {}),
+      ...(and.length ? { AND: and } : {}),
     };
   }
 
@@ -143,6 +156,8 @@ export class PrismaTransferRepository implements ITransferRepository {
     fromTeamId: string,
     toTeamId: string,
     includeReverse: boolean,
+    page: number,
+    pageSize: number,
   ) {
     const where: Prisma.TransferWhereInput = includeReverse
       ? {
@@ -153,27 +168,43 @@ export class PrismaTransferRepository implements ITransferRepository {
           ],
         }
       : { isRumour: false, fromTeamId, toTeamId };
-    return this.list(where);
+    return this.pagedBy(where, page, pageSize);
   }
 
-  getByYear(year: number) {
-    return this.list({
-      isRumour: false,
-      transferDate: {
-        gte: new Date(Date.UTC(year, 0, 1)),
-        lt: new Date(Date.UTC(year + 1, 0, 1)),
+  getByYear(year: number, page: number, pageSize: number, sort?: string) {
+    return this.pagedBy(
+      {
+        isRumour: false,
+        transferDate: {
+          gte: new Date(Date.UTC(year, 0, 1)),
+          lt: new Date(Date.UTC(year + 1, 0, 1)),
+        },
       },
-    });
+      page,
+      pageSize,
+      sort,
+    );
   }
 
-  getByMonth(year: number, month: number) {
-    return this.list({
-      isRumour: false,
-      transferDate: {
-        gte: new Date(Date.UTC(year, month - 1, 1)),
-        lt: new Date(Date.UTC(year, month, 1)),
+  getByMonth(
+    year: number,
+    month: number,
+    page: number,
+    pageSize: number,
+    sort?: string,
+  ) {
+    return this.pagedBy(
+      {
+        isRumour: false,
+        transferDate: {
+          gte: new Date(Date.UTC(year, month - 1, 1)),
+          lt: new Date(Date.UTC(year, month, 1)),
+        },
       },
-    });
+      page,
+      pageSize,
+      sort,
+    );
   }
 
   getByLeagueId(
@@ -249,6 +280,9 @@ export class PrismaTransferRepository implements ITransferRepository {
   getByTeamDirectional(
     teamId: string,
     direction: 'incoming' | 'outgoing' | 'all',
+    page: number,
+    pageSize: number,
+    sort?: string,
   ) {
     const where: Prisma.TransferWhereInput =
       direction === 'incoming'
@@ -259,7 +293,7 @@ export class PrismaTransferRepository implements ITransferRepository {
               isRumour: false,
               OR: [{ toTeamId: teamId }, { fromTeamId: teamId }],
             };
-    return this.list(where);
+    return this.pagedBy(where, page, pageSize, sort);
   }
 
   getRecentByTeam(
