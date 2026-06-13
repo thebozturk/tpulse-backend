@@ -35,27 +35,37 @@ export interface INewsRepository {
     playerId: string,
     page: number,
     pageSize: number,
+    sortBy: NewsSort,
+    order: SortOrder,
   ): Promise<{ items: NewsWithRel[]; total: number }>;
   getByToTeamId(
     teamId: string,
     page: number,
     pageSize: number,
+    sortBy: NewsSort,
+    order: SortOrder,
   ): Promise<{ items: NewsWithRel[]; total: number }>;
   getByFromTeamId(
     teamId: string,
     page: number,
     pageSize: number,
+    sortBy: NewsSort,
+    order: SortOrder,
   ): Promise<{ items: NewsWithRel[]; total: number }>;
   getBySourceName(
     sourceName: string,
     page: number,
     pageSize: number,
+    sortBy: NewsSort,
+    order: SortOrder,
   ): Promise<{ items: NewsWithRel[]; total: number }>;
   getByDateRange(
     start: Date,
     end: Date,
     page: number,
     pageSize: number,
+    sortBy: NewsSort,
+    order: SortOrder,
   ): Promise<{ items: NewsWithRel[]; total: number }>;
   create(
     data: NewsWriteInput,

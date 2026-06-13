@@ -1,7 +1,6 @@
 import { Controller, Get, Param, ParseUUIDPipe, Query } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Public } from '../common/decorators/public.decorator';
-import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 import {
   ApiPagedResponse,
   ApiSingleResponse,
@@ -14,6 +13,7 @@ import {
   NewsBySourceDto,
   NewsDateRangeDto,
   NewsQueryDto,
+  NewsSortQueryDto,
 } from './dto/news-query.dto';
 import { NewsResponseDto } from './dto/news-response.dto';
 import { NewsService } from './news.service';
@@ -57,36 +57,36 @@ export class NewsController {
   }
 
   @Get('by-player/:playerId')
-  @ApiOperation({ summary: 'Oyuncuya gore haberler' })
+  @ApiOperation({ summary: 'Oyuncuya gore haberler (paged + sort)' })
   @ApiPagedResponse(NewsResponseDto)
   byPlayer(
     @Param('playerId', ParseUUIDPipe) playerId: string,
-    @Query() page: PaginationQueryDto,
+    @Query() query: NewsSortQueryDto,
     @ReqLang() lang: Lang,
   ): Promise<PagedResult<NewsResponseDto>> {
-    return this.news.findByPlayer(playerId, page.page, page.pageSize, lang);
+    return this.news.findByPlayer(playerId, query, lang);
   }
 
   @Get('by-team/:teamId')
-  @ApiOperation({ summary: 'Hedef takima gore haberler' })
+  @ApiOperation({ summary: 'Hedef takima gore haberler (paged + sort)' })
   @ApiPagedResponse(NewsResponseDto)
   byTeam(
     @Param('teamId', ParseUUIDPipe) teamId: string,
-    @Query() page: PaginationQueryDto,
+    @Query() query: NewsSortQueryDto,
     @ReqLang() lang: Lang,
   ): Promise<PagedResult<NewsResponseDto>> {
-    return this.news.findByToTeam(teamId, page.page, page.pageSize, lang);
+    return this.news.findByToTeam(teamId, query, lang);
   }
 
   @Get('from-team/:teamId')
-  @ApiOperation({ summary: 'Kaynak takima gore haberler' })
+  @ApiOperation({ summary: 'Kaynak takima gore haberler (paged + sort)' })
   @ApiPagedResponse(NewsResponseDto)
   fromTeam(
     @Param('teamId', ParseUUIDPipe) teamId: string,
-    @Query() page: PaginationQueryDto,
+    @Query() query: NewsSortQueryDto,
     @ReqLang() lang: Lang,
   ): Promise<PagedResult<NewsResponseDto>> {
-    return this.news.findByFromTeam(teamId, page.page, page.pageSize, lang);
+    return this.news.findByFromTeam(teamId, query, lang);
   }
 
   @Get(':newsId')

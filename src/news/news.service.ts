@@ -12,6 +12,7 @@ import {
   NewsBySourceDto,
   NewsDateRangeDto,
   NewsQueryDto,
+  NewsSortQueryDto,
 } from './dto/news-query.dto';
 import { CreateNewsDto, UpdateNewsDto } from './dto/news-write.dto';
 import { toNewsResponse } from './news.mapper';
@@ -113,44 +114,47 @@ export class NewsService {
 
   async findByPlayer(
     playerId: string,
-    page: number,
-    pageSize: number,
+    query: NewsSortQueryDto,
     lang: Lang,
   ): Promise<PagedResult<NewsResponseDto>> {
     const { items, total } = await this.repo.getByPlayerId(
       playerId,
-      page,
-      pageSize,
+      query.page,
+      query.pageSize,
+      query.sortBy,
+      query.order,
     );
-    return this.page(items, total, page, pageSize, lang);
+    return this.page(items, total, query.page, query.pageSize, lang);
   }
 
   async findByToTeam(
     teamId: string,
-    page: number,
-    pageSize: number,
+    query: NewsSortQueryDto,
     lang: Lang,
   ): Promise<PagedResult<NewsResponseDto>> {
     const { items, total } = await this.repo.getByToTeamId(
       teamId,
-      page,
-      pageSize,
+      query.page,
+      query.pageSize,
+      query.sortBy,
+      query.order,
     );
-    return this.page(items, total, page, pageSize, lang);
+    return this.page(items, total, query.page, query.pageSize, lang);
   }
 
   async findByFromTeam(
     teamId: string,
-    page: number,
-    pageSize: number,
+    query: NewsSortQueryDto,
     lang: Lang,
   ): Promise<PagedResult<NewsResponseDto>> {
     const { items, total } = await this.repo.getByFromTeamId(
       teamId,
-      page,
-      pageSize,
+      query.page,
+      query.pageSize,
+      query.sortBy,
+      query.order,
     );
-    return this.page(items, total, page, pageSize, lang);
+    return this.page(items, total, query.page, query.pageSize, lang);
   }
 
   async findBySource(
@@ -161,6 +165,8 @@ export class NewsService {
       query.sourceName,
       query.page,
       query.pageSize,
+      query.sortBy,
+      query.order,
     );
     return this.page(items, total, query.page, query.pageSize, lang);
   }
@@ -174,6 +180,8 @@ export class NewsService {
       query.endDate,
       query.page,
       query.pageSize,
+      query.sortBy,
+      query.order,
     );
     return this.page(items, total, query.page, query.pageSize, lang);
   }

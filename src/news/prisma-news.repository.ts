@@ -70,27 +70,65 @@ export class PrismaNewsRepository implements INewsRepository {
     return this.prisma.news.findUnique({ where: { id }, include });
   }
 
-  getByPlayerId(playerId: string, page: number, pageSize: number) {
-    return this.paged({ playerId }, page, pageSize);
+  getByPlayerId(
+    playerId: string,
+    page: number,
+    pageSize: number,
+    sortBy: NewsSort,
+    order: SortOrder,
+  ) {
+    return this.paged({ playerId }, page, pageSize, { [sortBy]: order });
   }
 
-  getByToTeamId(teamId: string, page: number, pageSize: number) {
-    return this.paged({ toTeamId: teamId }, page, pageSize);
+  getByToTeamId(
+    teamId: string,
+    page: number,
+    pageSize: number,
+    sortBy: NewsSort,
+    order: SortOrder,
+  ) {
+    return this.paged({ toTeamId: teamId }, page, pageSize, {
+      [sortBy]: order,
+    });
   }
 
-  getByFromTeamId(teamId: string, page: number, pageSize: number) {
-    return this.paged({ fromTeamId: teamId }, page, pageSize);
+  getByFromTeamId(
+    teamId: string,
+    page: number,
+    pageSize: number,
+    sortBy: NewsSort,
+    order: SortOrder,
+  ) {
+    return this.paged({ fromTeamId: teamId }, page, pageSize, {
+      [sortBy]: order,
+    });
   }
 
-  getBySourceName(sourceName: string, page: number, pageSize: number) {
-    return this.paged({ sourceName }, page, pageSize);
+  getBySourceName(
+    sourceName: string,
+    page: number,
+    pageSize: number,
+    sortBy: NewsSort,
+    order: SortOrder,
+  ) {
+    return this.paged({ sourceName }, page, pageSize, { [sortBy]: order });
   }
 
-  getByDateRange(start: Date, end: Date, page: number, pageSize: number) {
+  getByDateRange(
+    start: Date,
+    end: Date,
+    page: number,
+    pageSize: number,
+    sortBy: NewsSort,
+    order: SortOrder,
+  ) {
     return this.paged(
       { publishDate: { gte: start, lte: end } },
       page,
       pageSize,
+      {
+        [sortBy]: order,
+      },
     );
   }
 

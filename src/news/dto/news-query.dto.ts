@@ -10,7 +10,11 @@ import {
 } from 'class-validator';
 import { PaginationQueryDto } from '../../common/dto/pagination-query.dto';
 
-export class NewsQueryDto extends PaginationQueryDto {
+/**
+ * Sayfalama + haber sıralaması. Tüm haber liste uçları bunu extend eder —
+ * böylece her uç sortBy/order kabul eder (mobil bunları her isteğe ekliyor).
+ */
+export class NewsSortQueryDto extends PaginationQueryDto {
   @ApiPropertyOptional({
     enum: ['publishDate', 'title'],
     default: 'publishDate',
@@ -25,7 +29,9 @@ export class NewsQueryDto extends PaginationQueryDto {
   order: 'asc' | 'desc' = 'desc';
 }
 
-export class NewsBySourceDto extends PaginationQueryDto {
+export class NewsQueryDto extends NewsSortQueryDto {}
+
+export class NewsBySourceDto extends NewsSortQueryDto {
   @ApiPropertyOptional()
   @IsString()
   @IsNotEmpty()
@@ -33,7 +39,7 @@ export class NewsBySourceDto extends PaginationQueryDto {
   sourceName: string;
 }
 
-export class NewsDateRangeDto extends PaginationQueryDto {
+export class NewsDateRangeDto extends NewsSortQueryDto {
   @ApiPropertyOptional({ type: String, format: 'date-time' })
   @Type(() => Date)
   @IsDate()

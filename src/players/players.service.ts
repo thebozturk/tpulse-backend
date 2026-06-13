@@ -49,7 +49,16 @@ export class PlayersService {
         }
         const [transfers, newsPaged, posts] = await Promise.all([
           this.transfers.getByPlayerId(id),
-          this.news.findByPlayer(id, 1, PROFILE_NEWS, lang),
+          this.news.findByPlayer(
+            id,
+            {
+              page: 1,
+              pageSize: PROFILE_NEWS,
+              sortBy: 'publishDate',
+              order: 'desc',
+            },
+            lang,
+          ),
           this.posts.byPlayer(id, undefined, lang),
         ]);
         return {

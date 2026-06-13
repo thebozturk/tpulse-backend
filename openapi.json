@@ -7983,6 +7983,32 @@
             }
           },
           {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": "publishDate",
+              "type": "string",
+              "enum": [
+                "publishDate",
+                "title"
+              ]
+            }
+          },
+          {
+            "name": "order",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": "desc",
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
+          {
             "name": "sourceName",
             "required": false,
             "in": "query",
@@ -8059,6 +8085,32 @@
               "maximum": 100,
               "default": 20,
               "type": "number"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": "publishDate",
+              "type": "string",
+              "enum": [
+                "publishDate",
+                "title"
+              ]
+            }
+          },
+          {
+            "name": "order",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": "desc",
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
             }
           },
           {
@@ -8157,6 +8209,32 @@
               "default": 20,
               "type": "number"
             }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": "publishDate",
+              "type": "string",
+              "enum": [
+                "publishDate",
+                "title"
+              ]
+            }
+          },
+          {
+            "name": "order",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": "desc",
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
           }
         ],
         "responses": {
@@ -8198,7 +8276,7 @@
             }
           }
         },
-        "summary": "Oyuncuya gore haberler",
+        "summary": "Oyuncuya gore haberler (paged + sort)",
         "tags": [
           "news"
         ]
@@ -8236,6 +8314,32 @@
               "default": 20,
               "type": "number"
             }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": "publishDate",
+              "type": "string",
+              "enum": [
+                "publishDate",
+                "title"
+              ]
+            }
+          },
+          {
+            "name": "order",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": "desc",
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
           }
         ],
         "responses": {
@@ -8277,7 +8381,7 @@
             }
           }
         },
-        "summary": "Hedef takima gore haberler",
+        "summary": "Hedef takima gore haberler (paged + sort)",
         "tags": [
           "news"
         ]
@@ -8315,6 +8419,32 @@
               "default": 20,
               "type": "number"
             }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": "publishDate",
+              "type": "string",
+              "enum": [
+                "publishDate",
+                "title"
+              ]
+            }
+          },
+          {
+            "name": "order",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": "desc",
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
           }
         ],
         "responses": {
@@ -8356,7 +8486,7 @@
             }
           }
         },
-        "summary": "Kaynak takima gore haberler",
+        "summary": "Kaynak takima gore haberler (paged + sort)",
         "tags": [
           "news"
         ]
