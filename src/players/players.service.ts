@@ -129,6 +129,18 @@ export class PlayersService {
     filter: PlayerFilterDto,
     lang: Lang,
   ): Promise<PagedResult<PlayerResponseDto>> {
+    // "Hepsini çekme": en az bir filtre (lig/takım/uyruk/pozisyon/serbest/arama)
+    // zorunlu. Filtresiz istek tüm oyuncuları döndürmez — boş sayfa döner.
+    if (
+      !filter.leagueId &&
+      !filter.teamId &&
+      !filter.nationality &&
+      !filter.positionId &&
+      filter.isFree === undefined &&
+      !filter.search?.trim()
+    ) {
+      return buildPaged([], 0, filter.page, filter.pageSize);
+    }
     return this.cache.getOrSet(
       CacheService.buildKey('players:list', { ...filter, lang }),
       CacheTtl.List,

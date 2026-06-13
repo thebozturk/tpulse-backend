@@ -49,6 +49,15 @@ describe('PlayersService', () => {
     expect(repo.getAll).toHaveBeenCalledWith(filter);
   });
 
+  it('findAll filtresiz istekte boş sayfa döner, repo hiç çağrılmaz', async () => {
+    const result = await service.findAll(
+      { page: 1, pageSize: 20 } as never,
+      'tr',
+    );
+    expect(repo.getAll).not.toHaveBeenCalled();
+    expect(result).toMatchObject({ items: [], totalCount: 0 });
+  });
+
   it('findById throws NotFound when missing', async () => {
     repo.getById.mockResolvedValue(null);
     await expect(service.findById('x', 'tr')).rejects.toThrow(

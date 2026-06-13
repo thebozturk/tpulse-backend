@@ -101,6 +101,11 @@ export class TeamsService {
     filter: TeamFilterDto,
     lang: Lang,
   ): Promise<PagedResult<TeamResponseDto>> {
+    // "Hepsini çekme": en az bir filtre (lig veya isim araması) zorunlu.
+    // Filtresiz istek tüm takımları döndürmez — boş sayfa döner.
+    if (!filter.leagueId && !filter.search?.trim()) {
+      return buildPaged([], 0, filter.page, filter.pageSize);
+    }
     return this.cache.getOrSet(
       CacheService.buildKey('teams:list', { ...filter, lang }),
       CacheTtl.List,

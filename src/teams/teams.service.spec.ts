@@ -39,4 +39,11 @@ describe('TeamsService', () => {
     expect(repo.getAll).toHaveBeenCalledWith(filter);
     expect(result).toMatchObject({ page: 1, pageSize: 20, totalCount: 0 });
   });
+
+  it('findAll filtresiz istekte boş sayfa döner, repo hiç çağrılmaz', async () => {
+    const result = await service.findAll({ page: 1, pageSize: 20 }, 'tr');
+
+    expect(repo.getAll).not.toHaveBeenCalled();
+    expect(result).toMatchObject({ items: [], totalCount: 0, totalPages: 0 });
+  });
 });
