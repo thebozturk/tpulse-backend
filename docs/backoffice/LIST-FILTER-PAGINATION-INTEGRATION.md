@@ -109,6 +109,35 @@ GET /api/transfers?leagueId=<id>&sort=-feeAmount&page=1&pageSize=50
 
 ---
 
+## 4.1. Arama & kaynak filtreleri (YENİ)
+
+Backend desteği olmadığı için panelden kaldırılan **arama** ve **kaynak çipleri**
+artık server-side — geri eklenebilir.
+
+**Transferler & söylentiler** (`GET /api/transfers`, `GET /api/rumours`):
+- `search` — oyuncu adı (aksan-duyarsız)
+- `source` — `Manual` / `ApiSports` / `Bot` (sabit enum → çipler hazır)
+- `leagueId` / `teamId` (rumours'a da eklendi)
+
+```
+GET /api/transfers?search=<oyuncu>&source=ApiSports&leagueId=<id>&page=1
+```
+
+**Haberler** (`GET /api/news`):
+- `search` — başlık araması (aksan-duyarsız)
+- `sourceName` — kaynak adı tam eşleşme
+- Çip listesi: `GET /api/news/sources` → `{ items: string[] }` (distinct kaynaklar)
+
+```
+GET /api/news/sources                          # çipleri kur
+GET /api/news?sourceName=<kaynak>&search=<metin>&page=1
+```
+
+> Çipleri client'ta sabit gömme: transfer kaynağı sabit enum (3 değer), haber
+> kaynağı `GET /api/news/sources`'tan dinamik gelir.
+
+---
+
 ## 5. ⚠️ BREAKING — panelde yapılması gerekenler
 
 | Değişim | Aksiyon |

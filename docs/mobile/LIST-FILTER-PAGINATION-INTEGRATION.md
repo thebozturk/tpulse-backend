@@ -150,6 +150,50 @@ query'siyle backend'de yapılmalı — aksi halde aranan kayıt o sayfada yoksa 
 
 ---
 
+## 5.1. Arama & kaynak filtreleri (YENİ)
+
+Önceden backend desteklemediği için kaldırılan **oyuncu/başlık araması** ve
+**kaynak çipleri** artık server-side. Hepsi pagination ile uyumlu — arama tüm
+veride çalışır, sayfa içinde değil.
+
+### Transferler & söylentiler
+`GET /api/transfers` ve `GET /api/rumours` şu paramları kabul eder:
+
+| Param | Açıklama |
+|-------|----------|
+| `search` | **YENİ** — oyuncu adı (aksan-duyarsız; "kilicsoy" → "Kılıçsoy") |
+| `source` | **YENİ** — `Manual` / `ApiSports` / `Bot` (sabit enum; çipler bundan) |
+| `leagueId` / `teamId` | Lig / takım (rumours'a da eklendi) |
+
+```
+GET /api/transfers?search=osimhen&page=1&pageSize=20
+GET /api/transfers?source=ApiSports&leagueId=<id>&sort=-feeAmount
+GET /api/rumours?search=icardi&source=Manual
+```
+
+### Haberler
+`GET /api/news` şu paramları kabul eder:
+
+| Param | Açıklama |
+|-------|----------|
+| `search` | **YENİ** — başlık araması (aksan-duyarsız) |
+| `sourceName` | **YENİ** — kaynak adı tam eşleşme (çip seçimi) |
+| `sortBy` / `order` | `publishDate`/`title` + `asc`/`desc` |
+
+**Kaynak çipleri için:** `GET /api/news/sources` → `{ "items": ["Fabrizio Romano", "AMK", …] }`
+(kullanılan farklı kaynak adları). Çipleri bundan kur, seçilince `?sourceName=` ile filtrele.
+
+```
+GET /api/news?search=transfer&page=1&pageSize=20
+GET /api/news?sourceName=Fabrizio%20Romano&sortBy=publishDate&order=desc
+GET /api/news/sources
+```
+
+> İlke (tekrar): arama/kaynak filtresi **client'ta sayfa içinde değil**, query
+> param'la backend'de. Aranan kayıt başka sayfadaysa bile bulunur.
+
+---
+
 ## 6. Hızlı referans
 
 ```
