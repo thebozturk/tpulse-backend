@@ -49,6 +49,7 @@ export class PrismaTransferRepository implements ITransferRepository {
   private baseWhere(
     filter: TransferFilter,
     isRumour: boolean,
+    searchPlayerIds?: string[],
   ): Prisma.TransferWhereInput {
     // Tek-takım (iki taraftan biri) ve lig filtreleri ayrı OR grupları ister →
     // AND altında topla (top-level'da iki OR anahtarı olamaz).
@@ -68,11 +69,12 @@ export class PrismaTransferRepository implements ITransferRepository {
     }
     return {
       isRumour,
-      playerId: filter.playerId,
+      playerId: searchPlayerIds ? { in: searchPlayerIds } : filter.playerId,
       fromTeamId: filter.fromTeamId,
       toTeamId: filter.toTeamId,
       createdByUserId: filter.ownerId,
       feeCurrency: filter.currency,
+      source: filter.source,
       ...(filter.dateFrom || filter.dateTo
         ? { transferDate: { gte: filter.dateFrom, lte: filter.dateTo } }
         : {}),
@@ -81,6 +83,30 @@ export class PrismaTransferRepository implements ITransferRepository {
         : {}),
       ...(and.length ? { AND: and } : {}),
     };
+  }
+
+  /**
+   * Oyuncu adı araması → eşleşen player id'leri (aksan-duyarsız, token-AND).
+   * player_full_trgm (f_unaccent(lower(firstName||' '||lastName))) index'i kullanır.
+   * Transfer sorgusu bu id kümesiyle daraltılır (soft-delete + include korunur).
+   */
+  private async searchPlayerIds(q: string): Promise<string[]> {
+    const tokens = q.split(/\s+/).filter(Boolean).slice(0, 8);
+    if (!tokens.length) {
+      return [];
+    }
+    const fullName = Prisma.sql`f_unaccent(lower("firstName" || ' ' || "lastName"))`;
+    const tokenSql = Prisma.join(
+      tokens.map(
+        (t) =>
+          Prisma.sql`${fullName} LIKE '%' || f_unaccent(lower(${t})) || '%'`,
+      ),
+      ' AND ',
+    );
+    const rows = await this.prisma.$queryRaw<{ id: string }[]>(
+      Prisma.sql`SELECT id FROM "player" WHERE ${tokenSql} LIMIT 500`,
+    );
+    return rows.map((r) => r.id);
   }
 
   private async pagedBy(
@@ -116,12 +142,15 @@ export class PrismaTransferRepository implements ITransferRepository {
     });
   }
 
-  query(
+  async query(
     filter: TransferFilter,
     isRumour: boolean,
   ): Promise<Paged<TransferWithRel>> {
+    const searchPlayerIds = filter.search?.trim()
+      ? await this.searchPlayerIds(filter.search.trim())
+      : undefined;
     return this.pagedBy(
-      this.baseWhere(filter, isRumour),
+      this.baseWhere(filter, isRumour, searchPlayerIds),
       filter.page,
       filter.pageSize,
       filter.sort,

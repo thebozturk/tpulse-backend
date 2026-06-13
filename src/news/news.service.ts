@@ -100,8 +100,15 @@ export class NewsService {
       query.pageSize,
       query.sortBy,
       query.order,
+      query.search,
+      query.sourceName,
     );
     return this.page(items, total, query.page, query.pageSize, lang);
+  }
+
+  /** Kaynak çipleri için: kullanılan farklı kaynak adları. */
+  listSources(): Promise<string[]> {
+    return this.repo.distinctSources();
   }
 
   async findById(id: string, lang: Lang): Promise<NewsResponseDto> {

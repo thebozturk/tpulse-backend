@@ -3548,6 +3548,29 @@
             }
           },
           {
+            "name": "source",
+            "required": false,
+            "in": "query",
+            "description": "Kaynak: Manual / ApiSports / Bot",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "Manual",
+                "ApiSports",
+                "Bot"
+              ]
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "description": "Oyuncu adı araması (aksan-duyarsız)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "sort",
             "required": false,
             "in": "query",
@@ -4441,6 +4464,45 @@
             "name": "ownerId",
             "required": false,
             "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "teamId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "leagueId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "source",
+            "required": false,
+            "in": "query",
+            "description": "Kaynak: Manual / ApiSports / Bot",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "Manual",
+                "ApiSports",
+                "Bot"
+              ]
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "description": "Oyuncu adı araması (aksan-duyarsız)",
             "schema": {
               "type": "string"
             }
@@ -7910,6 +7972,24 @@
                 "desc"
               ]
             }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "description": "Başlık araması (aksan-duyarsız)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sourceName",
+            "required": false,
+            "in": "query",
+            "description": "Kaynak adı filtresi (tam eşleşme)",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -7952,6 +8032,31 @@
           }
         },
         "summary": "Haberleri listele (paged + sort)",
+        "tags": [
+          "news"
+        ]
+      }
+    },
+    "/api/news/sources": {
+      "get": {
+        "operationId": "NewsController_sources",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Kaynak çipleri — kullanılan farklı kaynak adları",
         "tags": [
           "news"
         ]

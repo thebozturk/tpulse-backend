@@ -29,7 +29,19 @@ export class NewsSortQueryDto extends PaginationQueryDto {
   order: 'asc' | 'desc' = 'desc';
 }
 
-export class NewsQueryDto extends NewsSortQueryDto {}
+export class NewsQueryDto extends NewsSortQueryDto {
+  @ApiPropertyOptional({ description: 'Başlık araması (aksan-duyarsız)' })
+  @IsOptional()
+  @IsString()
+  @MaxLength(128)
+  search?: string;
+
+  @ApiPropertyOptional({ description: 'Kaynak adı filtresi (tam eşleşme)' })
+  @IsOptional()
+  @IsString()
+  @MaxLength(128)
+  sourceName?: string;
+}
 
 export class NewsBySourceDto extends NewsSortQueryDto {
   @ApiPropertyOptional()

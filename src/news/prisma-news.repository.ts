@@ -57,13 +57,88 @@ export class PrismaNewsRepository implements INewsRepository {
     return { items, total };
   }
 
-  getAll(
+  async getAll(
+    page: number,
+    pageSize: number,
+    sortBy: NewsSort,
+    order: SortOrder,
+    search?: string,
+    sourceName?: string,
+  ): Promise<{ items: NewsWithRel[]; total: number }> {
+    if (search?.trim()) {
+      return this.searchAll(
+        search.trim(),
+        sourceName,
+        page,
+        pageSize,
+        sortBy,
+        order,
+      );
+    }
+    return this.paged({ sourceName }, page, pageSize, { [sortBy]: order });
+  }
+
+  /** Başlık araması (aksan-duyarsız, token-AND) + opsiyonel kaynak; id-çözümlü. */
+  private async searchAll(
+    q: string,
+    sourceName: string | undefined,
     page: number,
     pageSize: number,
     sortBy: NewsSort,
     order: SortOrder,
   ): Promise<{ items: NewsWithRel[]; total: number }> {
-    return this.paged({}, page, pageSize, { [sortBy]: order });
+    const tokens = q.split(/\s+/).filter(Boolean).slice(0, 8);
+    const title = Prisma.sql`f_unaccent(lower(title))`;
+    const conds: Prisma.Sql[] = [
+      Prisma.join(
+        tokens.map(
+          (t) =>
+            Prisma.sql`${title} LIKE '%' || f_unaccent(lower(${t})) || '%'`,
+        ),
+        ' AND ',
+      ),
+    ];
+    if (sourceName) {
+      conds.push(Prisma.sql`"sourceName" = ${sourceName}`);
+    }
+    const whereSql = Prisma.join(conds, ' AND ');
+    const orderSql =
+      sortBy === 'title'
+        ? Prisma.sql`title ${order === 'asc' ? Prisma.sql`ASC` : Prisma.sql`DESC`}`
+        : Prisma.sql`"publishDate" ${order === 'asc' ? Prisma.sql`ASC` : Prisma.sql`DESC`}`;
+    const { skip, take } = toSkipTake(page, pageSize);
+
+    const [idRows, countRows] = await Promise.all([
+      this.prisma.$queryRaw<{ news_id: string }[]>(Prisma.sql`
+        SELECT news_id FROM "news" WHERE ${whereSql}
+        ORDER BY ${orderSql} LIMIT ${take} OFFSET ${skip}`),
+      this.prisma.$queryRaw<{ count: number }[]>(Prisma.sql`
+        SELECT COUNT(*)::int AS count FROM "news" WHERE ${whereSql}`),
+    ]);
+    const ids = idRows.map((r) => r.news_id);
+    const total = Number(countRows[0]?.count ?? 0);
+    if (ids.length === 0) {
+      return { items: [], total };
+    }
+    const rows = await this.prisma.news.findMany({
+      where: { id: { in: ids } },
+      include,
+    });
+    const byId = new Map(rows.map((n) => [n.id, n]));
+    const items = ids
+      .map((id) => byId.get(id))
+      .filter((n): n is NewsWithRel => n !== undefined);
+    return { items, total };
+  }
+
+  async distinctSources(): Promise<string[]> {
+    const rows = await this.prisma.news.findMany({
+      where: { sourceName: { not: null } },
+      distinct: ['sourceName'],
+      select: { sourceName: true },
+      orderBy: { sourceName: 'asc' },
+    });
+    return rows.map((r) => r.sourceName).filter((s): s is string => s !== null);
   }
 
   getById(id: string): Promise<NewsWithRel | null> {

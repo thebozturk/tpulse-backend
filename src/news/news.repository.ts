@@ -29,7 +29,11 @@ export interface INewsRepository {
     pageSize: number,
     sortBy: NewsSort,
     order: SortOrder,
+    search?: string,
+    sourceName?: string,
   ): Promise<{ items: NewsWithRel[]; total: number }>;
+  /** Çip listesi için: kullanılan farklı kaynak adları (alfabetik). */
+  distinctSources(): Promise<string[]>;
   getById(id: string): Promise<NewsWithRel | null>;
   getByPlayerId(
     playerId: string,

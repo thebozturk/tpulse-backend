@@ -6,6 +6,7 @@ import {
   ApiSingleResponse,
 } from '../common/swagger/api-envelope.decorators';
 import {
+  ListResponse,
   PagedResult,
   SingleResponse,
 } from '../common/interfaces/response.interface';
@@ -34,6 +35,13 @@ export class NewsController {
     @ReqLang() lang: Lang,
   ): Promise<PagedResult<NewsResponseDto>> {
     return this.news.findAll(query, lang);
+  }
+
+  @Get('sources')
+  @ApiOperation({ summary: 'Kaynak çipleri — kullanılan farklı kaynak adları' })
+  @ApiResponse({ status: 200, type: [String] })
+  async sources(): Promise<ListResponse<string>> {
+    return { items: await this.news.listSources() };
   }
 
   @Get('by-source')

@@ -1,7 +1,9 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
+import { TransferSource } from '@prisma/client';
 import { Transform, Type } from 'class-transformer';
 import {
   IsDate,
+  IsEnum,
   IsInt,
   IsNumber,
   IsOptional,
@@ -61,6 +63,21 @@ export class TransferFilterDto extends PaginationQueryDto {
   @IsString()
   @MaxLength(10)
   currency?: string;
+
+  @ApiPropertyOptional({
+    enum: TransferSource,
+    description: 'Kaynak: Manual / ApiSports / Bot',
+  })
+  @IsOptional()
+  @IsEnum(TransferSource)
+  source?: TransferSource;
+
+  @ApiPropertyOptional({ description: 'Oyuncu adı araması (aksan-duyarsız)' })
+  @IsOptional()
+  @IsString()
+  @MaxLength(64)
+  search?: string;
+
   @ApiPropertyOptional({
     description: 'field veya -field (createdAt/transferDate/feeAmount)',
   })
@@ -75,6 +92,24 @@ export class RumourFilterDto extends PaginationQueryDto {
   @ApiPropertyOptional() @IsOptional() @IsUUID() fromTeamId?: string;
   @ApiPropertyOptional() @IsOptional() @IsUUID() toTeamId?: string;
   @ApiPropertyOptional() @IsOptional() @IsUUID() ownerId?: string;
+
+  @ApiPropertyOptional() @IsOptional() @IsUUID() teamId?: string;
+  @ApiPropertyOptional() @IsOptional() @IsUUID() leagueId?: string;
+
+  @ApiPropertyOptional({
+    enum: TransferSource,
+    description: 'Kaynak: Manual / ApiSports / Bot',
+  })
+  @IsOptional()
+  @IsEnum(TransferSource)
+  source?: TransferSource;
+
+  @ApiPropertyOptional({ description: 'Oyuncu adı araması (aksan-duyarsız)' })
+  @IsOptional()
+  @IsString()
+  @MaxLength(64)
+  search?: string;
+
   @ApiPropertyOptional()
   @IsOptional()
   @Type(() => Date)

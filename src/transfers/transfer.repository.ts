@@ -29,6 +29,10 @@ export interface TransferFilter {
   // Lig — kaynak veya hedef takımın ligi
   leagueId?: string;
   ownerId?: string;
+  // Kaynak: Manual / ApiSports / Bot
+  source?: TransferSource;
+  // Oyuncu adı araması (aksan-duyarsız)
+  search?: string;
   dateFrom?: Date;
   dateTo?: Date;
   feeMin?: number;

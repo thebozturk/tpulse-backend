@@ -11,6 +11,8 @@ describe('NewsService', () => {
   beforeEach(async () => {
     repo = {
       getByPlayerId: jest.fn().mockResolvedValue({ items: [], total: 0 }),
+      getAll: jest.fn().mockResolvedValue({ items: [], total: 0 }),
+      distinctSources: jest.fn().mockResolvedValue(['Fabrizio', 'AMK']),
     };
     const module = await Test.createTestingModule({
       providers: [
@@ -40,5 +42,31 @@ describe('NewsService', () => {
       'desc',
     );
     expect(result).toMatchObject({ page: 1, pageSize: 5, totalCount: 0 });
+  });
+
+  it('findAll search ve sourceName filtrelerini repository.getAll içine geçirir', async () => {
+    await service.findAll(
+      {
+        page: 1,
+        pageSize: 20,
+        sortBy: 'publishDate',
+        order: 'desc',
+        search: 'osimhen',
+        sourceName: 'Fabrizio',
+      } as never,
+      'tr',
+    );
+    expect(repo.getAll).toHaveBeenCalledWith(
+      1,
+      20,
+      'publishDate',
+      'desc',
+      'osimhen',
+      'Fabrizio',
+    );
+  });
+
+  it('listSources kaynak çip listesini döner', async () => {
+    await expect(service.listSources()).resolves.toEqual(['Fabrizio', 'AMK']);
   });
 });
